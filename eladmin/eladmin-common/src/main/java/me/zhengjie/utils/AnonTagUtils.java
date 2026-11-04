@@ -26,13 +26,13 @@ import java.util.*;
 
 /**
  * @author Zheng Jie
- * @description 匿名标记工具
+ * @description Anonymous access annotation utilities
  * @date 2025-01-13
  **/
 public class AnonTagUtils {
 
     /**
-     * 获取匿名标记的URL
+     * Get anonymous tagged URLs
      * @param applicationContext /
      * @return /
      */
@@ -40,7 +40,7 @@ public class AnonTagUtils {
         RequestMappingHandlerMapping requestMappingHandlerMapping = (RequestMappingHandlerMapping) applicationContext.getBean("requestMappingHandlerMapping");
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
         Map<String, Set<String>> anonymousUrls = new HashMap<>(8);
-        // 获取匿名标记
+        // Get anonymous tags
         Set<String> get = new HashSet<>();
         Set<String> post = new HashSet<>();
         Set<String> put = new HashSet<>();
@@ -87,7 +87,7 @@ public class AnonTagUtils {
     }
 
     /**
-     * 获取所有匿名标记的URL
+     * Get all anonymous tagged URLs
      * @param applicationContext /
      * @return /
      */

@@ -24,7 +24,7 @@ import java.util.Date;
 /**
  * @author liaojinlong
  * @date 2020/6/11 16:28
- * @description JDK 8  新日期类 格式化与字符串转换 工具类
+ * @description JDK 8 Date-Time formatting and string conversion utilities
  */
 public class DateUtil {
 
@@ -32,7 +32,7 @@ public class DateUtil {
     public static final DateTimeFormatter DFY_MD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
-     * LocalDateTime 转时间戳
+     * Convert LocalDateTime to timestamp
      *
      * @param localDateTime /
      * @return /
@@ -42,7 +42,7 @@ public class DateUtil {
     }
 
     /**
-     * 时间戳转LocalDateTime
+     * Convert timestamp to LocalDateTime
      *
      * @param timeStamp /
      * @return /
@@ -52,8 +52,8 @@ public class DateUtil {
     }
 
     /**
-     * LocalDateTime 转 Date
-     * Jdk8 后 不推荐使用 {@link Date} Date
+     * Convert LocalDateTime to Date
+     * Since JDK 8, use of {@link Date} is not recommended
      *
      * @param localDateTime /
      * @return /
@@ -63,8 +63,8 @@ public class DateUtil {
     }
 
     /**
-     * LocalDate 转 Date
-     * Jdk8 后 不推荐使用 {@link Date} Date
+     * Convert LocalDate to Date
+     * Since JDK 8, use of {@link Date} is not recommended
      *
      * @param localDate /
      * @return /
@@ -75,8 +75,8 @@ public class DateUtil {
 
 
     /**
-     * Date转 LocalDateTime
-     * Jdk8 后 不推荐使用 {@link Date} Date
+     * Convert Date to LocalDateTime
+     * Since JDK 8, use of {@link Date} is not recommended
      *
      * @param date /
      * @return /
@@ -86,7 +86,7 @@ public class DateUtil {
     }
 
     /**
-     * 日期 格式化
+     * Format date
      *
      * @param localDateTime /
      * @param patten /
@@ -98,7 +98,7 @@ public class DateUtil {
     }
 
     /**
-     * 日期 格式化
+     * Format date
      *
      * @param localDateTime /
      * @param df /
@@ -109,7 +109,7 @@ public class DateUtil {
     }
 
     /**
-     * 日期格式化 yyyy-MM-dd HH:mm:ss
+     * Format date yyyy-MM-dd HH:mm:ss
      *
      * @param localDateTime /
      * @return /
@@ -119,15 +119,15 @@ public class DateUtil {
     }
 
     /**
-     * 获取当前时间
-     * @return 、
+     * Get current time
+     * @return Current formatted time string
      */
     public static Timestamp getTimeStamp() {
         return Timestamp.valueOf(LocalDateTime.now());
     }
 
     /**
-     * 日期格式化 yyyy-MM-dd
+     * Format date yyyy-MM-dd
      *
      * @param localDateTime /
      * @return /
@@ -137,7 +137,7 @@ public class DateUtil {
     }
 
     /**
-     * 字符串转 LocalDateTime ，字符串格式 yyyy-MM-dd
+     * Convert string to LocalDateTime, format: yyyy-MM-dd
      *
      * @param localDateTime /
      * @return /
@@ -148,7 +148,7 @@ public class DateUtil {
     }
 
     /**
-     * 字符串转 LocalDateTime ，字符串格式 yyyy-MM-dd
+     * Convert string to LocalDateTime, format: yyyy-MM-dd
      *
      * @param localDateTime /
      * @return /
@@ -158,7 +158,7 @@ public class DateUtil {
     }
 
     /**
-     * 字符串转 LocalDateTime ，字符串格式 yyyy-MM-dd HH:mm:ss
+     * Convert string to LocalDateTime, format: yyyy-MM-dd HH:mm:ss
      *
      * @param localDateTime /
      * @return /

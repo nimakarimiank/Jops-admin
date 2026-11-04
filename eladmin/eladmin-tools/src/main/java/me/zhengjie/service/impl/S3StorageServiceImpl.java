@@ -46,7 +46,7 @@ import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.waiters.S3Waiter;
 
 /**
-* @description 服务实现
+* @description Service implementation
 * @author Zheng Jie
 * @date 2025-06-19
 **/
@@ -72,31 +72,31 @@ public class S3StorageServiceImpl extends ServiceImpl<S3StorageMapper, S3Storage
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteAll(List<Long> ids) {
-        // 检查桶是否存在
+        // Check if bucket exists
         String bucketName = amzS3Config.getDefaultBucket();
         if (!bucketExists(bucketName)) {
-            throw new BadRequestException("存储桶不存在，请检查配置或权限。");
+            throw new BadRequestException("Bucket does not exist. Please check configuration or permissions.");
         }
-        // 遍历 ID 列表，删除对应的文件和数据库记录
+        // Iterate through ID list, delete corresponding files and database records
         for (Long id : ids) {
             String filePath = s3StorageMapper.selectFilePathById(id);
             if (filePath == null) {
-                System.err.println("未找到 ID 为 " + id + " 的文件记录，无法删除。");
+                System.err.println("File record not found for ID " + id + ", cannot delete.");
                 continue;
             }
             try {
-                // 创建 DeleteObjectRequest，指定存储桶和文件键
+                // Create DeleteObjectRequest, specifying bucket and file key
                 DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
                         .bucket(bucketName)
                         .key(filePath)
                         .build();
-                // 调用 deleteObject 方法
+                // Call deleteObject method
                 s3Client.deleteObject(deleteObjectRequest);
-                // 删除数据库数据
+                // Delete database data
                 s3StorageMapper.deleteById(id);
             } catch (S3Exception e) {
-                // 处理 AWS 特定的异常
-                log.error("从 S3 删除文件时出错: {}", e.awsErrorDetails().errorMessage(), e);
+                // Handle AWS specific exceptions
+                log.error("Error deleting file from S3: {}", e.awsErrorDetails().errorMessage(), e);
             }
         }
     }
@@ -104,47 +104,47 @@ public class S3StorageServiceImpl extends ServiceImpl<S3StorageMapper, S3Storage
     @Override
     public S3Storage upload(MultipartFile file) {
         String bucketName = amzS3Config.getDefaultBucket();
-        // 检查存储桶是否存在
+        // Check if bucket exists
         if (!bucketExists(bucketName)) {
-            log.warn("存储桶 {} 不存在，尝试创建...", bucketName);
+            log.warn("Bucket {} does not exist, attempting to create...", bucketName);
             if (createBucket(bucketName)){
-                log.info("存储桶 {} 创建成功。", bucketName);
+                log.info("Bucket {} created successfully.", bucketName);
             } else {
-                throw new BadRequestException("存储桶创建失败，请检查配置或权限。");
+                throw new BadRequestException("Failed to create bucket. Please check configuration or permissions.");
             }
         }
-        // 获取文件名
+        // Get file name
         String originalName = file.getOriginalFilename();
         if (StringUtils.isBlank(originalName)) {
-            throw new IllegalArgumentException("文件名不能为空");
+            throw new IllegalArgumentException("File name cannot be empty");
         }
-        // 生成存储路径和文件名
+        // Generate storage path and file name
         String folder = DateUtil.format(new Date(), amzS3Config.getTimeformat());
         String fileName = IdUtil.simpleUUID() + "." + FileUtil.getExtensionName(originalName);
         String filePath = folder + "/" + fileName;
-        // 构建上传请求
+        // Build upload request
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(amzS3Config.getDefaultBucket())
                 .key(filePath)
                 .build();
-        // 创建 S3Storage 实例
+        // Create S3Storage instance
         S3Storage s3Storage = new S3Storage();
         try {
-            // 上传文件到 S3
+            // Upload file to S3
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-            // 设置 S3Storage 属性
+            // Set S3Storage properties
             s3Storage.setFileMimeType(FileUtil.getMimeType(originalName));
             s3Storage.setFileName(originalName);
             s3Storage.setFileRealName(fileName);
             s3Storage.setFileSize(FileUtil.getSize(file.getSize()));
             s3Storage.setFileType(FileUtil.getExtensionName(originalName));
             s3Storage.setFilePath(filePath);
-            // 保存入库
+            // Save to database
             s3StorageMapper.insert(s3Storage);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        // 设置地址
+        // Set URL
         return s3Storage;
     }
 
@@ -153,16 +153,16 @@ public class S3StorageServiceImpl extends ServiceImpl<S3StorageMapper, S3Storage
         List<Map<String, Object>> list = new ArrayList<>();
         for (S3Storage s3Storage : all) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("文件名称", s3Storage.getFileName());
-            map.put("真实存储的名称", s3Storage.getFileRealName());
-            map.put("文件大小", s3Storage.getFileSize());
-            map.put("文件MIME 类型", s3Storage.getFileMimeType());
-            map.put("文件类型", s3Storage.getFileType());
-            map.put("文件路径", s3Storage.getFilePath());
-            map.put("创建者", s3Storage.getCreateBy());
-            map.put("更新者", s3Storage.getUpdateBy());
-            map.put("创建日期", s3Storage.getCreateTime());
-            map.put("更新时间", s3Storage.getUpdateTime());
+            map.put("File Name", s3Storage.getFileName());
+            map.put("Storage File Name", s3Storage.getFileRealName());
+            map.put("File Size", s3Storage.getFileSize());
+            map.put("File MIME Type", s3Storage.getFileMimeType());
+            map.put("File Type", s3Storage.getFileType());
+            map.put("File Path", s3Storage.getFilePath());
+            map.put("Created By", s3Storage.getCreateBy());
+            map.put("Updated By", s3Storage.getUpdateBy());
+            map.put("Creation Date", s3Storage.getCreateTime());
+            map.put("Update Time", s3Storage.getUpdateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
@@ -171,42 +171,42 @@ public class S3StorageServiceImpl extends ServiceImpl<S3StorageMapper, S3Storage
     public Map<String, String> privateDownload(Long id) {
         S3Storage storage = s3StorageMapper.selectById(id);
         if (storage == null) {
-            throw new BadRequestException("文件不存在或已被删除");
+            throw new BadRequestException("File does not exist or has been deleted");
         }
-        // 创建 GetObjectRequest，指定存储桶和文件键
+        // Create GetObjectRequest, specifying bucket and file key
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(amzS3Config.getDefaultBucket())
                 .key(storage.getFilePath())
                 .build();
         String base64Data;
-        // 使用 try-with-resources 确保流能被自动关闭
-        // s3Client.getObject() 返回一个 ResponseInputStream，它是一个包含S3对象数据的输入流
+        // Use try-with-resources to ensure stream is automatically closed
+        // s3Client.getObject() returns a ResponseInputStream, which is an input stream containing S3 object data
         try (ResponseInputStream<GetObjectResponse> s3InputStream = s3Client.getObject(getObjectRequest)) {
-            // 使用 IOUtils.toByteArray 将输入流直接转换为字节数组
+            // Use IOUtils.toByteArray to directly convert input stream to byte array
             byte[] fileBytes = IOUtils.toByteArray(s3InputStream);
-            // 使用 Java 内置的 Base64 编码器将字节数组转换为 Base64 字符串
+            // Use Java built-in Base64 encoder to convert byte array to Base64 string
             base64Data = Base64.getEncoder().encodeToString(fileBytes);
         } catch (S3Exception e) {
-            // 处理 AWS 特定的异常
-            throw new BadRequestException("从 S3 下载文件时出错: " + e.awsErrorDetails().errorMessage());
+            // Handle AWS specific exceptions
+            throw new BadRequestException("Error downloading file from S3: " + e.awsErrorDetails().errorMessage());
         } catch (IOException e) {
-            // 处理通用的 IO 异常 (IOUtils.toByteArray 可能会抛出)
-            throw new BadRequestException("读取 S3 输入流时出错: " + e.getMessage());
+            // Handle general IO exceptions (IOUtils.toByteArray may throw)
+            throw new BadRequestException("Error reading S3 input stream: " + e.getMessage());
         }
-        // 构造返回数据
+        // Construct return data
         Map<String, String> responseData = new HashMap<>();
-        // 文件名
+        // File name
         responseData.put("fileName", storage.getFileName());
-        // 文件类型
+        // File type
         responseData.put("fileMimeType", storage.getFileMimeType());
-        // 文件内容
+        // File content
         responseData.put("base64Data", base64Data);
         return responseData;
     }
 
     /**
-     * 检查云存储桶是否存在
-     * @param bucketName 存储桶名称
+     * Check if cloud storage bucket exists
+     * @param bucketName Bucket name
      */
     @SuppressWarnings({"all"})
     private boolean bucketExists(String bucketName) {
@@ -217,42 +217,42 @@ public class S3StorageServiceImpl extends ServiceImpl<S3StorageMapper, S3Storage
             s3Client.headBucket(headBucketRequest);
             return true;
         } catch (S3Exception e) {
-            // 如果状态码是 404 (Not Found), 说明存储桶不存在
+            // If status code is 404 (Not Found), bucket does not exist
             if (e.statusCode() == 404) {
-                log.error("存储桶 '{}' 不存在。", bucketName);
+                log.error("Bucket '{}' does not exist.", bucketName);
                 return false;
             }
-            // 其他异常 (如 403 Forbidden) 说明存在问题，但不能断定它不存在
-            throw new BadRequestException("检查存储桶时出错: " + e.awsErrorDetails().errorMessage());
+            // Other exceptions (such as 403 Forbidden) indicate issues, but cannot determine it does not exist
+            throw new BadRequestException("Error checking bucket: " + e.awsErrorDetails().errorMessage());
         }
     }
 
     /**
-     * 创建云存储桶
-     * @param bucketName 存储桶名称
+     * Create cloud storage bucket
+     * @param bucketName Bucket name
      */
     private boolean createBucket(String bucketName) {
         try {
-            // 使用 S3Waiter 等待存储桶创建完成
+            // Use S3Waiter to wait until bucket creation completes
             S3Waiter s3Waiter = s3Client.waiter();
             CreateBucketRequest bucketRequest = CreateBucketRequest.builder()
                     .bucket(bucketName)
                     .acl(BucketCannedACL.PRIVATE)
                     .build();
             s3Client.createBucket(bucketRequest);
-            // 等待直到存储桶创建完成
+            // Wait until bucket creation completes
             HeadBucketRequest bucketRequestWait = HeadBucketRequest.builder()
                     .bucket(bucketName)
                     .build();
-            // 使用 WaiterResponse 等待存储桶存在
+            // Use WaiterResponse to wait until bucket exists
             WaiterResponse<HeadBucketResponse> waiterResponse = s3Waiter.waitUntilBucketExists(bucketRequestWait);
             waiterResponse.matched().response().ifPresent(response ->
-                    log.info("存储桶 '{}' 创建成功，状态: {}", bucketName, response.sdkHttpResponse().statusCode())
+                    log.info("Bucket '{}' created successfully, status: {}", bucketName, response.sdkHttpResponse().statusCode())
             );
         } catch (BucketAlreadyOwnedByYouException e) {
-            log.warn("存储桶 '{}' 已经被您拥有，无需重复创建。", bucketName);
+            log.warn("Bucket '{}' is already owned by you, no need to recreate.", bucketName);
         } catch (S3Exception e) {
-            throw new BadRequestException("创建存储桶时出错: " + e.awsErrorDetails().errorMessage());
+            throw new BadRequestException("Error creating bucket: " + e.awsErrorDetails().errorMessage());
         }
         return true;
     }

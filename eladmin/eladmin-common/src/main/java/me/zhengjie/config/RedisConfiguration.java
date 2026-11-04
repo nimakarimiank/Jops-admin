@@ -53,12 +53,12 @@ import java.util.Map;
 @AutoConfigureBefore(RedisAutoConfiguration.class)
 public class RedisConfiguration extends CachingConfigurerSupport {
 
-    // 自动识别json对象白名单配置（仅允许解析的包名，范围越小越安全）
+    // Whitelist configuration for automatic JSON object recognition (only permitted package names, narrower scope is more secure)
     private static final String[] WHITELIST_STR = {"me.zhengjie" };
 
     /**
-     *  设置 redis 数据默认过期时间，默认2小时
-     *  设置@cacheable 序列化方式
+     *  Set default expiration time for Redis data, default is 2 hours
+     *  Configure serialization strategy for @Cacheable
      */
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration(){
@@ -72,16 +72,16 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     @Bean(name = "redisTemplate")
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
-        // 指定 key 和 value 的序列化方案
+        // Specify serialization scheme for key and value
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
-        // value值的序列化采用fastJsonRedisSerializer
+        // Value serialization uses fastJsonRedisSerializer
         template.setValueSerializer(fastJsonRedisSerializer);
         template.setHashValueSerializer(fastJsonRedisSerializer);
-        // 设置fastJson的序列化白名单
+        // Configure FastJson serialization whitelist
         for (String pack : WHITELIST_STR) {
             JSONFactory.getDefaultObjectReaderProvider().addAutoTypeAccept(pack);
         }
-        // key的序列化采用StringRedisSerializer
+        // Key serialization uses StringRedisSerializer
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
         template.setConnectionFactory(redisConnectionFactory);
@@ -89,9 +89,9 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     }
 
     /**
-     * 缓存管理器
+     * Cache manager
      * @param redisConnectionFactory /
-     * @return 缓存管理器
+     * @return Cache manager
      */
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
@@ -102,26 +102,26 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     }
 
     /**
-     * 自定义缓存key生成策略
+     * Custom cache key generation strategy
      */
     @Bean
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
             Map<String,Object> container = new HashMap<>(8);
             Class<?> targetClassClass = target.getClass();
-            // 类地址
+            // Class name
             container.put("class",targetClassClass.toGenericString());
-            // 方法名称
+            // Method name
             container.put("methodName",method.getName());
-            // 包名称
+            // Package name
             container.put("package",targetClassClass.getPackage());
-            // 参数列表
+            // Parameter list
             for (int i = 0; i < params.length; i++) {
                 container.put(String.valueOf(i),params[i]);
             }
-            // 转为JSON字符串
+            // Convert to JSON string
             String jsonString = JSON.toJSONString(container);
-            // 使用 MurmurHash 生成 hash
+            // Generate hash using MurmurHash
             return Integer.toHexString(MurmurHash3.hash32x86(jsonString.getBytes()));
         };
     }
@@ -132,29 +132,29 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         return new SimpleCacheErrorHandler() {
             @Override
             public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
-                // 处理缓存读取错误
+                // Handle cache get error
                 log.error("Cache Get Error: {}",exception.getMessage());
             }
             @Override
             public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
-                // 处理缓存写入错误
+                // Handle cache put error
                 log.error("Cache Put Error: {}",exception.getMessage());
             }
             @Override
             public void handleCacheEvictError(RuntimeException exception, Cache cache, Object key) {
-                // 处理缓存删除错误
+                // Handle cache evict error
                 log.error("Cache Evict Error: {}",exception.getMessage());
             }
             @Override
             public void handleCacheClearError(RuntimeException exception, Cache cache) {
-                // 处理缓存清除错误
+                // Handle cache clear error
                 log.error("Cache Clear Error: {}",exception.getMessage());
             }
         };
     }
 
     /**
-     * Value 序列化
+     * Value serializer
      *
      * @param <T>
      * @author /

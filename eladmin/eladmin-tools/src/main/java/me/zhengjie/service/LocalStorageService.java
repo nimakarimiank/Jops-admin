@@ -32,44 +32,44 @@ import java.util.List;
 public interface LocalStorageService extends IService<LocalStorage> {
 
     /**
-     * 分页查询
+     * Paginated query
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param criteria Criteria
+     * @param page     Pagination parameters
      * @return /
      */
     PageResult<LocalStorage> queryAll(LocalStorageQueryCriteria criteria, Page<Object> page);
 
     /**
-     * 查询全部数据
-     * @param criteria 条件
+     * Query all data
+     * @param criteria Criteria
      * @return /
      */
     List<LocalStorage> queryAll(LocalStorageQueryCriteria criteria);
 
     /**
-     * 上传
-     * @param name 文件名称
-     * @param file 文件
+     * Upload
+     * @param name File name
+     * @param file File
      * @return /
      */
     LocalStorage create(String name, MultipartFile file);
 
     /**
-     * 编辑
-     * @param resources 文件信息
+     * Edit
+     * @param resources File information
      */
     void update(LocalStorage resources);
 
     /**
-     * 多选删除
+     * Batch delete
      * @param ids /
      */
     void deleteAll(Long[] ids);
 
     /**
-     * 导出数据
-     * @param localStorages 待导出的数据
+     * Export data
+     * @param localStorages Data to export
      * @param response /
      * @throws IOException /
      */

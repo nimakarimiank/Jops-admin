@@ -66,7 +66,7 @@ public class LocalStorageServiceImpl extends ServiceImpl<LocalStorageMapper, Loc
         String type = FileUtil.getFileType(suffix);
         File file = FileUtil.upload(multipartFile, properties.getPath().getPath() + type +  File.separator);
         if(ObjectUtil.isNull(file)){
-            throw new BadRequestException("上传失败");
+            throw new BadRequestException("Upload failed");
         }
         try {
             name = StringUtils.isBlank(name) ? FileUtil.getFileNameNoEx(multipartFile.getOriginalFilename()) : name;
@@ -109,12 +109,12 @@ public class LocalStorageServiceImpl extends ServiceImpl<LocalStorageMapper, Loc
         List<Map<String, Object>> list = new ArrayList<>();
         for (LocalStorage localStorage : queryAll) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("文件名", localStorage.getRealName());
-            map.put("备注名", localStorage.getName());
-            map.put("文件类型", localStorage.getType());
-            map.put("文件大小", localStorage.getSize());
-            map.put("创建者", localStorage.getCreateBy());
-            map.put("创建日期", localStorage.getCreateTime());
+            map.put("File Name", localStorage.getRealName());
+            map.put("Description", localStorage.getName());
+            map.put("File Type", localStorage.getType());
+            map.put("File Size", localStorage.getSize());
+            map.put("Created By", localStorage.getCreateBy());
+            map.put("Creation Date", localStorage.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);

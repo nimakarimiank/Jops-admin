@@ -19,7 +19,7 @@ import java.io.Closeable;
 
 /**
  * @author Zheng Jie
- * @description 用于关闭各种连接，缺啥补啥
+ * @description Utility to close various resources and connections
  * @date 2021-03-05
  **/
 public class CloseUtil {
@@ -29,7 +29,7 @@ public class CloseUtil {
             try {
                 closeable.close();
             } catch (Exception e) {
-                // 静默关闭
+                // Quietly close
             }
         }
     }
@@ -39,7 +39,7 @@ public class CloseUtil {
             try {
                 closeable.close();
             } catch (Exception e) {
-                // 静默关闭
+                // Quietly close
             }
         }
     }

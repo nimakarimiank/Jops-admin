@@ -26,8 +26,8 @@ import me.zhengjie.domain.EmailConfig;
 public interface EmailService extends IService<EmailConfig> {
 
     /**
-     * 更新邮件配置
-     * @param emailConfig 邮箱配置
+     * Update email configuration
+     * @param emailConfig Email configuration
      * @param old /
      * @return /
      * @throws Exception /
@@ -35,15 +35,15 @@ public interface EmailService extends IService<EmailConfig> {
     EmailConfig config(EmailConfig emailConfig, EmailConfig old) throws Exception;
 
     /**
-     * 查询配置
-     * @return EmailConfig 邮件配置
+     * Query configuration
+     * @return EmailConfig Email configuration
      */
     EmailConfig find();
 
     /**
-     * 发送邮件
-     * @param emailDto 邮件发送的内容
-     * @param emailConfig 邮件配置
+     * Send email
+     * @param emailDto Email content to send
+     * @param emailConfig Email configuration
      */
     void send(EmailDto emailDto, EmailConfig emailConfig);
 }

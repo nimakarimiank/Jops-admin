@@ -38,39 +38,39 @@ public class SysLog  implements Serializable {
     @TableId(value = "log_id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "操作用户")
+    @ApiModelProperty(value = "Operating user")
     private String username;
 
-    @ApiModelProperty(value = "描述")
+    @ApiModelProperty(value = "Description")
     private String description;
 
-    @ApiModelProperty(value = "方法名")
+    @ApiModelProperty(value = "Method name")
     private String method;
 
-    @ApiModelProperty(value = "参数")
+    @ApiModelProperty(value = "Parameters")
     private String params;
 
-    @ApiModelProperty(value = "日志类型")
+    @ApiModelProperty(value = "Log type")
     private String logType;
 
-    @ApiModelProperty(value = "请求ip")
+    @ApiModelProperty(value = "Request IP")
     private String requestIp;
 
-    @ApiModelProperty(value = "地址")
+    @ApiModelProperty(value = "Address")
     private String address;
 
-    @ApiModelProperty(value = "浏览器")
+    @ApiModelProperty(value = "Browser")
     private String browser;
 
-    @ApiModelProperty(value = "请求耗时")
+    @ApiModelProperty(value = "Response time")
     private Long time;
 
-    @ApiModelProperty(value = "异常详细")
+    @ApiModelProperty(value = "Exception details")
     @JSONField(serialize = false)
     private String exceptionDetail;
 
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建日期：yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "Creation date: yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createTime;
 

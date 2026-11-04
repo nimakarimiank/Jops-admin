@@ -20,7 +20,7 @@ import lombok.Getter;
 
 /**
  * <p>
- * 验证码业务场景
+ * Verification code business scenarios
  * </p>
  * @author Zheng Jie
  * @date 2020-05-02
@@ -29,11 +29,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CodeBiEnum {
 
-    /* 旧邮箱修改邮箱 */
-    ONE(1, "旧邮箱修改邮箱"),
+    /* Modify email via old email */
+    ONE(1, "Modify email via old email"),
 
-    /* 通过邮箱修改密码 */
-    TWO(2, "通过邮箱修改密码");
+    /* Reset password via email */
+    TWO(2, "Reset password via email");
 
     private final Integer code;
     private final String description;

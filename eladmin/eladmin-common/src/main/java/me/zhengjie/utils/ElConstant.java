@@ -16,19 +16,19 @@
 package me.zhengjie.utils;
 
 /**
- * 常用静态常量
+ * Common static constants
  *
  * @author Zheng Jie
  * @date 2018-12-26
  */
 public class ElConstant {
     /**
-     * win 系统
+     * Windows OS
      */
     public static final String WIN = "win";
 
     /**
-     * mac 系统
+     * Mac OS
      */
     public static final String MAC = "mac";
 }

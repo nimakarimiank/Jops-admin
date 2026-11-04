@@ -46,7 +46,7 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
     public EmailConfig config(EmailConfig emailConfig, EmailConfig old) throws Exception {
         emailConfig.setId(1L);
         if(!emailConfig.getPass().equals(old.getPass())){
-            // 对称加密
+            // Symmetric encryption
             emailConfig.setPass(EncryptUtils.desEncrypt(emailConfig.getPass()));
         }
         saveOrUpdate(emailConfig);
@@ -64,31 +64,31 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
     @Transactional(rollbackFor = Exception.class)
     public void send(EmailDto emailDto, EmailConfig emailConfig){
         if(emailConfig.getId() == null){
-            throw new BadRequestException("请先配置，再操作");
+            throw new BadRequestException("Please configure before proceeding");
         }
-        // 封装
+        // Encapsulate
         MailAccount account = new MailAccount();
-        // 设置用户
+        // Set user
         String user = emailConfig.getFromUser().split("@")[0];
         account.setUser(user);
         account.setHost(emailConfig.getHost());
         account.setPort(Integer.parseInt(emailConfig.getPort()));
         account.setAuth(true);
         try {
-            // 对称解密
+            // Symmetric decryption
             account.setPass(EncryptUtils.desDecrypt(emailConfig.getPass()));
         } catch (Exception e) {
             throw new BadRequestException(e.getMessage());
         }
         account.setFrom(emailConfig.getUser()+"<"+emailConfig.getFromUser()+">");
-        // ssl方式发送
+        // Send via SSL
         account.setSslEnable(true);
-        // 使用STARTTLS安全连接
+        // Use STARTTLS secure connection
         account.setStarttlsEnable(true);
-        // 解决jdk8之后默认禁用部分tls协议，导致邮件发送失败的问题
+        // Fix issue where JDK disables certain TLS protocols by default after JDK 8, causing email sending failures
         account.setSslProtocols("TLSv1 TLSv1.1 TLSv1.2");
         String content = emailDto.getContent();
-        // 发送
+        // Send
         try {
             int size = emailDto.getTos().size();
             Mail.create(account)
@@ -96,7 +96,7 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
                     .setTitle(emailDto.getSubject())
                     .setContent(content)
                     .setHtml(true)
-                    //关闭session
+                    // Close session
                     .setUseGlobalSession(false)
                     .send();
         }catch (Exception e){

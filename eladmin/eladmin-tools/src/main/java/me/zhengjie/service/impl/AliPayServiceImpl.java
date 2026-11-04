@@ -61,17 +61,17 @@ public class AliPayServiceImpl extends ServiceImpl<AliPayConfigMapper, AlipayCon
     public String toPayAsPc(AlipayConfig alipay, TradeDto trade) throws Exception {
 
         if(alipay.getId() == null){
-            throw new BadRequestException("请先添加相应配置，再操作");
+            throw new BadRequestException("Please add configuration before proceeding");
         }
         AlipayClient alipayClient = new DefaultAlipayClient(alipay.getGatewayUrl(), alipay.getAppId(), alipay.getPrivateKey(), alipay.getFormat(), alipay.getCharset(), alipay.getPublicKey(), alipay.getSignType());
 
-        // 创建API对应的request(电脑网页版)
+        // Create API corresponding request (PC web version)
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
 
-        // 订单完成后返回的页面和异步通知地址
+        // Return URL after order completion and async notification URL
         request.setReturnUrl(alipay.getReturnUrl());
         request.setNotifyUrl(alipay.getNotifyUrl());
-        // 填充订单参数
+        // Populate order parameters
         request.setBizContent("{" +
                 "    \"out_trade_no\":\""+trade.getOutTradeNo()+"\"," +
                 "    \"product_code\":\"FAST_INSTANT_TRADE_PAY\"," +
@@ -81,8 +81,8 @@ public class AliPayServiceImpl extends ServiceImpl<AliPayConfigMapper, AlipayCon
                 "    \"extend_params\":{" +
                 "    \"sys_service_provider_id\":\""+alipay.getSysServiceProviderId()+"\"" +
                 "    }"+
-                "  }");//填充业务参数
-        // 调用SDK生成表单, 通过GET方式，口可以获取url
+                "  }");// Populate business parameters
+        // Call SDK to generate form; obtain URL via GET method
         return alipayClient.pageExecute(request, "GET").getBody();
 
     }
@@ -90,16 +90,16 @@ public class AliPayServiceImpl extends ServiceImpl<AliPayConfigMapper, AlipayCon
     @Override
     public String toPayAsWeb(AlipayConfig alipay, TradeDto trade) throws Exception {
         if(alipay.getId() == null){
-            throw new BadRequestException("请先添加相应配置，再操作");
+            throw new BadRequestException("Please add configuration before proceeding");
         }
         AlipayClient alipayClient = new DefaultAlipayClient(alipay.getGatewayUrl(), alipay.getAppId(), alipay.getPrivateKey(), alipay.getFormat(), alipay.getCharset(), alipay.getPublicKey(), alipay.getSignType());
 
         double money = Double.parseDouble(trade.getTotalAmount());
         double maxMoney = 5000;
         if(money <= 0 || money >= maxMoney){
-            throw new BadRequestException("测试金额过大");
+            throw new BadRequestException("Test payment amount is too large");
         }
-        // 创建API对应的request(手机网页版)
+        // Create API corresponding request (mobile web version)
         AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
         request.setReturnUrl(alipay.getReturnUrl());
         request.setNotifyUrl(alipay.getNotifyUrl());

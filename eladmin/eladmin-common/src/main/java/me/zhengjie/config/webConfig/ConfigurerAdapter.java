@@ -44,7 +44,7 @@ import java.util.List;
 @EnableWebMvc
 public class ConfigurerAdapter implements WebMvcConfigurer {
 
-    /** 文件配置 */
+    /** File properties */
     private final FileProperties properties;
 
     public ConfigurerAdapter(FileProperties properties) {
@@ -75,15 +75,15 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        // 添加默认的 StringHttpMessageConverter
+        // Add default StringHttpMessageConverter
         converters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        // 配置 FastJsonHttpMessageConverter
+        // Configure FastJsonHttpMessageConverter
         FastJsonHttpMessageConverter fastJsonConverter = new FastJsonHttpMessageConverter();
         List<MediaType> supportMediaTypeList = new ArrayList<>();
         supportMediaTypeList.add(MediaType.APPLICATION_JSON);
         FastJsonConfig config = new FastJsonConfig();
         config.setDateFormat("yyyy-MM-dd HH:mm:ss");
-        // 开启引用检测，枚举支持
+        // Enable reference detection and enum support
         config.setWriterFeatures(
                 JSONWriter.Feature.WriteEnumUsingToString,
                 JSONWriter.Feature.ReferenceDetection
@@ -91,7 +91,7 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
         fastJsonConverter.setFastJsonConfig(config);
         fastJsonConverter.setSupportedMediaTypes(supportMediaTypeList);
         fastJsonConverter.setDefaultCharset(StandardCharsets.UTF_8);
-        // 将 FastJsonHttpMessageConverter 添加到列表末尾
+        // Append FastJsonHttpMessageConverter to the list
         converters.add(fastJsonConverter);
     }
 }

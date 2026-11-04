@@ -21,38 +21,38 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Zheng Jie
- * @description 自定义 p6spy sql输出格式
+ * @description Custom p6spy SQL output formatting
  * @date 2024-12-26
  **/
 @Slf4j
 public class CustomP6SpyLogger implements MessageFormattingStrategy {
 
-    // 重置颜色
+    // Reset color
     private static final String RESET = "\u001B[0m";
-    // 红色
+    // Red
     private static final String RED = "\u001B[31m";
-    // 绿色
+    // Green
     private static final String GREEN = "\u001B[32m";
 
     /**
-     * 格式化 sql
-     * @param connectionId 连接id
-     * @param now 当前时间
-     * @param elapsed 执行时长
-     * @param category sql分类
-     * @param prepared 预编译sql
-     * @param sql 执行sql
-     * @param url 数据库连接url
-     * @return 格式化后的sql
+     * Format SQL
+     * @param connectionId Connection ID
+     * @param now Current timestamp
+     * @param elapsed Execution time
+     * @param category SQL category
+     * @param prepared Prepared SQL statement
+     * @param sql Executed SQL
+     * @param url Database connection URL
+     * @return Formatted SQL
      */
     @Override
     public String formatMessage(int connectionId, String now, long elapsed, String category, String prepared, String sql, String url) {
-        // 去掉换行和多余空格
+        // Remove line breaks and extra whitespace
         if(StrUtil.isNotBlank(sql)){
             sql = sql.replaceAll("\\s+", " ").trim();
         }
 
-        // 格式化并加上颜色
+        // Format and apply ANSI colors
         return String.format(
                 "sql- %s%s%s %s[Time: %dms]%s - %s;",
                 RED, now, RESET, GREEN, elapsed, RESET, sql

@@ -30,12 +30,12 @@ import org.springframework.context.annotation.Configuration;
 public class MybatisPlusConfig {
 
     /**
-     * MyBatisPlus拦截器（用于分页）
+     * MyBatisPlus interceptor (for pagination)
      */
     @Bean
     public MybatisPlusInterceptor paginationInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        //添加MySQL的分页拦截器
+        // Add MySQL pagination interceptor
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
     }

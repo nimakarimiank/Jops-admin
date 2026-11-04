@@ -32,10 +32,10 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        /* 创建时间 */
+        /* Creation time */
         this.strictInsertFill(metaObject, "createTime", Timestamp.class, DateTime.now().toTimestamp());
         this.strictInsertFill(metaObject, "updateTime", Timestamp.class, DateTime.now().toTimestamp());
-        /* 操作人 */
+        /* Operator */
         String username = "System";
         try {username = SecurityUtils.getCurrentUsername();}catch (Exception ignored){}
         this.strictInsertFill(metaObject, "createBy", String.class, username);
@@ -44,9 +44,9 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        /* 更新时间 */
+        /* Update time */
         this.strictUpdateFill(metaObject, "updateTime", Timestamp.class, DateTime.now().toTimestamp());
-        /* 操作人 */
+        /* Operator */
         String username = "System";
         try {username = SecurityUtils.getCurrentUsername();}catch (Exception ignored){}
         this.strictUpdateFill(metaObject, "updateBy", String.class, username);

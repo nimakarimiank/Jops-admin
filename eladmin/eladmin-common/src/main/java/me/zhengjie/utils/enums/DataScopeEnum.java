@@ -20,7 +20,7 @@ import lombok.Getter;
 
 /**
  * <p>
- * 数据权限枚举
+ * Data scope enum
  * </p>
  * @author Zheng Jie
  * @date 2020-05-07
@@ -29,21 +29,24 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DataScopeEnum {
 
-    /* 全部的数据权限 */
-    ALL("全部", "全部的数据权限"),
+    /* All data permissions */
+    ALL("All", "All data permissions"),
 
-    /* 自己部门的数据权限 */
-    THIS_LEVEL("本级", "自己部门的数据权限"),
+    /* Department data permissions */
+    THIS_LEVEL("This level", "Department data permissions"),
 
-    /* 自定义的数据权限 */
-    CUSTOMIZE("自定义", "自定义的数据权限");
+    /* Custom data permissions */
+    CUSTOMIZE("Custom", "Custom data permissions");
 
     private final String value;
     private final String description;
 
     public static DataScopeEnum find(String val) {
+        if (val == null) {
+            return null;
+        }
         for (DataScopeEnum dataScopeEnum : DataScopeEnum.values()) {
-            if (dataScopeEnum.getValue().equals(val)) {
+            if (dataScopeEnum.getValue().equalsIgnoreCase(val) || dataScopeEnum.name().equalsIgnoreCase(val)) {
                 return dataScopeEnum;
             }
         }

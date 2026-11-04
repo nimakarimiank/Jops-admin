@@ -11,7 +11,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 /**
  * @author <a href="https://www.cnblogs.com/nihaorz/p/10690643.html">...</a>
- * @description Rsa 工具类，公钥私钥生成，加解密
+ * @description RSA utility class, key pair generation, encryption and decryption
  * @date 2020-05-18
  **/
 public class RsaUtils {
@@ -21,8 +21,8 @@ public class RsaUtils {
     public static void main(String[] args) throws Exception {
         System.out.println("\n");
         RsaKeyPair keyPair = generateKeyPair();
-        System.out.println("公钥：" + keyPair.getPublicKey());
-        System.out.println("私钥：" + keyPair.getPrivateKey());
+        System.out.println("Public key: " + keyPair.getPublicKey());
+        System.out.println("Private key: " + keyPair.getPrivateKey());
         System.out.println("\n");
         test1(keyPair);
         System.out.println("\n");
@@ -31,47 +31,47 @@ public class RsaUtils {
     }
 
     /**
-     * 公钥加密私钥解密
+     * Public key encrypt, private key decrypt
      */
     private static void test1(RsaKeyPair keyPair) throws Exception {
-        System.out.println("***************** 公钥加密私钥解密开始 *****************");
+        System.out.println("***************** Public key encrypt, private key decrypt start *****************");
         String text1 = encryptByPublicKey(keyPair.getPublicKey(), RsaUtils.SRC);
         String text2 = decryptByPrivateKey(keyPair.getPrivateKey(), text1);
-        System.out.println("加密前：" + RsaUtils.SRC);
-        System.out.println("加密后：" + text1);
-        System.out.println("解密后：" + text2);
+        System.out.println("Before encryption: " + RsaUtils.SRC);
+        System.out.println("After encryption: " + text1);
+        System.out.println("After decryption: " + text2);
         if (RsaUtils.SRC.equals(text2)) {
-            System.out.println("解密字符串和原始字符串一致，解密成功");
+            System.out.println("Decrypted string matches original string, decryption successful");
         } else {
-            System.out.println("解密字符串和原始字符串不一致，解密失败");
+            System.out.println("Decrypted string does not match original string, decryption failed");
         }
-        System.out.println("***************** 公钥加密私钥解密结束 *****************");
+        System.out.println("***************** Public key encrypt, private key decrypt end *****************");
     }
 
     /**
-     * 私钥加密公钥解密
+     * Private key encrypt, public key decrypt
      * @throws Exception /
      */
     private static void test2(RsaKeyPair keyPair) throws Exception {
-        System.out.println("***************** 私钥加密公钥解密开始 *****************");
+        System.out.println("***************** Private key encrypt, public key decrypt start *****************");
         String text1 = encryptByPrivateKey(keyPair.getPrivateKey(), RsaUtils.SRC);
         String text2 = decryptByPublicKey(keyPair.getPublicKey(), text1);
-        System.out.println("加密前：" + RsaUtils.SRC);
-        System.out.println("加密后：" + text1);
-        System.out.println("解密后：" + text2);
+        System.out.println("Before encryption: " + RsaUtils.SRC);
+        System.out.println("After encryption: " + text1);
+        System.out.println("After decryption: " + text2);
         if (RsaUtils.SRC.equals(text2)) {
-            System.out.println("解密字符串和原始字符串一致，解密成功");
+            System.out.println("Decrypted string matches original string, decryption successful");
         } else {
-            System.out.println("解密字符串和原始字符串不一致，解密失败");
+            System.out.println("Decrypted string does not match original string, decryption failed");
         }
-        System.out.println("***************** 私钥加密公钥解密结束 *****************");
+        System.out.println("***************** Private key encrypt, public key decrypt end *****************");
     }
 
     /**
-     * 公钥解密
+     * Public key decrypt
      *
-     * @param publicKeyText 公钥
-     * @param text 待解密的信息
+     * @param publicKeyText Public key
+     * @param text Message to decrypt
      * @return /
      * @throws Exception /
      */
@@ -86,10 +86,10 @@ public class RsaUtils {
     }
 
     /**
-     * 私钥加密
+     * Private key encrypt
      *
-     * @param privateKeyText 私钥
-     * @param text 待加密的信息
+     * @param privateKeyText Private key
+     * @param text Message to encrypt
      * @return /
      * @throws Exception /
      */
@@ -104,10 +104,10 @@ public class RsaUtils {
     }
 
     /**
-     * 私钥解密
+     * Private key decrypt
      *
-     * @param privateKeyText 私钥
-     * @param text 待解密的文本
+     * @param privateKeyText Private key
+     * @param text Text to decrypt
      * @return /
      * @throws Exception /
      */
@@ -122,10 +122,10 @@ public class RsaUtils {
     }
 
     /**
-     * 公钥加密
+     * Public key encrypt
      *
-     * @param publicKeyText 公钥
-     * @param text 待加密的文本
+     * @param publicKeyText Public key
+     * @param text Text to encrypt
      * @return /
      */
     public static String encryptByPublicKey(String publicKeyText, String text) throws Exception {
@@ -156,7 +156,7 @@ public class RsaUtils {
     }
 
     /**
-     * 构建RSA密钥对
+     * Build RSA key pair
      *
      * @return /
      * @throws NoSuchAlgorithmException /
@@ -174,7 +174,7 @@ public class RsaUtils {
 
 
     /**
-     * RSA密钥对对象
+     * RSA key pair object
      */
     public static class RsaKeyPair {
 

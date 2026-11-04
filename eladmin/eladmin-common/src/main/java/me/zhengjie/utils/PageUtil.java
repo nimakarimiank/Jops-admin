@@ -19,14 +19,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.util.*;
 
 /**
- * 分页工具
+ * Pagination utilities
  * @author Zheng Jie
  * @date 2018-12-10
  */
 public class PageUtil extends cn.hutool.core.util.PageUtil {
 
     /**
-     * List 分页
+     * List pagination
      */
     public static <T> List<T> paging(int page, int size , List<T> list) {
         int fromIndex = page * size;
@@ -41,28 +41,28 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
     }
 
     /**
-     * Page 数据处理
+     * Page data processing
      */
     public static <T> PageResult<T> toPage(IPage<T> page) {
         return new PageResult<>(page.getRecords(), page.getTotal());
     }
 
     /**
-     * 自定义分页
+     * Custom pagination
      */
     public static <T> PageResult<T> toPage(List<T> list) {
         return new PageResult<>(list, list.size());
     }
 
     /**
-     * 返回空数据
+     * Return empty pagination result
      */
     public static <T> PageResult<T> noData () {
         return new PageResult<>(null, 0);
     }
 
     /**
-     * 自定义分页
+     * Custom pagination
      */
     public static <T> PageResult<T> toPage(List<T> list, long totalElements) {
         return new PageResult<>(list, totalElements);

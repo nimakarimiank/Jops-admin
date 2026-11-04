@@ -50,7 +50,7 @@ import java.util.*;
 public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> implements SysLogService {
 
     private final SysLogMapper sysLogMapper;
-    // 定义敏感字段常量数组
+    // Define sensitive field constant array
     private static final String[] SENSITIVE_KEYS = {"password"};
 
     @Override
@@ -73,21 +73,21 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
     @Transactional(rollbackFor = Exception.class)
     public void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, SysLog sysLog) {
         if (sysLog == null) {
-            throw new IllegalArgumentException("Log 不能为 null!");
+            throw new IllegalArgumentException("Log cannot be null!");
         }
 
-        // 获取方法签名
+        // Get method signature
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         me.zhengjie.annotation.Log aopLog = method.getAnnotation(me.zhengjie.annotation.Log.class);
 
-        // 方法路径
+        // Method path
         String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
 
-        // 获取参数
+        // Get parameters
         JSONObject params = getParameter(method, joinPoint.getArgs());
 
-        // 填充基本信息
+        // Populate basic information
         sysLog.setRequestIp(ip);
         sysLog.setAddress(StringUtils.getCityInfo(sysLog.getRequestIp()));
         sysLog.setMethod(methodName);
@@ -96,35 +96,35 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
         sysLog.setBrowser(browser);
         sysLog.setDescription(aopLog.value());
 
-        // 如果没有获取到用户名，尝试从参数中获取
+        // If username was not retrieved, attempt to get it from parameters
         if(StringUtils.isBlank(sysLog.getUsername())){
             sysLog.setUsername(params.getString("username"));
         }
 
-        // 保存
+        // Save
         save(sysLog);
     }
 
     /**
-     * 根据方法和传入的参数获取请求参数
+     * Get request parameters based on method and passed arguments
      */
     private JSONObject getParameter(Method method, Object[] args) {
         JSONObject params = new JSONObject();
         Parameter[] parameters = method.getParameters();
         for (int i = 0; i < parameters.length; i++) {
-            // 过滤掉 MultiPartFile
+            // Filter out MultipartFile
             if (args[i] instanceof MultipartFile) {
                 continue;
             }
-            // 过滤掉 HttpServletResponse
+            // Filter out HttpServletResponse
             if (args[i] instanceof HttpServletResponse) {
                 continue;
             }
-            // 过滤掉 HttpServletRequest
+            // Filter out HttpServletRequest
             if (args[i] instanceof HttpServletRequest) {
                 continue;
             }
-            // 将RequestBody注解修饰的参数作为请求参数
+            // Use parameter annotated with @RequestBody as request parameter
             RequestBody requestBody = parameters[i].getAnnotation(RequestBody.class);
             if (requestBody != null) {
                 Object json = JSON.toJSON(args[i]);
@@ -138,14 +138,14 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
                 params.put(key, args[i]);
             }
         }
-        // 遍历敏感字段数组并替换值
+        // Iterate through sensitive field array and mask values
         Set<String> keys = params.keySet();
         for (String key : SENSITIVE_KEYS) {
             if (keys.contains(key)) {
                 params.put(key, "******");
             }
         }
-        // 返回参数
+        // Return parameters
         return params;
     }
 
@@ -160,14 +160,14 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
         List<Map<String, Object>> list = new ArrayList<>();
         for (SysLog sysLog : sysLogs) {
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("用户名", sysLog.getUsername());
+            map.put("Username", sysLog.getUsername());
             map.put("IP", sysLog.getRequestIp());
-            map.put("IP来源", sysLog.getAddress());
-            map.put("描述", sysLog.getDescription());
-            map.put("浏览器", sysLog.getBrowser());
-            map.put("请求耗时/毫秒", sysLog.getTime());
-            map.put("异常详情", sysLog.getExceptionDetail());
-            map.put("创建日期", sysLog.getCreateTime());
+            map.put("IP Source", sysLog.getAddress());
+            map.put("Description", sysLog.getDescription());
+            map.put("Browser", sysLog.getBrowser());
+            map.put("Response Time (ms)", sysLog.getTime());
+            map.put("Exception Details", sysLog.getExceptionDetail());
+            map.put("Creation Date", sysLog.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
@@ -176,14 +176,14 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delAllByError() {
-        // 删除 ERROR 级别的日志
+        // Delete ERROR level logs
         sysLogMapper.deleteByLevel("ERROR");
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delAllByInfo() {
-        // 删除 INFO 级别的日志
+        // Delete INFO level logs
         sysLogMapper.deleteByLevel("INFO");
     }
 }

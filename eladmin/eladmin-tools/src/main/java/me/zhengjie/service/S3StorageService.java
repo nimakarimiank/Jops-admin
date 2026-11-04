@@ -27,51 +27,51 @@ import me.zhengjie.utils.PageResult;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
-* @description 服务接口
+* @description Service interface
 * @author Zheng Jie
 * @date 2025-06-19
 **/
 public interface S3StorageService extends IService<S3Storage> {
 
     /**
-    * 查询数据分页
-    * @param criteria 条件
-    * @param page 分页参数
+    * Paginated query
+    * @param criteria Criteria
+    * @param page Pagination parameters
     * @return PageResult
     */
     PageResult<S3Storage> queryAll(S3StorageQueryCriteria criteria, Page<Object> page);
 
     /**
-    * 查询所有数据不分页
-    * @param criteria 条件参数
+    * Query all data unpaged
+    * @param criteria Criteria parameters
     * @return List<S3StorageDto>
     */
     List<S3Storage> queryAll(S3StorageQueryCriteria criteria);
 
     /**
-    * 多选删除
+    * Batch delete
     * @param ids /
     */
     void deleteAll(List<Long> ids);
 
     /**
-    * 导出数据
-    * @param all 待导出的数据
+    * Export data
+    * @param all Data to export
     * @param response /
     * @throws IOException /
     */
     void download(List<S3Storage> all, HttpServletResponse response) throws IOException;
 
     /**
-     * 私有化下载，仅供参考，还有许多方式
-     * @param id 文件ID
+     * Private download (for reference only; multiple methods exist)
+     * @param id File ID
      */
     Map<String, String> privateDownload(Long id);
 
     /**
-     * 上传文件
-     * @param file 上传的文件
-     * @return S3Storage 对象，包含文件存储信息
+     * Upload file
+     * @param file File to upload
+     * @return S3Storage object containing file storage information
      */
     S3Storage upload(MultipartFile file);
 }
