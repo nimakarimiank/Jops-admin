@@ -22,18 +22,18 @@ import java.util.List;
 
 /**
  * @author Zheng Jie
- * 公共查询类
+ * Common query criteria class
  */
 @Data
 public class MenuQueryCriteria {
 
-    @ApiModelProperty(value = "模糊查询")
+    @ApiModelProperty(value = "Fuzzy query")
     private String blurry;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "Create time")
     private List<Timestamp> createTime;
 
-    @ApiModelProperty(value = "PID为空查询")
+    @ApiModelProperty(value = "Query where PID is null")
     private Boolean pidIsNull;
 
     @ApiModelProperty(value = "PID")

@@ -1,26 +1,26 @@
 <template>
   <el-tabs v-model="activeName" style="padding-left: 5px;">
-    <el-tab-pane label="参数配置" name="first">
+    <el-tab-pane label="Configuration" name="first">
       <Config />
     </el-tab-pane>
-    <el-tab-pane label="支付测试" name="second">
+    <el-tab-pane label="Payment Test" name="second">
       <ToPay />
     </el-tab-pane>
-    <el-tab-pane label="使用说明" name="third">
+    <el-tab-pane label="Instructions" name="third">
       <div>
-        <blockquote class="my-blockquote">注意</blockquote>
+        <blockquote class="my-blockquote">Notice</blockquote>
         <pre class="my-code">
-测试所用参数都是沙箱环境，仅供测试使用，申请地址：<a style="color: #00a0e9" href="https://openhome.alipay.com/platform/appDaily.htm?tab=info" target="_blank">支付宝开发平台</a>
-如需付款测试，请使用
-账号：uuxesw9745@sandbox.com
-密码与支付密码：111111</pre>
-        <blockquote class="my-blockquote"> 支付设置</blockquote>
+Parameters used for testing are sandbox environment, for testing only. Application URL: <a style="color: #00a0e9" href="https://openhome.alipay.com/platform/appDaily.htm?tab=info" target="_blank">Alipay Open Platform</a>
+For payment testing, please use:
+Account: uuxesw9745@sandbox.com
+Password and payment password: 111111</pre>
+        <blockquote class="my-blockquote"> Payment Settings</blockquote>
         <pre class="my-code">
-// 支付提供两个接口，
-// PC端与手机端，并且在前端使用代码识别
-if (/(Android)/i.test(navigator.userAgent)){     // 判断是否为Android手机
+// Payment provides two interfaces,
+// PC and Mobile, identified by code on frontend
+if (/(Android)/i.test(navigator.userAgent)){     // Determine whether it is an Android phone
     url = "/aliPay/toPayAsWeb"
-}else if(/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)){  // 判断是否为苹果手机
+}else if(/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)){  // Determine whether it is an Apple phone
     url = "/aliPay/toPayAsWeb"
 } else {
     url = "/aliPay/toPayAsPC"

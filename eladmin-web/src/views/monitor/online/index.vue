@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
-        <el-input v-model="query.username" clearable size="small" placeholder="输入用户名称查询" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <el-input v-model="query.username" clearable size="small" placeholder="Enter username to search" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <rrOperation />
       </div>
       <crudOperation>
@@ -16,23 +16,23 @@
           :disabled="crud.selections.length === 0"
           @click="doDelete(crud.selections)"
         >
-          强退
+          Force Logout
         </el-button>
       </crudOperation>
     </div>
-    <!--表格渲染-->
+    <!-- Table rendering -->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
 
-      <el-table-column :show-overflow-tooltip="true" prop="uid" label="会话编号" />
-      <el-table-column prop="userName" label="用户名" />
-      <el-table-column prop="nickName" label="用户昵称" />
-      <el-table-column prop="dept" label="部门" />
-      <el-table-column prop="ip" label="登录IP" />
-      <el-table-column :show-overflow-tooltip="true" prop="address" label="登录地点" />
-      <el-table-column prop="browser" label="浏览器" />
-      <el-table-column prop="loginTime" label="登录时间" />
-      <el-table-column label="操作" width="70px" fixed="right">
+      <el-table-column :show-overflow-tooltip="true" prop="uid" label="Session ID" />
+      <el-table-column prop="userName" label="Username" />
+      <el-table-column prop="nickName" label="User Nickname" />
+      <el-table-column prop="dept" label="Department" />
+      <el-table-column prop="ip" label="Login IP" />
+      <el-table-column :show-overflow-tooltip="true" prop="address" label="Login Location" />
+      <el-table-column prop="browser" label="Browser" />
+      <el-table-column prop="loginTime" label="Login Time" />
+      <el-table-column label="Actions" width="70px" fixed="right">
         <template slot-scope="scope">
           <el-popover
             :ref="scope.$index"
@@ -40,17 +40,17 @@
             placement="top"
             width="180"
           >
-            <p>确定强制退出该用户吗？</p>
+            <p>Are you sure you want to force logout this user?</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="$refs[scope.$index].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.key, scope.$index)">确定</el-button>
+              <el-button size="mini" type="text" @click="$refs[scope.$index].doClose()">Cancel</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.key, scope.$index)">Confirm</el-button>
             </div>
-            <el-button slot="reference" size="mini" type="text">强退</el-button>
+            <el-button slot="reference" size="mini" type="text">Force Logout</el-button>
           </el-popover>
         </template>
       </el-table-column>
     </el-table>
-    <!--分页组件-->
+    <!-- Pagination component -->
     <pagination />
   </div>
 </template>
@@ -66,7 +66,7 @@ export default {
   name: 'OnlineUser',
   components: { pagination, crudOperation, rrOperation },
   cruds() {
-    return CRUD({ url: 'auth/online', title: '在线用户' })
+    return CRUD({ url: 'auth/online', title: 'Online Users' })
   },
   mixins: [presenter(), header(), crud()],
   data() {
@@ -76,7 +76,7 @@ export default {
     }
   },
   created() {
-    this.crud.msg.del = '强退成功！'
+    this.crud.msg.del = 'Force logout succeeded!'
     this.crud.optShow = {
       add: false,
       edit: false,
@@ -86,15 +86,15 @@ export default {
   },
   methods: {
     doDelete(datas) {
-      this.$confirm(`确认强退选中的${datas.length}个用户?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(`Confirm force logout of selected ${datas.length} users?`, 'Hint', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         this.delMethod(datas)
       }).catch(() => {})
     },
-    // 踢出用户
+    // Kick out user
     delMethod(key, index) {
       const ids = []
       if (key instanceof Array) {

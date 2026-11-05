@@ -92,10 +92,10 @@ public class DatabaseServiceImpl extends ServiceImpl<DatabaseMapper, Database> i
         List<Map<String, Object>> list = new ArrayList<>();
         for (Database database : databases) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("数据库名称", database.getName());
-            map.put("数据库连接地址", database.getJdbcUrl());
-            map.put("用户名", database.getUserName());
-            map.put("创建日期", database.getCreateTime());
+            map.put("Database Name", database.getName());
+            map.put("Database Connection URL", database.getJdbcUrl());
+            map.put("Username", database.getUserName());
+            map.put("Creation Date", database.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);

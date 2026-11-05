@@ -41,28 +41,28 @@ import java.util.Set;
 */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "系统：字典管理")
+@Api(tags = "System: Dictionary Management")
 @RequestMapping("/api/dict")
 public class DictController {
 
     private final DictService dictService;
     private static final String ENTITY_NAME = "dict";
 
-    @ApiOperation("导出字典数据")
+    @ApiOperation("Export dictionary data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dict:list')")
     public void exportDict(HttpServletResponse response, DictQueryCriteria criteria) throws IOException {
         dictService.download(dictService.queryAll(criteria), response);
     }
 
-    @ApiOperation("查询字典")
+    @ApiOperation("Query dictionaries")
     @GetMapping(value = "/all")
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<List<Dict>> queryAllDict(){
         return new ResponseEntity<>(dictService.queryAll(new DictQueryCriteria()),HttpStatus.OK);
     }
 
-    @ApiOperation("查询字典")
+    @ApiOperation("Query dictionaries")
     @GetMapping
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<PageResult<Dict>> queryDict(DictQueryCriteria criteria){
@@ -70,8 +70,8 @@ public class DictController {
         return new ResponseEntity<>(dictService.queryAll(criteria, page),HttpStatus.OK);
     }
 
-    @Log("新增字典")
-    @ApiOperation("新增字典")
+    @Log("Create dictionary")
+    @ApiOperation("Create dictionary")
     @PostMapping
     @PreAuthorize("@el.check('dict:add')")
     public ResponseEntity<Object> createDict(@Validated @RequestBody Dict resources){
@@ -82,8 +82,8 @@ public class DictController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Log("修改字典")
-    @ApiOperation("修改字典")
+    @Log("Update dictionary")
+    @ApiOperation("Update dictionary")
     @PutMapping
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Object> updateDict(@Validated(Dict.Update.class) @RequestBody Dict resources){
@@ -91,8 +91,8 @@ public class DictController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除字典")
-    @ApiOperation("删除字典")
+    @Log("Delete dictionary")
+    @ApiOperation("Delete dictionary")
     @DeleteMapping
     @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity<Object> deleteDict(@RequestBody Set<Long> ids){

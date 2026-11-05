@@ -51,7 +51,7 @@ export default {
 
       this.chart.setOption({
         title: {
-          text: 'Graph 简单示例'
+          text: 'Graph Simple Example'
         },
         tooltip: {},
         animationDurationUpdate: 1500,
@@ -77,19 +77,19 @@ export default {
               }
             },
             data: [{
-              name: '节点1',
+              name: 'Node 1',
               x: 100,
               y: 300
             }, {
-              name: '节点2',
+              name: 'Node 2',
               x: 1000,
               y: 300
             }, {
-              name: '节点3',
+              name: 'Node 3',
               x: 550,
               y: 100
             }, {
-              name: '节点4',
+              name: 'Node 4',
               x: 550,
               y: 500
             }],
@@ -110,8 +110,8 @@ export default {
                 }
               }
             }, {
-              source: '节点2',
-              target: '节点1',
+              source: 'Node 2',
+              target: 'Node 1',
               label: {
                 normal: {
                   show: true
@@ -121,17 +121,17 @@ export default {
                 normal: { curveness: 0.2 }
               }
             }, {
-              source: '节点1',
-              target: '节点3'
+              source: 'Node 1',
+              target: 'Node 3'
             }, {
-              source: '节点2',
-              target: '节点3'
+              source: 'Node 2',
+              target: 'Node 3'
             }, {
-              source: '节点2',
-              target: '节点4'
+              source: 'Node 2',
+              target: 'Node 4'
             }, {
-              source: '节点1',
-              target: '节点4'
+              source: 'Node 1',
+              target: 'Node 4'
             }],
             lineStyle: {
               normal: {

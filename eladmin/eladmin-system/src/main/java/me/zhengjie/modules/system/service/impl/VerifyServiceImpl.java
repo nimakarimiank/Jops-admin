@@ -49,22 +49,22 @@ public class VerifyServiceImpl implements VerifyService {
         EmailDto emailDto;
         String content;
         String redisKey = key + email;
-        // 如果不存在有效的验证码，就创建一个新的
+        // If valid verification code does not exist, create a new one
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         Template template = engine.getTemplate("email.ftl");
         String oldCode =  redisUtils.get(redisKey, String.class);
         if(oldCode == null){
             String code = RandomUtil.randomNumbers (6);
-            // 存入缓存
+            // Save to cache
             if(!redisUtils.set(redisKey, code, expiration)){
-                throw new BadRequestException("服务异常，请联系网站负责人");
+                throw new BadRequestException("Service exception, please contact the website administrator");
             }
             content = template.render(Dict.create().set("code",code));
-            // 存在就再次发送原来的验证码
+            // If exists, resend original verification code
         } else {
             content = template.render(Dict.create().set("code",oldCode));
         }
-        emailDto = new EmailDto(Collections.singletonList(email),"ELADMIN后台管理系统",content);
+        emailDto = new EmailDto(Collections.singletonList(email),"ELADMIN Management System",content);
         return emailDto;
     }
 
@@ -72,7 +72,7 @@ public class VerifyServiceImpl implements VerifyService {
     public void validated(String key, String code) {
         String value = redisUtils.get(key, String.class);
         if(value == null || !value.equals(code)){
-            throw new BadRequestException("无效验证码");
+            throw new BadRequestException("Invalid verification code");
         } else {
             redisUtils.del(key);
         }

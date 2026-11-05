@@ -27,21 +27,21 @@ import java.util.List;
 @Data
 public class DeptQueryCriteria{
 
-    @ApiModelProperty(value = "部门id集合")
+    @ApiModelProperty(value = "Department ID collection")
     private List<Long> ids;
 
-    @ApiModelProperty(value = "部门名称")
+    @ApiModelProperty(value = "Department name")
     private String name;
 
-    @ApiModelProperty(value = "是否启用")
+    @ApiModelProperty(value = "Is enabled")
     private Boolean enabled;
 
-    @ApiModelProperty(value = "上级部门")
+    @ApiModelProperty(value = "Parent department")
     private Long pid;
 
-    @ApiModelProperty(value = "PID为空查询")
+    @ApiModelProperty(value = "Query where PID is null")
     private Boolean pidIsNull;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "Create time")
     private List<Timestamp> createTime;
 }

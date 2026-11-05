@@ -28,18 +28,18 @@ import java.util.List;
 @Data
 public class DeployQueryCriteria{
 
-    @ApiModelProperty(value = "应用名称")
+    @ApiModelProperty(value = "Application name")
     private String appName;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "Creation time")
     private List<Timestamp> createTime;
 
-    @ApiModelProperty(value = "页码", example = "1")
+    @ApiModelProperty(value = "Page number", example = "1")
     private Integer page = 1;
 
-    @ApiModelProperty(value = "每页数据量", example = "10")
+    @ApiModelProperty(value = "Page size", example = "10")
     private Integer size = 10;
 
-    @ApiModelProperty(value = "查询分页偏移量", hidden = true)
+    @ApiModelProperty(value = "Query page offset", hidden = true)
     private Long offset;
 }

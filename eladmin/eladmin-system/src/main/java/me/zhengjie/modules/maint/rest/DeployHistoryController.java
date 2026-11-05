@@ -39,20 +39,20 @@ import java.util.Set;
 */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "运维：部署历史管理")
+@Api(tags = "Operation: Deployment History Management")
 @RequestMapping("/api/deployHistory")
 public class DeployHistoryController {
 
     private final DeployHistoryService deployhistoryService;
 
-    @ApiOperation("导出部署历史数据")
+    @ApiOperation("Export deployment history data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('deployHistory:list')")
     public void exportDeployHistory(HttpServletResponse response, DeployHistoryQueryCriteria criteria) throws IOException {
         deployhistoryService.download(deployhistoryService.queryAll(criteria), response);
     }
 
-    @ApiOperation(value = "查询部署历史")
+    @ApiOperation(value = "Query deployment history")
     @GetMapping
     @PreAuthorize("@el.check('deployHistory:list')")
     public ResponseEntity<PageResult<DeployHistory>> queryDeployHistory(DeployHistoryQueryCriteria criteria){
@@ -60,8 +60,8 @@ public class DeployHistoryController {
         return new ResponseEntity<>(deployhistoryService.queryAll(criteria, page),HttpStatus.OK);
     }
 
-    @Log("删除DeployHistory")
-    @ApiOperation(value = "删除部署历史")
+    @Log("Delete deployment history")
+    @ApiOperation(value = "Delete deployment history")
     @DeleteMapping
     @PreAuthorize("@el.check('deployHistory:del')")
     public ResponseEntity<Object> deleteDeployHistory(@RequestBody Set<String> ids){

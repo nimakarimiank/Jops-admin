@@ -1,24 +1,24 @@
-// 适配 Nginx 反向代理
+// Adapt to Nginx reverse proxy
 const baseUrl = process.env.VUE_APP_BASE_API === '/' ? '' : process.env.VUE_APP_BASE_API
 const api = {
   state: {
-    // 部署包上传
+    // Deployment package upload
     deployUploadApi: baseUrl + '/api/deploy/upload',
-    // SQL脚本上传
+    // SQL script upload
     databaseUploadApi: baseUrl + '/api/database/upload',
-    // 图片上传
+    // Image upload
     imagesUploadApi: baseUrl + '/api/localStorage/pictures',
-    // 修改头像
+    // Update avatar
     updateAvatarApi: baseUrl + '/api/users/updateAvatar',
-    // 上传文件到七牛云
+    // Upload file to cloud storage
     s3UploadApi: baseUrl + '/api/s3Storage',
-    // Sql 监控
+    // Sql monitor
     sqlApi: baseUrl + '/druid/index.html',
     // swagger
     swaggerApi: baseUrl + '/doc.html',
-    // 文件上传
+    // File upload
     fileUploadApi: baseUrl + '/api/localStorage',
-    // baseUrl，
+    // baseUrl
     baseApi: baseUrl
   }
 }

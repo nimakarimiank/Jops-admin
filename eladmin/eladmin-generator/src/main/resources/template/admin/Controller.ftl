@@ -44,7 +44,7 @@ public class ${className}Controller {
 
     private final ${className}Service ${changeClassName}Service;
 
-    @ApiOperation("导出数据")
+    @ApiOperation("Export data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('${changeClassName}:list')")
     public void export${className}(HttpServletResponse response, ${className}QueryCriteria criteria) throws IOException {
@@ -52,7 +52,7 @@ public class ${className}Controller {
     }
 
     @GetMapping
-    @ApiOperation("查询${apiAlias}")
+    @ApiOperation("Query ${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:list')")
     public ResponseEntity<PageResult<${className}>> query${className}(${className}QueryCriteria criteria){
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
@@ -60,8 +60,8 @@ public class ${className}Controller {
     }
 
     @PostMapping
-    @Log("新增${apiAlias}")
-    @ApiOperation("新增${apiAlias}")
+    @Log("Create ${apiAlias}")
+    @ApiOperation("Create ${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:add')")
     public ResponseEntity<Object> create${className}(@Validated @RequestBody ${className} resources){
         ${changeClassName}Service.create(resources);
@@ -69,8 +69,8 @@ public class ${className}Controller {
     }
 
     @PutMapping
-    @Log("修改${apiAlias}")
-    @ApiOperation("修改${apiAlias}")
+    @Log("Update ${apiAlias}")
+    @ApiOperation("Update ${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:edit')")
     public ResponseEntity<Object> update${className}(@Validated @RequestBody ${className} resources){
         ${changeClassName}Service.update(resources);
@@ -78,10 +78,10 @@ public class ${className}Controller {
     }
 
     @DeleteMapping
-    @Log("删除${apiAlias}")
-    @ApiOperation("删除${apiAlias}")
+    @Log("Delete ${apiAlias}")
+    @ApiOperation("Delete ${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:del')")
-    public ResponseEntity<Object> delete${className}(@ApiParam(value = "传ID数组[]") @RequestBody List<${pkColumnType}> ids) {
+    public ResponseEntity<Object> delete${className}(@ApiParam(value = "Pass ID array []") @RequestBody List<${pkColumnType}> ids) {
         ${changeClassName}Service.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

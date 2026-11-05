@@ -1,25 +1,25 @@
 <template>
   <div class="app-container">
-    <!--工具栏-->
+    <!-- Toolbar -->
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
-        <!-- 搜索 -->
-        <el-input v-model="query.name" clearable size="small" placeholder="输入部门名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <!-- Search -->
+        <el-input v-model="query.name" clearable size="small" placeholder="Enter department name to search" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <date-range-picker v-model="query.createTime" class="date-item" />
-        <el-select v-model="query.enabled" clearable size="small" placeholder="状态" class="filter-item" style="width: 90px" @change="crud.toQuery">
+        <el-select v-model="query.enabled" clearable size="small" placeholder="Status" class="filter-item" style="width: 90px" @change="crud.toQuery">
           <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
         </el-select>
         <rrOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>
-    <!--表单组件-->
+    <!-- Form component -->
     <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
       <el-form ref="form" inline :model="form" :rules="rules" size="small" label-width="80px">
-        <el-form-item label="部门名称" prop="name">
+        <el-form-item label="Department Name" prop="name">
           <el-input v-model="form.name" style="width: 370px;" />
         </el-form-item>
-        <el-form-item label="部门排序" prop="deptSort">
+        <el-form-item label="Department Sort" prop="deptSort">
           <el-input-number
             v-model.number="form.deptSort"
             :min="0"
@@ -28,31 +28,31 @@
             style="width: 370px;"
           />
         </el-form-item>
-        <el-form-item label="顶级部门">
+        <el-form-item label="Top Department">
           <el-radio-group v-model="form.isTop" style="width: 140px">
-            <el-radio label="1">是</el-radio>
-            <el-radio label="0">否</el-radio>
+            <el-radio label="1">Yes</el-radio>
+            <el-radio label="0">No</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="状态" prop="enabled">
+        <el-form-item label="Status" prop="enabled">
           <el-radio v-for="item in dict.dept_status" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
         </el-form-item>
-        <el-form-item v-if="form.isTop === '0'" style="margin-bottom: 0;" label="上级部门" prop="pid">
+        <el-form-item v-if="form.isTop === '0'" style="margin-bottom: 0;" label="Parent Department" prop="pid">
           <treeselect
             v-model="form.pid"
             :load-options="loadDepts"
             :options="depts"
             style="width: 370px;"
-            placeholder="选择上级类目"
+            placeholder="Select parent category"
           />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="crud.cancelCU">取消</el-button>
-        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+        <el-button type="text" @click="crud.cancelCU">Cancel</el-button>
+        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">Confirm</el-button>
       </div>
     </el-dialog>
-    <!--表格渲染-->
+    <!-- Table rendering -->
     <el-table
       ref="table"
       v-loading="crud.loading"
@@ -66,9 +66,9 @@
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column :selectable="checkboxT" type="selection" width="55" />
-      <el-table-column label="名称" prop="name" />
-      <el-table-column label="排序" prop="deptSort" />
-      <el-table-column label="状态" align="center" prop="enabled">
+      <el-table-column label="Name" prop="name" />
+      <el-table-column label="Sort" prop="deptSort" />
+      <el-table-column label="Status" align="center" prop="enabled">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.enabled"
@@ -79,14 +79,14 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建日期" />
-      <el-table-column v-if="checkPer(['admin','dept:edit','dept:del'])" label="操作" width="130px" align="center" fixed="right">
+      <el-table-column prop="createTime" label="Created Date" />
+      <el-table-column v-if="checkPer(['admin','dept:edit','dept:del'])" label="Actions" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <udOperation
             :data="scope.row"
             :permission="permission"
             :disabled-dle="scope.row.id === 1"
-            msg="确定删除吗,如果存在下级节点则一并删除，此操作不能撤销！"
+            msg="Are you sure you want to delete this? Sub-nodes will also be deleted, this operation cannot be undone!"
           />
         </template>
       </el-table-column>
@@ -110,20 +110,20 @@ export default {
   name: 'Dept',
   components: { Treeselect, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '部门', url: 'api/dept', crudMethod: { ...crudDept }})
+    return CRUD({ title: 'Department', url: 'api/dept', crudMethod: { ...crudDept }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
-  // 设置数据字典
+  // Set data dictionary
   dicts: ['dept_status'],
   data() {
     return {
       depts: [],
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+          { required: true, message: 'Please enter a name', trigger: 'blur' }
         ],
         deptSort: [
-          { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
+          { required: true, message: 'Please enter a sort number', trigger: 'blur', type: 'number' }
         ]
       },
       permission: {
@@ -132,8 +132,8 @@ export default {
         del: ['admin', 'dept:del']
       },
       enabledTypeOptions: [
-        { key: 'true', display_name: '正常' },
-        { key: 'false', display_name: '禁用' }
+        { key: 'true', display_name: 'Enabled' },
+        { key: 'false', display_name: 'Disabled' }
       ]
     }
   },
@@ -146,7 +146,7 @@ export default {
         })
       }, 100)
     },
-    // 新增与编辑前做的操作
+    // Operations performed before adding and editing
     [CRUD.HOOK.afterToCU](crud, form) {
       if (form.pid !== null) {
         form.isTop = '0'
@@ -187,7 +187,7 @@ export default {
         })
       })
     },
-    // 获取弹窗内部门数据
+    // Get department data in modal
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
         crudDept.getDepts({ enabled: true, pid: parentNode.id }).then(res => {
@@ -203,11 +203,11 @@ export default {
         })
       }
     },
-    // 提交前的验证
+    // Validation before submit
     [CRUD.HOOK.afterValidateCU]() {
       if (this.form.pid !== null && this.form.pid === this.form.id) {
         this.$message({
-          message: '上级部门不能为空',
+          message: 'Parent department cannot be empty',
           type: 'warning'
         })
         return false
@@ -217,15 +217,15 @@ export default {
       }
       return true
     },
-    // 改变状态
+    // Change status
     changeEnabled(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.dept_status[val] + '" ' + data.name + '部门, 是否继续？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm('This action will "' + this.dict.label.dept_status[val] + '" department ' + data.name + ', continue?', 'Hint', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         crudDept.edit(data).then(() => {
-          this.crud.notify(this.dict.label.dept_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+          this.crud.notify(this.dict.label.dept_status[val] + ' succeeded', CRUD.NOTIFICATION_TYPE.SUCCESS)
         }).catch(err => {
           data.enabled = !data.enabled
           console.log(err.response.data.message)

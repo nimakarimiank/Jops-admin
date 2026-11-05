@@ -1,7 +1,7 @@
 <template>
   <div class="crud-opts">
     <span class="crud-opts-left">
-      <!--左侧插槽-->
+      <!-- Left slot -->
       <slot name="left" />
       <el-button
         v-if="crud.optShow.add"
@@ -12,7 +12,7 @@
         icon="el-icon-plus"
         @click="crud.toAdd"
       >
-        新增
+        Add
       </el-button>
       <el-button
         v-if="crud.optShow.edit"
@@ -24,7 +24,7 @@
         :disabled="crud.selections.length !== 1"
         @click="crud.toEdit(crud.selections[0])"
       >
-        修改
+        Edit
       </el-button>
       <el-button
         v-if="crud.optShow.del"
@@ -38,7 +38,7 @@
         :disabled="crud.selections.length === 0"
         @click="toDelete(crud.selections)"
       >
-        删除
+        Delete
       </el-button>
       <el-button
         v-if="crud.optShow.download"
@@ -49,8 +49,8 @@
         type="warning"
         icon="el-icon-download"
         @click="crud.doExport"
-      >导出</el-button>
-      <!--右侧-->
+      >Export</el-button>
+      <!-- Right -->
       <slot name="right" />
     </span>
     <el-button-group class="crud-opts-right">
@@ -86,7 +86,7 @@
           :indeterminate="allColumnsSelectedIndeterminate"
           @change="handleCheckAllChange"
         >
-          全选
+          Select All
         </el-checkbox>
         <el-checkbox
           v-for="item in tableColumns"
@@ -140,7 +140,7 @@ export default {
       allColumnsSelected: true,
       allColumnsSelectedIndeterminate: false,
       tableUnwatcher: null,
-      // 忽略下次表格列变动
+      // Ignore next table column change
       ignoreNextTableColumnsChange: false
     }
   },
@@ -190,9 +190,9 @@ export default {
       this.tableColumns = columns
     },
     toDelete(datas) {
-      this.$confirm(`确认删除选中的${datas.length}条数据?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(`Are you sure you want to delete the selected ${datas.length} items?`, 'Notice', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         this.crud.delAllLoading = true
@@ -222,7 +222,7 @@ export default {
         selectedCount += column.visible ? 1 : 0
       })
       if (selectedCount === 0) {
-        this.crud.notify('请至少选择一列', CRUD.NOTIFICATION_TYPE.WARNING)
+        this.crud.notify('Please select at least one column', CRUD.NOTIFICATION_TYPE.WARNING)
         this.$nextTick(function() {
           item.visible = true
         })
@@ -237,7 +237,7 @@ export default {
       const vm = table.$children.find(e => e.prop === item.property)
       const columnConfig = vm.columnConfig
       if (item.visible) {
-        // 找出合适的插入点
+        // Find suitable insertion point
         const columnIndex = this.tableColumns.indexOf(item)
         vm.owner.store.commit('insertColumn', columnConfig, columnIndex + 1, null)
       } else {

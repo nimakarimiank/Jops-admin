@@ -32,19 +32,19 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/genConfig")
-@Api(tags = "系统：代码生成器配置管理")
+@Api(tags = "System: Code Generator Configuration Management")
 public class GenConfigController {
 
     private final GenConfigService genConfigService;
 
-    @ApiOperation("查询")
+    @ApiOperation("Query generator configuration")
     @GetMapping(value = "/{tableName}")
     public ResponseEntity<GenConfig> queryGenConfig(@PathVariable String tableName){
         return new ResponseEntity<>(genConfigService.find(tableName), HttpStatus.OK);
     }
 
     @PutMapping
-    @ApiOperation("修改")
+    @ApiOperation("Update generator configuration")
     public ResponseEntity<GenConfig> updateGenConfig(@Validated @RequestBody GenConfig genConfig){
         return new ResponseEntity<>(genConfigService.update(genConfig.getTableName(), genConfig),HttpStatus.OK);
     }

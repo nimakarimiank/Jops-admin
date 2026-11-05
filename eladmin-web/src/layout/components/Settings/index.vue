@@ -1,25 +1,25 @@
 <template>
   <div class="drawer-container">
     <div>
-      <h3 class="drawer-title">系统布局设置</h3>
+      <h3 class="drawer-title">System Layout Settings</h3>
 
       <div class="drawer-item">
-        <span>主题颜色</span>
+        <span>Theme Color</span>
         <theme-picker style="float: right;height: 26px;margin: -3px 8px 0 0;" @change="themeChange" />
       </div>
 
       <div class="drawer-item">
-        <span>显示标签</span>
+        <span>Show Tags</span>
         <el-switch v-model="tagsView" class="drawer-switch" />
       </div>
 
       <div class="drawer-item">
-        <span>固定头部</span>
+        <span>Fixed Header</span>
         <el-switch v-model="fixedHeader" class="drawer-switch" />
       </div>
 
       <div class="drawer-item">
-        <span>显示LOGO</span>
+        <span>Show LOGO</span>
         <el-switch v-model="sidebarLogo" class="drawer-switch" />
       </div>
 

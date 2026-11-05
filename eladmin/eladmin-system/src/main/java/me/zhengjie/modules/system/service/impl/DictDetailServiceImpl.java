@@ -53,7 +53,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
     public void create(DictDetail resources) {
         resources.setDictId(resources.getDict().getId());
         save(resources);
-        // 清理缓存
+        // Clear cache
         delCaches(resources);
     }
 
@@ -62,9 +62,9 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
     public void update(DictDetail resources) {
         DictDetail dictDetail = getById(resources.getId());
         resources.setId(dictDetail.getId());
-        // 更新数据
+        // Update data
         saveOrUpdate(resources);
-        // 清理缓存
+        // Clear cache
         delCaches(dictDetail);
     }
 
@@ -84,7 +84,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
     public void delete(Long id) {
         DictDetail dictDetail = getById(id);
         removeById(id);
-        // 清理缓存
+        // Clear cache
         delCaches(dictDetail);
     }
 

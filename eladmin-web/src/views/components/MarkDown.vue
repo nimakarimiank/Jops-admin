@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <p class="warn-content">
-      Markdown 基于
+      Markdown based on
       <el-link type="primary" href="https://github.com/hinesboy/mavonEditor" target="_blank">MavonEditor</el-link>
     </p>
     <mavon-editor ref="md" :style="'height:' + height" @imgAdd="imgAdd" />

@@ -30,8 +30,8 @@ import java.util.Set;
 public interface DeptService extends IService<Dept> {
 
     /**
-     * 查询所有数据
-     * @param criteria 条件
+     * Query all data
+     * @param criteria Criteria
      * @param isQuery /
      * @throws Exception /
      * @return /
@@ -39,55 +39,55 @@ public interface DeptService extends IService<Dept> {
     List<Dept> queryAll(DeptQueryCriteria criteria, Boolean isQuery) throws Exception;
 
     /**
-     * 根据ID查询
+     * Query by ID
      * @param id /
      * @return /
      */
     Dept findById(Long id);
 
     /**
-     * 创建
+     * Create
      * @param resources /
      */
     void create(Dept resources);
 
     /**
-     * 编辑
+     * Update
      * @param resources /
      */
     void update(Dept resources);
 
     /**
-     * 删除
+     * Delete
      * @param depts /
      *
      */
     void delete(Set<Dept> depts);
 
     /**
-     * 根据PID查询
+     * Query by PID
      * @param pid /
      * @return /
      */
     List<Dept> findByPid(long pid);
 
     /**
-     * 根据角色ID查询
+     * Query by role ID
      * @param id /
      * @return /
      */
     Set<Dept> findByRoleId(Long id);
 
     /**
-     * 导出数据
-     * @param depts 待导出的数据
+     * Export data
+     * @param depts Data to export
      * @param response /
      * @throws IOException /
      */
     void download(List<Dept> depts, HttpServletResponse response) throws IOException;
 
     /**
-     * 获取待删除的部门
+     * Get departments to delete
      * @param deptList /
      * @param depts /
      * @return /
@@ -95,7 +95,7 @@ public interface DeptService extends IService<Dept> {
     Set<Dept> getDeleteDepts(List<Dept> deptList, Set<Dept> depts);
 
     /**
-     * 根据ID获取同级与上级数据
+     * Get sibling and parent data by ID
      * @param dept /
      * @param depts /
      * @return /
@@ -103,21 +103,21 @@ public interface DeptService extends IService<Dept> {
     List<Dept> getSuperior(Dept dept, List<Dept> depts);
 
     /**
-     * 构建树形数据
+     * Build tree data
      * @param depts /
      * @return /
      */
     Object buildTree(List<Dept> depts);
 
     /**
-     * 获取
-     * @param deptList 、
-     * @return 、
+     * Get
+     * @param deptList /
+     * @return /
      */
     List<Long> getDeptChildren(List<Dept> deptList);
 
     /**
-     * 验证是否被角色或用户关联
+     * Verify whether associated with roles or users
      * @param depts /
      */
     void verification(Set<Dept> depts);

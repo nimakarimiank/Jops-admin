@@ -1,42 +1,42 @@
 import Date from './datetime.js'
 
 export const calendarBaseShortcuts = [{
-  text: '今天',
+  text: 'Today',
   onClick(picker) {
     const startTime = new Date(new Date().setHours(0, 0, 0))
     const endTime = new Date(new Date().setHours(23, 59, 59))
     picker.$emit('pick', [startTime, endTime])
   }
 }, {
-  text: '昨天',
+  text: 'Yesterday',
   onClick(picker) {
     const startTime = new Date(new Date().daysAgo(1).setHours(0, 0, 0))
     const endTime = new Date(new Date().daysAgo(1).setHours(23, 59, 59))
     picker.$emit('pick', [startTime, endTime])
   }
 }, {
-  text: '本周',
+  text: 'This Week',
   onClick(picker) {
     const startTime = new Date(new Date().daysAgo(new Date().getDay() - 1).setHours(0, 0, 0))
     const endTime = new Date(new Date().setHours(23, 59, 59))
     picker.$emit('pick', [startTime, endTime])
   }
 }, {
-  text: '这个月',
+  text: 'This Month',
   onClick(picker) {
     const startTime = new Date(new Date().monthBegin().setHours(0, 0, 0))
     const endTime = new Date(new Date().setHours(23, 59, 59))
     picker.$emit('pick', [startTime, endTime])
   }
 }, {
-  text: '当前季度',
+  text: 'Current Quarter',
   onClick(picker) {
     const startTime = new Date(new Date().quarterBegin().setHours(0, 0, 0))
     const endTime = new Date(new Date().setHours(23, 59, 59))
     picker.$emit('pick', [startTime, endTime])
   }
 }, {
-  text: '最近30天',
+  text: 'Last 30 Days',
   onClick(picker) {
     const startTime = new Date(new Date().daysAgo(30).setHours(0, 0, 0))
     const endTime = new Date(new Date().setHours(23, 59, 59))
@@ -45,7 +45,7 @@ export const calendarBaseShortcuts = [{
 }]
 
 export const calendarMoveShortcuts = [{
-  text: '‹ 往前一天 ',
+  text: '‹ Previous Day ',
   onClick(picker) {
     let startTime = new Date(new Date().setHours(0, 0, 0))
     let endTime = new Date(new Date().setHours(23, 59, 59))
@@ -57,7 +57,7 @@ export const calendarMoveShortcuts = [{
     picker.$emit('pick', [startTime, endTime])
   }
 }, {
-  text: ' 往后一天 ›',
+  text: ' Next Day ›',
   onClick(picker) {
     let startTime = new Date(new Date().setHours(0, 0, 0))
     let endTime = new Date(new Date().setHours(23, 59, 59))

@@ -48,7 +48,7 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-      const axisData = ['周一', '周二', '周三', '很长很长的周四', '周五', '周六', '周日']
+      const axisData = ['Mon', 'Tue', 'Wed', 'Very Long Thursday', 'Fri', 'Sat', 'Sun']
       const data = axisData.map(function(item, i) {
         return Math.round(Math.random() * 1000 * (i + 1))
       })
@@ -61,7 +61,7 @@ export default {
       links.pop()
       this.chart.setOption({
         title: {
-          text: '笛卡尔坐标系上的 Graph'
+          text: 'Graph on Cartesian System'
         },
         tooltip: {},
         xAxis: {

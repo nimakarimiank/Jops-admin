@@ -58,9 +58,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     private static final String HTTP_PRE = "http://";
     private static final String HTTPS_PRE = "https://";
-    private static final String YES_STR = "是";
-    private static final String NO_STR = "否";
-    private static final String BAD_REQUEST = "外链必须以http://或者https://开头";
+    private static final String YES_STR = "Yes";
+    private static final String NO_STR = "No";
+    private static final String BAD_REQUEST = "External link must start with http:// or https://";
     
     @Override
     public List<Menu> queryAll(MenuQueryCriteria criteria, Boolean isQuery) throws Exception {
@@ -68,13 +68,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             criteria.setPidIsNull(true);
             List<Field> fields = StringUtils.getAllFields(criteria.getClass(), new ArrayList<>());
             for (Field field : fields) {
-                //设置对象的访问权限，保证对private的属性的访问
+                // Set accessible permission on object to allow access to private properties
                 field.setAccessible(true);
                 Object val = field.get(criteria);
                 if("pidIsNull".equals(field.getName())){
                     continue;
                 }
-                // 如果有查询条件，则不指定pidIsNull
+                // If there are query criteria, do not specify pidIsNull
                 if (ObjectUtil.isNotNull(val)) {
                     criteria.setPidIsNull(null);
                     break;
@@ -96,7 +96,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     /**
-     * 用户角色改变时需清理缓存
+     * Clear cache when user role changes
      * @param currentUserId /
      * @return /
      */
@@ -133,9 +133,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             }
         }
         save(resources);
-        // 计算子节点数目
+        // Calculate sub node count
         resources.setSubCount(0);
-        // 更新父节点菜单数目
+        // Update parent menu sub node count
         updateSubCnt(resources.getPid());
     }
 
@@ -143,7 +143,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Transactional(rollbackFor = Exception.class)
     public void update(Menu resources) {
         if(resources.getId().equals(resources.getPid())) {
-            throw new BadRequestException("上级不能为自己");
+            throw new BadRequestException("The parent menu cannot be itself");
         }
         Menu menu = getById(resources.getId());
         if(resources.getIFrame()){
@@ -161,7 +161,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             resources.setPid(null);
         }
 
-        // 记录的父节点ID
+        // Recorded parent node ID
         Long oldPid = menu.getPid();
         Long newPid = resources.getPid();
 
@@ -184,10 +184,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         menu.setPermission(resources.getPermission());
         menu.setType(resources.getType());
         saveOrUpdate(menu);
-        // 计算父级菜单节点数目
+        // Calculate parent menu node count
         updateSubCnt(oldPid);
         updateSubCnt(newPid);
-        // 清理缓存
+        // Clear cache
         delCaches(resources.getId());
     }
 
@@ -207,7 +207,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Menu> menuSet) {
         for (Menu menu : menuSet) {
-            // 清理缓存
+            // Clear cache
             delCaches(menu.getId());
             roleMenuMapper.deleteByMenuId(menu.getId());
             menuMapper.deleteById(menu.getId());
@@ -268,14 +268,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                         List<Menu> menuList = menu.getChildren();
                         MenuVo menuVo = new MenuVo();
                         menuVo.setName(ObjectUtil.isNotEmpty(menu.getComponentName())  ? menu.getComponentName() : menu.getTitle());
-                        // 一级目录需要加斜杠，不然会报警告
+                        // First-level directory requires leading slash to avoid warnings
                         menuVo.setPath(menu.getPid() == null ? "/" + menu.getPath() :menu.getPath());
                         menuVo.setHidden(menu.getHidden());
-                        // 如果不是外链
+                        // If not an external link
                         if(!menu.getIFrame()){
                             if(menu.getPid() == null){
                                 menuVo.setComponent(StringUtils.isEmpty(menu.getComponent())?"Layout":menu.getComponent());
-                                // 如果不是一级菜单，并且菜单类型为目录，则代表是多级菜单
+                                // If not top-level menu and type is directory, it represents a multi-level menu
                             }else if(menu.getType() == 0){
                                 menuVo.setComponent(StringUtils.isEmpty(menu.getComponent())?"ParentView":menu.getComponent());
                             }else if(StringUtils.isNoneBlank(menu.getComponent())){
@@ -287,7 +287,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                             menuVo.setAlwaysShow(true);
                             menuVo.setRedirect("noredirect");
                             menuVo.setChildren(buildMenus(menuList));
-                            // 处理是一级菜单并且没有子菜单的情况
+                            // Handle case of top-level menu without children
                         } else if(menu.getPid() == null){
                             MenuVo menuVo1 = getMenuVo(menu, menuVo);
                             menuVo.setName(null);
@@ -309,13 +309,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         List<Map<String, Object>> list = new ArrayList<>();
         for (Menu menu : menus) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("菜单标题", menu.getTitle());
-            map.put("菜单类型", menu.getType() == null ? "目录" : menu.getType() == 1 ? "菜单" : "按钮");
-            map.put("权限标识", menu.getPermission());
-            map.put("外链菜单", menu.getIFrame() ? YES_STR : NO_STR);
-            map.put("菜单可见", menu.getHidden() ? NO_STR : YES_STR);
-            map.put("是否缓存", menu.getCache() ? YES_STR : NO_STR);
-            map.put("创建日期", menu.getCreateTime());
+            map.put("Menu Title", menu.getTitle());
+            map.put("Menu Type", menu.getType() == null ? "Directory" : menu.getType() == 1 ? "Menu" : "Button");
+            map.put("Permission", menu.getPermission());
+            map.put("External Link", menu.getIFrame() ? YES_STR : NO_STR);
+            map.put("Visible", menu.getHidden() ? NO_STR : YES_STR);
+            map.put("Cache", menu.getCache() ? YES_STR : NO_STR);
+            map.put("Create Date", menu.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
@@ -329,20 +329,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     /**
-     * 清理缓存
-     * @param id 菜单ID
+     * Clear cache
+     * @param id Menu ID
      */
     public void delCaches(Long id){
         List<User> users = userMapper.findByMenuId(id);
         redisUtils.del(CacheKey.MENU_ID + id);
         redisUtils.delByKeys(CacheKey.MENU_USER, users.stream().map(User::getId).collect(Collectors.toSet()));
-        // 清除 Role 缓存
+        // Clear Role cache
         List<Role> roles = roleService.findByMenuId(id);
         redisUtils.delByKeys(CacheKey.ROLE_ID, roles.stream().map(Role::getId).collect(Collectors.toSet()));
     }
 
     /**
-     * 获取 MenuVo
+     * Get MenuVo
      * @param menu /
      * @param menuVo /
      * @return /
@@ -350,7 +350,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     private static MenuVo getMenuVo(Menu menu, MenuVo menuVo) {
         MenuVo menuVo1 = new MenuVo();
         menuVo1.setMeta(menuVo.getMeta());
-        // 非外链
+        // Non-external link
         if(!menu.getIFrame()){
             menuVo1.setPath("index");
             menuVo1.setName(menuVo.getName());

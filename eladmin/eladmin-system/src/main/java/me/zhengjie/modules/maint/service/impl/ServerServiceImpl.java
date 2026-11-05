@@ -93,7 +93,7 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
         removeBatchByIds(ids);
-        // 删除与之关联的服务
+        // Delete associated services
         deployServerMapper.deleteByServerIds(ids);
     }
 
@@ -102,11 +102,11 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
         List<Map<String, Object>> list = new ArrayList<>();
         for (Server deploy : servers) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("服务器名称", deploy.getName());
-            map.put("服务器IP", deploy.getIp());
-            map.put("端口", deploy.getPort());
-            map.put("账号", deploy.getAccount());
-            map.put("创建日期", deploy.getCreateTime());
+            map.put("Server Name", deploy.getName());
+            map.put("Server IP", deploy.getIp());
+            map.put("Port", deploy.getPort());
+            map.put("Account", deploy.getAccount());
+            map.put("Creation Date", deploy.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);

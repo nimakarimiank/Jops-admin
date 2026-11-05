@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <!--侧边部门数据-->
+      <!-- Side department data -->
       <el-col :xs="9" :sm="6" :md="5" :lg="4" :xl="4">
         <div class="head-container">
           <el-input
             v-model="deptName"
             clearable
             size="small"
-            placeholder="输入部门名称搜索"
+            placeholder="Enter department name to search"
             prefix-icon="el-icon-search"
             class="filter-item"
             @input="getDeptDatas"
@@ -23,17 +23,17 @@
           @node-click="handleNodeClick"
         />
       </el-col>
-      <!--用户数据-->
+      <!-- User data -->
       <el-col :xs="15" :sm="18" :md="19" :lg="20" :xl="20">
-        <!--工具栏-->
+        <!-- Toolbar -->
         <div class="head-container">
           <div v-if="crud.props.searchToggle">
-            <!-- 搜索 -->
+            <!-- Search -->
             <el-input
               v-model="query.blurry"
               clearable
               size="small"
-              placeholder="输入名称或者邮箱搜索"
+              placeholder="Enter name or email to search"
               style="width: 200px;"
               class="filter-item"
               @keyup.enter.native="crud.toQuery"
@@ -43,7 +43,7 @@
               v-model="query.enabled"
               clearable
               size="small"
-              placeholder="状态"
+              placeholder="Status"
               class="filter-item"
               style="width: 90px"
               @change="crud.toQuery"
@@ -67,40 +67,40 @@
               type="primary"
               icon="el-icon-refresh-left"
               @click="resetPwd(crud.selections)"
-            >重置密码
+            >Reset Password
             </el-button>
           </crudOperation>
         </div>
-        <!--表单渲染-->
+        <!-- Form rendering -->
         <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="555px">
           <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
-            <el-form-item label="用户名" prop="username">
+            <el-form-item label="Username" prop="username">
               <el-input v-model="form.username" @keydown.native="keydown($event)" />
             </el-form-item>
-            <el-form-item label="电话" prop="phone">
+            <el-form-item label="Phone" prop="phone">
               <el-input v-model.number="form.phone" />
             </el-form-item>
-            <el-form-item label="昵称" prop="nickName">
+            <el-form-item label="Nickname" prop="nickName">
               <el-input v-model="form.nickName" @keydown.native="keydown($event)" />
             </el-form-item>
-            <el-form-item label="邮箱" prop="email">
+            <el-form-item label="Email" prop="email">
               <el-input v-model="form.email" />
             </el-form-item>
-            <el-form-item label="部门" prop="dept.id">
+            <el-form-item label="Department" prop="dept.id">
               <treeselect
                 v-model="form.dept.id"
                 :options="depts"
                 :load-options="loadDepts"
                 style="width: 173px"
-                placeholder="选择部门"
+                placeholder="Select department"
               />
             </el-form-item>
-            <el-form-item label="岗位" prop="jobDatas" class="is-required">
+            <el-form-item label="Job" prop="jobDatas" class="is-required">
               <el-select
                 v-model="jobDatas"
                 style="width: 172px"
                 multiple
-                placeholder="请选择"
+                placeholder="Please select"
                 @remove-tag="deleteTag"
                 @change="changeJob"
               >
@@ -112,13 +112,13 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="性别">
+            <el-form-item label="Gender">
               <el-radio-group v-model="form.gender" style="width: 178px">
-                <el-radio label="男">男</el-radio>
-                <el-radio label="女">女</el-radio>
+                <el-radio label="Male">Male</el-radio>
+                <el-radio label="Female">Female</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="状态">
+            <el-form-item label="Status">
               <el-radio-group v-model="form.enabled" :disabled="form.id === user.id">
                 <el-radio
                   v-for="item in dict.user_status"
@@ -127,13 +127,13 @@
                 >{{ item.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item style="margin-bottom: 0;" label="角色" prop="roleDatas" class="is-required">
+            <el-form-item style="margin-bottom: 0;" label="Role" prop="roleDatas" class="is-required">
               <el-select
                 v-model="roleDatas"
                 :disabled="form.id === user.id"
                 style="width: 426px"
                 multiple
-                placeholder="请选择"
+                placeholder="Please select"
                 @remove-tag="deleteTag"
                 @change="changeRole"
               >
@@ -148,24 +148,24 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="text" @click="crud.cancelCU">取消</el-button>
-            <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+            <el-button type="text" @click="crud.cancelCU">Cancel</el-button>
+            <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">Confirm</el-button>
           </div>
         </el-dialog>
-        <!--表格渲染-->
+        <!-- Table rendering -->
         <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
           <el-table-column :selectable="checkboxT" type="selection" width="55" />
-          <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
-          <el-table-column :show-overflow-tooltip="true" prop="nickName" label="昵称" />
-          <el-table-column prop="gender" label="性别" />
-          <el-table-column :show-overflow-tooltip="true" prop="phone" width="100" label="电话" />
-          <el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />
-          <el-table-column :show-overflow-tooltip="true" prop="dept" label="部门">
+          <el-table-column :show-overflow-tooltip="true" prop="username" label="Username" />
+          <el-table-column :show-overflow-tooltip="true" prop="nickName" label="Nickname" />
+          <el-table-column prop="gender" label="Gender" />
+          <el-table-column :show-overflow-tooltip="true" prop="phone" width="100" label="Phone" />
+          <el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="Email" />
+          <el-table-column :show-overflow-tooltip="true" prop="dept" label="Department">
             <template slot-scope="scope">
               <div>{{ scope.row.dept.name }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="状态" align="center" prop="enabled">
+          <el-table-column label="Status" align="center" prop="enabled">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.enabled"
@@ -176,10 +176,10 @@
               />
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="createTime" width="135" label="创建日期" />
+          <el-table-column :show-overflow-tooltip="true" prop="createTime" width="135" label="Created Date" />
           <el-table-column
             v-if="checkPer(['admin','user:edit','user:del'])"
-            label="操作"
+            label="Actions"
             width="115"
             align="center"
             fixed="right"
@@ -193,7 +193,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <!--分页组件-->
+        <!-- Pagination component -->
         <pagination />
       </el-col>
     </el-row>
@@ -218,23 +218,23 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 let userRoles = []
 let userJobs = []
-const defaultForm = { id: null, username: null, nickName: null, gender: '男', email: null, enabled: 'false', roles: [], jobs: [], dept: { id: null }, phone: null }
+const defaultForm = { id: null, username: null, nickName: null, gender: 'Male', email: null, enabled: 'false', roles: [], jobs: [], dept: { id: null }, phone: null }
 export default {
   name: 'User',
   components: { Treeselect, crudOperation, rrOperation, udOperation, pagination, DateRangePicker },
   cruds() {
-    return CRUD({ title: '用户', url: 'api/users', crudMethod: { ...crudUser }})
+    return CRUD({ title: 'User', url: 'api/users', crudMethod: { ...crudUser }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
-  // 数据字典
+  // Data dictionary
   dicts: ['user_status'],
   data() {
-    // 自定义验证
+    // Custom validation
     const validPhone = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入电话号码'))
+        callback(new Error('Please enter a phone number'))
       } else if (!isvalidPhone(value)) {
-        callback(new Error('请输入正确的11位手机号码'))
+        callback(new Error('Please enter a valid 11-digit phone number'))
       } else {
         callback()
       }
@@ -242,7 +242,7 @@ export default {
     return {
       height: document.documentElement.clientHeight - 180 + 'px;',
       deptName: '', depts: [], deptDatas: [], jobs: [], level: 3, roles: [],
-      jobDatas: [], roleDatas: [], // 多选时使用
+      jobDatas: [], roleDatas: [], // Used for multiple selection
       defaultProps: { children: 'children', label: 'name', isLeaf: 'leaf' },
       permission: {
         add: ['admin', 'user:add'],
@@ -250,34 +250,34 @@ export default {
         del: ['admin', 'user:del']
       },
       enabledTypeOptions: [
-        { key: 'true', display_name: '激活' },
-        { key: 'false', display_name: '锁定' }
+        { key: 'true', display_name: 'Active' },
+        { key: 'false', display_name: 'Locked' }
       ],
       rules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+          { required: true, message: 'Please enter a username', trigger: 'blur' },
+          { min: 2, max: 20, message: 'Length must be between 2 and 20 characters', trigger: 'blur' }
         ],
         nickName: [
-          { required: true, message: '请输入用户昵称', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+          { required: true, message: 'Please enter a nickname', trigger: 'blur' },
+          { min: 2, max: 20, message: 'Length must be between 2 and 20 characters', trigger: 'blur' }
         ],
         email: [
-          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+          { required: true, message: 'Please enter an email address', trigger: 'blur' },
+          { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
         ],
         phone: [
           { required: true, trigger: 'blur', validator: validPhone }
         ],
         'dept.id': [
-          { required: true, message: '部门不能为空', trigger: 'blur' }
+          { required: true, message: 'Department cannot be empty', trigger: 'blur' }
         ],
         jobDatas: [
           {
             validator: (rule, value, callback) => {
               value = this.jobDatas
               if (!value || value.length === 0) {
-                callback(new Error('请选择至少一个岗位'))
+                callback(new Error('Please select at least one job'))
               } else {
                 callback()
               }
@@ -290,7 +290,7 @@ export default {
             validator: (rule, value, callback) => {
               value = this.roleDatas
               if (!value || value.length === 0) {
-                callback(new Error('请选择至少一个角色'))
+                callback(new Error('Please select at least one role'))
               } else {
                 callback()
               }
@@ -307,7 +307,7 @@ export default {
     ])
   },
   created() {
-    this.crud.msg.add = '新增成功，默认密码：123456'
+    this.crud.msg.add = 'Added successfully, default password: 123456'
   },
   mounted: function() {
     const that = this
@@ -316,7 +316,7 @@ export default {
     }
   },
   methods: {
-    // 禁止输入空格
+    // Disallow space input
     keydown(e) {
       if (e.keyCode === 32) {
         e.returnValue = false
@@ -343,7 +343,7 @@ export default {
         }
       })
     },
-    // 新增与编辑前做的操作
+    // Operations performed before adding and editing
     [CRUD.HOOK.afterToCU](crud, form) {
       this.getRoles()
       if (form.id == null) {
@@ -355,12 +355,12 @@ export default {
       this.getJobs()
       form.enabled = form.enabled.toString()
     },
-    // 新增前将多选的值设置为空
+    // Clear multi-select values before adding
     [CRUD.HOOK.beforeToAdd]() {
       this.jobDatas = []
       this.roleDatas = []
     },
-    // 初始化编辑时候的角色与岗位
+    // Initialize roles and jobs when editing
     [CRUD.HOOK.beforeToEdit](crud, form) {
       this.getJobs(this.form.dept.id)
       this.jobDatas = []
@@ -379,14 +379,14 @@ export default {
         userJobs.push(data)
       })
     },
-    // 提交前做的操作
+    // Operations performed before submit
     [CRUD.HOOK.afterValidateCU](crud) {
       crud.form.roles = userRoles
       crud.form.jobs = userJobs
       console.log(this.jobDatas)
       return true
     },
-    // 获取左侧部门数据
+    // Get left department data
     getDeptDatas(node, resolve) {
       const params = {}
       if (typeof node !== 'object') {
@@ -433,7 +433,7 @@ export default {
         }
       })
     },
-    // 获取弹窗内部门数据
+    // Get department data in modal
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
         getDepts({ enabled: true, pid: parentNode.id }).then(res => {
@@ -449,7 +449,7 @@ export default {
         })
       }
     },
-    // 切换部门
+    // Switch department
     handleNodeClick(data) {
       if (data.pid === 0) {
         this.query.deptId = null
@@ -458,15 +458,15 @@ export default {
       }
       this.crud.toQuery()
     },
-    // 改变状态
+    // Change status
     changeEnabled(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.username + ', 是否继续？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm('This action will "' + this.dict.label.user_status[val] + '" ' + data.username + ', continue?', 'Hint', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         crudUser.edit(data).then(res => {
-          this.crud.notify(this.dict.label.user_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+          this.crud.notify(this.dict.label.user_status[val] + ' succeeded', CRUD.NOTIFICATION_TYPE.SUCCESS)
         }).catch(() => {
           data.enabled = !data.enabled
         })
@@ -474,19 +474,19 @@ export default {
         data.enabled = !data.enabled
       })
     },
-    // 获取弹窗内角色数据
+    // Get role data in modal
     getRoles() {
       getAll().then(res => {
         this.roles = res
       }).catch(() => { })
     },
-    // 获取弹窗内岗位数据
+    // Get job data in modal
     getJobs() {
       getAllJob().then(res => {
         this.jobs = res.content
       }).catch(() => { })
     },
-    // 获取权限级别
+    // Get role level
     getRoleLevel() {
       getLevel().then(res => {
         this.level = res.level
@@ -496,9 +496,9 @@ export default {
       return row.id !== this.user.id
     },
     resetPwd(datas) {
-      this.$confirm(`你选中了 ${datas.length} 位用户，确认重置用户的密码吗?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(`You selected ${datas.length} users, confirm reset password for these users?`, 'Hint', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         const ids = []
@@ -507,7 +507,7 @@ export default {
         })
         console.log(ids)
         crudUser.resetPwd(ids).then(() => {
-          this.crud.notify('重置成功, 用户新密码:123456', CRUD.NOTIFICATION_TYPE.SUCCESS)
+          this.crud.notify('Reset successfully, new user password: 123456', CRUD.NOTIFICATION_TYPE.SUCCESS)
         }).catch(() => {})
       }).catch(() => {
       })

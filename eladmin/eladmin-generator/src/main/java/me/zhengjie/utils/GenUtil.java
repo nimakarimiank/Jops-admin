@@ -30,7 +30,7 @@ import java.util.*;
 import static me.zhengjie.utils.FileUtil.SYS_TEM_DIR;
 
 /**
- * 代码生成
+ * Code generation
  *
  * @author Zheng Jie
  * @date 2019-01-02
@@ -48,7 +48,7 @@ public class GenUtil {
     public static final String EXTRA = "auto_increment";
 
     /**
-     * 获取后端代码模板名称
+     * Get backend code template names
      *
      * @return List
      */
@@ -65,7 +65,7 @@ public class GenUtil {
     }
 
     /**
-     * 获取前端代码模板名称
+     * Get frontend code template names
      *
      * @return List
      */
@@ -79,7 +79,7 @@ public class GenUtil {
     public static List<Map<String, Object>> preview(List<ColumnInfo> columns, GenConfig genConfig) {
         Map<String, Object> genMap = getGenMap(columns, genConfig);
         List<Map<String, Object>> genList = new ArrayList<>();
-        // 获取后端模版
+        // Get backend templates
         List<String> templates = getAdminTemplateNames();
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         for (String templateName : templates) {
@@ -89,7 +89,7 @@ public class GenUtil {
             map.put("name", templateName.replace("-xml", ".xml"));
             genList.add(map);
         }
-        // 获取前端模版
+        // Get frontend templates
         templates = getFrontTemplateNames();
         for (String templateName : templates) {
             Map<String, Object> map = new HashMap<>(1);
@@ -103,26 +103,26 @@ public class GenUtil {
     }
 
     public static String download(List<ColumnInfo> columns, GenConfig genConfig) throws IOException {
-        // 拼接的路径：/tmpeladmin-gen-temp/，这个路径在Linux下需要root用户才有权限创建,非root用户会权限错误而失败，更改为： /tmp/eladmin-gen-temp/
+        // Concatenated path: /tmpeladmin-gen-temp/, which requires root permission on Linux; changed to: /tmp/eladmin-gen-temp/
         // String tempPath =SYS_TEM_DIR + "eladmin-gen-temp" + File.separator + genConfig.getTableName() + File.separator;
         String tempPath = SYS_TEM_DIR + "eladmin-gen-temp" + File.separator + genConfig.getTableName() + File.separator;
         Map<String, Object> genMap = getGenMap(columns, genConfig);
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
-        // 生成后端代码
+        // Generate backend code
         List<String> templates = getAdminTemplateNames();
         for (String templateName : templates) {
             Template template = engine.getTemplate("admin/" + templateName + ".ftl");
             String filePath = getAdminFilePath(templateName, genConfig, genMap.get("className").toString(), tempPath + "eladmin" + File.separator);
             assert filePath != null;
             File file = new File(filePath);
-            // 如果非覆盖生成
+            // If non-overwrite generation
             if (!genConfig.getCover() && FileUtil.exist(file)) {
                 continue;
             }
-            // 生成代码
+            // Generate code
             genFile(file, template, genMap);
         }
-        // 生成前端代码
+        // Generate frontend code
         templates = getFrontTemplateNames();
         for (String templateName : templates) {
             Template template = engine.getTemplate("front/" + templateName + ".ftl");
@@ -132,11 +132,11 @@ public class GenUtil {
             String filePath = getFrontFilePath(templateName, apiPath, srcPath, genMap.get("changeClassName").toString());
             assert filePath != null;
             File file = new File(filePath);
-            // 如果非覆盖生成
+            // If non-overwrite generation
             if (!genConfig.getCover() && FileUtil.exist(file)) {
                 continue;
             }
-            // 生成代码
+            // Generate code
             genFile(file, template, genMap);
         }
         return tempPath;
@@ -145,7 +145,7 @@ public class GenUtil {
     public static void generatorCode(List<ColumnInfo> columnInfos, GenConfig genConfig) throws IOException {
         Map<String, Object> genMap = getGenMap(columnInfos, genConfig);
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
-        // 生成后端代码
+        // Generate backend code
         List<String> templates = getAdminTemplateNames();
         for (String templateName : templates) {
             Template template = engine.getTemplate("admin/" + templateName + ".ftl");
@@ -155,15 +155,15 @@ public class GenUtil {
             assert filePath != null;
             File file = new File(filePath);
 
-            // 如果非覆盖生成
+            // If non-overwrite generation
             if (!genConfig.getCover() && FileUtil.exist(file)) {
                 continue;
             }
-            // 生成代码
+            // Generate code
             genFile(file, template, genMap);
         }
 
-        // 生成前端代码
+        // Generate frontend code
         templates = getFrontTemplateNames();
         for (String templateName : templates) {
             Template template = engine.getTemplate("front/" + templateName + ".ftl");
@@ -172,178 +172,178 @@ public class GenUtil {
             assert filePath != null;
             File file = new File(filePath);
 
-            // 如果非覆盖生成
+            // If non-overwrite generation
             if (!genConfig.getCover() && FileUtil.exist(file)) {
                 continue;
             }
-            // 生成代码
+            // Generate code
             genFile(file, template, genMap);
         }
     }
 
-    // 获取模版数据
+    // Get template data
     private static Map<String, Object> getGenMap(List<ColumnInfo> columnInfos, GenConfig genConfig) {
-        // 存储模版字段数据
+        // Store template field data
         Map<String, Object> genMap = new HashMap<>(16);
-        // 接口别名
+        // API alias
         genMap.put("apiAlias", genConfig.getApiAlias());
-        // 包名称
+        // Package name
         genMap.put("package", genConfig.getPack());
-        // 模块名称
+        // Module name
         genMap.put("moduleName", genConfig.getModuleName());
-        // 作者
+        // Author
         genMap.put("author", genConfig.getAuthor());
-        // 创建日期
+        // Creation date
         genMap.put("date", LocalDate.now().toString());
-        // 表名
+        // Table name
         genMap.put("tableName", genConfig.getTableName());
-        // 大写开头的类名
+        // PascalCase class name
         String className = StringUtils.toCapitalizeCamelCase(genConfig.getTableName());
-        // 小写开头的类名
+        // camelCase class name
         String changeClassName = StringUtils.toCamelCase(genConfig.getTableName());
-        // 判断是否去除表前缀
+        // Check whether to remove table prefix
         if (StringUtils.isNotEmpty(genConfig.getPrefix())) {
             className = StringUtils.toCapitalizeCamelCase(StrUtil.removePrefix(genConfig.getTableName(), genConfig.getPrefix()));
             changeClassName = StringUtils.toCamelCase(StrUtil.removePrefix(genConfig.getTableName(), genConfig.getPrefix()));
             changeClassName = StringUtils.uncapitalize(changeClassName);
         }
-        // 保存类名
+        // Save class name
         genMap.put("className", className);
-        // 保存小写开头的类名
+        // Save camelCase class name
         genMap.put("changeClassName", changeClassName);
-        // 存在 Timestamp 字段
+        // Whether Timestamp field exists
         genMap.put("hasTimestamp", false);
-        // 查询类中存在 Timestamp 字段
+        // Whether Timestamp field exists in query class
         genMap.put("queryHasTimestamp", false);
-        // 存在 BigDecimal 字段
+        // Whether BigDecimal field exists
         genMap.put("hasBigDecimal", false);
-        // 查询类中存在 BigDecimal 字段
+        // Whether BigDecimal field exists in query class
         genMap.put("queryHasBigDecimal", false);
-        // 是否需要创建查询
+        // Whether query needs to be created
         genMap.put("hasQuery", false);
-        // 自增主键
+        // Auto-increment primary key
         genMap.put("auto", false);
-        // 存在字典
+        // Whether dictionary exists
         genMap.put("hasDict", false);
-        // 存在日期注解
+        // Whether date annotation exists
         genMap.put("hasDateAnnotation", false);
-        // 存储主键字段名
+        // Store primary key field name
         genMap.put("pkIdName", "none");
-        // 存储符号
+        // Store symbol
         genMap.put("symbol", "#");
-        // 保存字段信息
+        // Save column information
         List<Map<String, Object>> columns = new ArrayList<>();
-        // 保存查询字段的信息
+        // Save query column information
         List<Map<String, Object>> queryColumns = new ArrayList<>();
-        // 存储字典信息
+        // Store dictionary information
         List<String> dicts = new ArrayList<>();
-        // 存储 between 信息
+        // Store between information
         List<Map<String, Object>> betweens = new ArrayList<>();
-        // 存储不为空的字段信息
+        // Store non-null column information
         List<Map<String, Object>> isNotNullColumns = new ArrayList<>();
 
         for (ColumnInfo column : columnInfos) {
             Map<String, Object> listMap = new HashMap<>(16);
-            // 字段描述
+            // Column description
             listMap.put("remark", column.getRemark());
-            // 字段类型
+            // Column type
             listMap.put("columnKey", column.getKeyType());
-            // 主键类型
+            // Primary key type
             String colType = ColUtil.cloToJava(column.getColumnType());
-            // 小写开头的字段名
+            // camelCase column name
             String changeColumnName = StringUtils.toCamelCase(column.getColumnName());
-            // 大写开头的字段名
+            // PascalCase column name
             String capitalColumnName = StringUtils.toCapitalizeCamelCase(column.getColumnName());
             if (PK.equals(column.getKeyType())) {
-                // 存储主键类型
+                // Store primary key type
                 genMap.put("pkColumnType", colType);
-                // 存储小写开头的字段名
+                // Store camelCase field name
                 genMap.put("pkChangeColName", changeColumnName);
-                // 存储大写开头的字段名
+                // Store PascalCase field name
                 genMap.put("pkCapitalColName", capitalColumnName);
-                // 存储主键字段名
+                // Store primary key field name
                 genMap.put("pkIdName", column.getColumnName());
             }
-            // 是否存在 Timestamp 类型的字段
+            // Check if Timestamp type column exists
             if (TIMESTAMP.equals(colType)) {
                 genMap.put("hasTimestamp", true);
             }
-            // 是否存在 BigDecimal 类型的字段
+            // Check if BigDecimal type column exists
             if (BIGDECIMAL.equals(colType)) {
                 genMap.put("hasBigDecimal", true);
             }
-            // 主键是否自增
+            // Whether primary key is auto-increment
             if (EXTRA.equals(column.getExtra())) {
                 genMap.put("auto", true);
             }
-            // 主键存在字典
+            // Primary key has dictionary
             if (StringUtils.isNotBlank(column.getDictName())) {
                 genMap.put("hasDict", true);
                 if(!dicts.contains(column.getDictName()))
                     dicts.add(column.getDictName());
             }
 
-            // 存储字段类型
+            // Store column type
             listMap.put("columnType", colType);
-            // 存储字原始段名称
+            // Store raw column name
             listMap.put("columnName", column.getColumnName());
-            // 不为空
+            // Not null
             listMap.put("istNotNull", column.getNotNull());
-            // 字段列表显示
+            // Display column in list
             listMap.put("columnShow", column.getListShow());
-            // 表单显示
+            // Display in form
             listMap.put("formShow", column.getFormShow());
-            // 表单组件类型
+            // Form component type
             listMap.put("formType", StringUtils.isNotBlank(column.getFormType()) ? column.getFormType() : "Input");
-            // 小写开头的字段名称
+            // camelCase column name
             listMap.put("changeColumnName", changeColumnName);
-            //大写开头的字段名称
+            // PascalCase column name
             listMap.put("capitalColumnName", capitalColumnName);
-            // 字典名称
+            // Dictionary name
             listMap.put("dictName", column.getDictName());
-            // 添加非空字段信息
+            // Add non-null column info
             if (column.getNotNull()) {
                 isNotNullColumns.add(listMap);
             }
-            // 判断是否有查询，如有则把查询的字段set进columnQuery
+            // Check if query exists; if so, set query column into columnQuery
             if (!StringUtils.isBlank(column.getQueryType())) {
-                // 查询类型
+                // Query type
                 listMap.put("queryType", column.getQueryType());
-                // 是否存在查询
+                // Whether query exists
                 genMap.put("hasQuery", true);
                 if (TIMESTAMP.equals(colType)) {
-                    // 查询中存储 Timestamp 类型
+                    // Store Timestamp type in query
                     genMap.put("queryHasTimestamp", true);
                 }
                 if (BIGDECIMAL.equals(colType)) {
-                    // 查询中存储 BigDecimal 类型
+                    // Store BigDecimal type in query
                     genMap.put("queryHasBigDecimal", true);
                 }
                 if ("between".equalsIgnoreCase(column.getQueryType())) {
                     betweens.add(listMap);
                 } else {
-                    // 添加到查询列表中
+                    // Add to query list
                     queryColumns.add(listMap);
                 }
             }
-            // 添加到字段列表中
+            // Add to column list
             columns.add(listMap);
         }
-        // 保存字段列表
+        // Save column list
         genMap.put("columns", columns);
-        // 保存查询列表
+        // Save query list
         genMap.put("queryColumns", queryColumns);
-        // 保存字段列表
+        // Save dictionary list
         genMap.put("dicts", dicts);
-        // 保存查询列表
+        // Save between list
         genMap.put("betweens", betweens);
-        // 保存非空字段信息
+        // Save non-null column list
         genMap.put("isNotNullColumns", isNotNullColumns);
         return genMap;
     }
 
     /**
-     * 定义后端文件路径以及名称
+     * Define backend file path and name
      */
     private static String getAdminFilePath(String templateName, GenConfig genConfig, String className, String rootPath) {
         String projectPath = rootPath + File.separator + genConfig.getModuleName();
@@ -385,7 +385,7 @@ public class GenUtil {
     }
 
     /**
-     * 定义前端文件路径以及名称
+     * Define frontend file path and name
      */
     private static String getFrontFilePath(String templateName, String apiPath, String path, String apiName) {
 
@@ -401,7 +401,7 @@ public class GenUtil {
     }
 
     private static void genFile(File file, Template template, Map<String, Object> map) throws IOException {
-        // 生成目标文件
+        // Generate target file
         Writer writer = null;
         try {
             FileUtil.touch(file);

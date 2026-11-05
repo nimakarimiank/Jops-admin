@@ -7,12 +7,12 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title // 网址标题
-const port = 8013 // 端口配置
+const name = defaultSettings.title // Website title
+const port = 8013 // Port configuration
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
-  // hash 模式下可使用
+  // Available in hash mode
   // publicPath: process.env.NODE_ENV === 'development' ? '/' : './',
   publicPath: '/',
   outputDir: 'dist',
@@ -54,12 +54,12 @@ module.exports = {
       }
     },
     plugins: [
-      // https://www.ydyno.com/archives/1260.html 使用gzip解压缩静态文件
+      // https://www.ydyno.com/archives/1260.html Use gzip to decompress static files
       new CompressionPlugin({
-        test: /\.(js|css|html)?$/i, // 压缩文件格式
-        filename: '[path].gz[query]', // 压缩后的文件名
-        algorithm: 'gzip', // 使用gzip压缩
-        minRatio: 0.8 // 压缩率小于1才会压缩
+        test: /\.(js|css|html)?$/i, // Compressed file format
+        filename: '[path].gz[query]', // Compressed file name
+        algorithm: 'gzip', // Use gzip compression
+        minRatio: 0.8 // Compress only if compression ratio is less than 1
       })
     ]
   },

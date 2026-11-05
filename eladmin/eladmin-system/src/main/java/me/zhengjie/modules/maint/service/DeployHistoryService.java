@@ -32,36 +32,36 @@ import java.util.Set;
 public interface DeployHistoryService extends IService<DeployHistory> {
 
     /**
-     * 分页查询
+     * Pagination query
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param criteria Criteria
+     * @param page     Pagination parameters
      * @return /
      */
     PageResult<DeployHistory> queryAll(DeployHistoryQueryCriteria criteria, Page<Object> page);
 
     /**
-     * 查询全部
+     * Query all
      *
-     * @param criteria 条件
+     * @param criteria Criteria
      * @return /
      */
     List<DeployHistory> queryAll(DeployHistoryQueryCriteria criteria);
 
     /**
-     * 创建
+     * Create
      * @param resources /
      */
     void create(DeployHistory resources);
 
     /**
-     * 删除
+     * Delete
      * @param ids /
      */
     void delete(Set<String> ids);
 
     /**
-     * 导出数据
+     * Export data
      * @param queryAll /
      * @param response /
      * @throws IOException /

@@ -40,16 +40,16 @@ export default {
     const _this = this
     return {
       toolbarConfig: {},
-      editorConfig: { placeholder: '请输入内容...', MENU_CONF: {
+      editorConfig: { placeholder: 'Please enter content...', MENU_CONF: {
         'uploadImage': {
-          // 选择文件时的类型限制，默认为 ['image/*'] 。如不想限制，则设置为 []
+          // File type limit when selecting files, default is ['image/*']. If no limit, set to []
           allowedFileTypes: ['image/*'],
-          // 自定义上传
-          async customUpload(file, insertFn) { // JS 语法
+          // Custom upload
+          async customUpload(file, insertFn) { // JS syntax
             upload(_this.imagesUploadApi, file).then(res => {
               const data = res.data
               const url = _this.baseApi + '/file/' + data.type + '/' + data.realName
-              // 最后插入图片
+              // Finally insert image
               insertFn(url, '', '')
             })
           }

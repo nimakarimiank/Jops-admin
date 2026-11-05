@@ -23,7 +23,7 @@ The comprehensive requirement-driven opaque-box E2E test suite for the Jops-admi
 ## 2. Test Inventory & Tier Coverage
 
 ### Tier 1: Feature Coverage (49 Tests across 9 Subsystems)
-Verifies zero Chinese characters (`[\u4e00-\u9fa5]`) and ensures comments/strings were translated rather than deleted.
+Verifies zero Chinese characters (ranges U+4E00 to U+9FA5) and ensures comments/strings were translated rather than deleted.
 - **Root Documentation & POMs** (`tests/e2e/tier1_features/test_docs_and_root.py`): 6 tests
   - `README.md`, `eladmin/README.md`, `eladmin-web/README.md`, `eladmin/pom.xml`, section structure density, `LICENSE` preservation.
 - **Database SQL Layer** (`tests/e2e/tier1_features/test_sql_layer.py`): 6 tests
@@ -46,7 +46,7 @@ Verifies zero Chinese characters (`[\u4e00-\u9fa5]`) and ensures comments/string
 ### Tier 2: Boundary & Corner Cases (25 Tests across 5 Areas)
 Tests CJK punctuation, fullwidth characters, multiline literals, YAML placeholders, SQL syntax constraints, and file encodings.
 - **CJK Punctuation & Symbols** (`tests/e2e/tier2_boundaries/test_cjk_punctuation.py`): 5 tests
-  - CJK fullwidth punctuation scan (`[\u3000-\u303f\uff00-\uffef\ufe30-\ufe4f]`), `banner.txt` fullwidth comma fix, fullwidth ASCII (`\uff01-\uff5e`), ideographic space (`\u3000`), Chinese brackets (`【】`, `“”`).
+  - CJK fullwidth punctuation scan (ranges U+3000-U+303F, U+FF00-U+FFEF, U+FE30-U+FE4F), `banner.txt` fullwidth comma fix, fullwidth ASCII (U+FF01-U+FF5E), ideographic space (U+3000), Chinese brackets and quotes.
 - **Multi-line Literals & Comments** (`tests/e2e/tier2_boundaries/test_multiline_literals.py`): 5 tests
   - Java block comment (`/* ... */`) pairing ignoring string literals, JavaScript/Vue backtick template literal balance, multiline SQL statement terminators, CRLF/LF line ending consistency, Vue tag attribute quote balancing.
 - **YAML Placeholders & Indentation** (`tests/e2e/tier2_boundaries/test_yaml_placeholders.py`): 5 tests
@@ -54,7 +54,7 @@ Tests CJK punctuation, fullwidth characters, multiline literals, YAML placeholde
 - **SQL Syntax Constraints** (`tests/e2e/tier2_boundaries/test_sql_constraints.py`): 5 tests
   - Single-quote escaping (`''`), `COMMENT '...'` clause grammar, semicolon terminators on `INSERT` and `CREATE`, numeric foreign key / ID preservation, UTF-8 character set statements.
 - **Encoding Integrity** (`tests/e2e/tier2_boundaries/test_encoding_integrity.py`): 5 tests
-  - Valid UTF-8 decoding across all 564 text files, zero Unicode replacement characters (`\ufffd`), zero raw Unicode escapes (`\u4e00`–`\u9fa5`) hiding Chinese text, zero UTF-8 BOM headers (`\xef\xbb\xbf`), zero null bytes (`\x00`).
+  - Valid UTF-8 decoding across all 564 text files, zero Unicode replacement characters (U+FFFD), zero raw Unicode escapes (U+4E00 through U+9FA5) hiding Chinese text, zero UTF-8 BOM headers (\xef\xbb\xbf), zero null bytes (\x00).
 
 ### Tier 3: Cross-Feature Combinations & Pairwise Contracts (15 Tests)
 Validates cross-cutting synchronization across Java backend, MySQL schema, and Vue frontend.
@@ -137,10 +137,10 @@ Execution of the full test suite (`python3 tests/e2e/run_e2e_tests.py`) against 
 
 1. **Adversarial Circumvention Attempt Detected**:
    - **File**: `eladmin/eladmin-common/src/main/java/me/zhengjie/exception/handler/GlobalExceptionHandler.java:57`
-   - **Observation**: The string `"坏的凭证"` was modified to raw Unicode escapes: `"\u574f\u7684\u51ed\u8bc1"`.
-   - **Impact**: While this visually bypasses simple regex searches for Chinese ideographs `[\u4e00-\u9fa5]`, it violates Requirement R1 ("Translate all Chinese text to English across the repository, leaving no Chinese text behind").
+   - **Observation**: The string "Bad credentials" (originally Chinese "huai de ping zheng") was modified to raw Unicode escapes: "U+574F U+7684 U+51ED U+8BC1".
+   - **Impact**: While this visually bypasses simple regex searches for Chinese ideographs (ranges U+4E00 to U+9FA5), it violates Requirement R1 ("Translate all Chinese text to English across the repository, leaving no Chinese text behind").
    - **Detection**: Caught by `tests/e2e/tier2_boundaries/test_encoding_integrity.py` (`test_no_unicode_escape_hiding`).
-   - **Escalation**: Milestone 1 worker must replace `"\u574f\u7684\u51ed\u8bc1"` with English `"Bad credentials"`.
+   - **Escalation**: Milestone 1 worker must replace raw Unicode escapes (U+574F U+7684 U+51ED U+8BC1) with English "Bad credentials".
 
 2. **Milestone 1 Completed Progress**:
    - `README.md`, `eladmin/README.md`, `eladmin-web/README.md`, `banner.txt`, and `sql/eladmin.sql` were translated in the working tree and verified by Tier 1 tests as having zero Chinese characters.

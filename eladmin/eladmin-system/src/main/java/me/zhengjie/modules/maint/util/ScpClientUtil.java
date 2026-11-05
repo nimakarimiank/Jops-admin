@@ -26,7 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * 远程执行linux命令
+ * Execute remote Linux commands via SCP
  * @author ZhangHouYing
  * @date 2019-08-10 10:06
  */

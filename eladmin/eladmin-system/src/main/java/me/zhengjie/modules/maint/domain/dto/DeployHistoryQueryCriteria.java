@@ -28,18 +28,18 @@ import java.util.List;
 @Data
 public class DeployHistoryQueryCriteria{
 
-	@ApiModelProperty(value = "模糊查询")
+	@ApiModelProperty(value = "Fuzzy query")
 	private String blurry;
 
-	@ApiModelProperty(value = "部署ID")
+	@ApiModelProperty(value = "Deploy ID")
 	private Long deployId;
 
-	@ApiModelProperty(value = "部署时间")
+	@ApiModelProperty(value = "Deploy time")
 	private List<Timestamp> deployDate;
 
-	@ApiModelProperty(value = "页码", example = "1")
+	@ApiModelProperty(value = "Page number", example = "1")
 	private Integer page = 1;
 
-	@ApiModelProperty(value = "每页数据量", example = "10")
+	@ApiModelProperty(value = "Page size", example = "10")
 	private Integer size = 10;
 }

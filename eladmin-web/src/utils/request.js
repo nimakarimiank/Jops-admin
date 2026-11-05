@@ -6,17 +6,17 @@ import { getToken } from '@/utils/auth'
 import Config from '@/settings'
 import Cookies from 'js-cookie'
 
-// 创建axios实例
+// Create axios instance
 const service = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_BASE_API : '/', // api 的 base_url
-  timeout: Config.timeout // 请求超时时间
+  baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_BASE_API : '/', // api base_url
+  timeout: Config.timeout // Request timeout
 })
 
-// request拦截器
+// Request interceptor
 service.interceptors.request.use(
   config => {
     if (getToken()) {
-      config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+      config.headers['Authorization'] = getToken() // Let each request carry custom token; modify according to actual needs
     }
     config.headers['Content-Type'] = 'application/json'
     return config
@@ -26,13 +26,13 @@ service.interceptors.request.use(
   }
 )
 
-// response 拦截器
+// Response interceptor
 service.interceptors.response.use(
   response => {
     return response.data
   },
   error => {
-    // 兼容blob下载出错json提示
+    // Compatible with blob download error json notification
     if (error.response.data instanceof Blob && error.response.data.type.toLowerCase().indexOf('json') !== -1) {
       const reader = new FileReader()
       reader.readAsText(error.response.data, 'utf-8')
@@ -50,7 +50,7 @@ service.interceptors.response.use(
       } catch (e) {
         if (error.toString().indexOf('Error: timeout') !== -1) {
           Notification.error({
-            title: '网络请求超时',
+            title: 'Network request timed out',
             duration: 5000
           })
           return Promise.reject(error)
@@ -60,7 +60,7 @@ service.interceptors.response.use(
       if (code) {
         if (code === 401) {
           store.dispatch('LogOut').then(() => {
-            // 用户登录界面提示
+            // User login interface prompt
             Cookies.set('point', 401)
             location.reload()
           })
@@ -77,7 +77,7 @@ service.interceptors.response.use(
         }
       } else {
         Notification.error({
-          title: '接口请求失败',
+          title: 'API request failed',
           duration: 5000
         })
       }

@@ -33,41 +33,41 @@ import java.util.Set;
 public interface AppService extends IService<App> {
 
     /**
-     * 分页查询
-     * @param criteria 条件
-     * @param page 分页参数
+     * Pagination query
+     * @param criteria Criteria
+     * @param page Pagination parameters
      * @return /
      */
     PageResult<App> queryAll(AppQueryCriteria criteria, Page<Object> page);
 
     /**
-     * 查询全部数据
+     * Query all data
      *
-     * @param criteria 条件
+     * @param criteria Criteria
      * @return /
      */
     List<App> queryAll(AppQueryCriteria criteria);
 
     /**
-     * 创建
+     * Create
      * @param resources /
      */
     void create(App resources);
 
     /**
-     * 编辑
+     * Edit
      * @param resources /
      */
     void update(App resources);
 
     /**
-     * 删除
+     * Delete
      * @param ids /
      */
     void delete(Set<Long> ids);
 
     /**
-     * 导出数据
+     * Export data
      * @param apps /
      * @param response /
      * @throws IOException /

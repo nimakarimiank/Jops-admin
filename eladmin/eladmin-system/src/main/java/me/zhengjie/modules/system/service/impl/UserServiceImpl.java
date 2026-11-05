@@ -100,9 +100,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         resources.setIsAdmin(false);
         save(resources);
-        // 保存用户岗位
+        // Save user jobs
         userJobMapper.insertData(resources.getId(), resources.getJobs());
-        // 保存用户角色
+        // Save user roles
         userRoleMapper.insertData(resources.getId(), resources.getRoles());
     }
 
@@ -122,18 +122,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user3 != null && !user.getId().equals(user3.getId())) {
             throw new EntityExistException(User.class, "phone", resources.getPhone());
         }
-        // 如果用户的角色改变
+        // If user roles changed
         if (!resources.getRoles().equals(user.getRoles())) {
             redisUtils.del(CacheKey.DATA_USER + resources.getId());
             redisUtils.del(CacheKey.MENU_USER + resources.getId());
             redisUtils.del(CacheKey.ROLE_AUTH + resources.getId());
             redisUtils.del(CacheKey.ROLE_USER + resources.getId());
         }
-        // 修改部门会影响 数据权限
+        // Modifying department affects data scope
         if (!Objects.equals(resources.getDept(),user.getDept())) {
             redisUtils.del(CacheKey.DATA_USER + resources.getId());
         }
-        // 如果用户被禁用，则清除用户登录信息
+        // If user is disabled, clear user login info
         if(!resources.getEnabled()){
             onlineUserService.kickOutForUsername(resources.getUsername());
         }
@@ -148,12 +148,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setNickName(resources.getNickName());
         user.setGender(resources.getGender());
         saveOrUpdate(user);
-        // 清除缓存
+        // Clear cache
         delCaches(user.getId(), user.getUsername());
-        // 更新用户岗位
+        // Update user jobs
         userJobMapper.deleteByUserId(resources.getId());
         userJobMapper.insertData(resources.getId(), resources.getJobs());
-        // 更新用户角色
+        // Update user roles
         userRoleMapper.deleteByUserId(resources.getId());
         userRoleMapper.insertData(resources.getId(), resources.getRoles());
     }
@@ -170,7 +170,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPhone(resources.getPhone());
         user.setGender(resources.getGender());
         saveOrUpdate(user);
-        // 清理缓存
+        // Clear cache
         delCaches(user.getId(), user.getUsername());
     }
 
@@ -178,14 +178,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
         for (Long id : ids) {
-            // 清理缓存
+            // Clear cache
             User user = getById(id);
             delCaches(user.getId(), user.getUsername());
         }
         userMapper.deleteBatchIds(ids);
-        // 删除用户岗位
+        // Delete user jobs
         userJobMapper.deleteByUserIds(ids);
-        // 删除用户角色
+        // Delete user roles
         userRoleMapper.deleteByUserIds(ids);
     }
 
@@ -210,27 +210,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public void resetPwd(Set<Long> ids, String pwd) {
         List<User> users = userMapper.selectBatchIds(ids);
-        // 清除缓存
+        // Clear cache
         users.forEach(user -> {
-            // 清除缓存
+            // Clear cache
             flushCache(user.getUsername());
-            // 强制退出
+            // Force logout
             onlineUserService.kickOutForUsername(user.getUsername());
         });
-        // 重置密码
+        // Reset password
         userMapper.resetPwd(ids, pwd);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, String> updateAvatar(MultipartFile multipartFile) {
-        // 文件大小验证
+        // File size validation
         FileUtil.checkSize(properties.getAvatarMaxSize(), multipartFile.getSize());
-        // 验证文件上传的格式
+        // Validate uploaded file format
         String image = "gif jpg png jpeg";
         String fileType = FileUtil.getExtensionName(multipartFile.getOriginalFilename());
         if(fileType != null && !image.contains(fileType)){
-            throw new BadRequestException("文件格式错误！, 仅支持 " + image +" 格式");
+            throw new BadRequestException("File format error! Only " + image + " format is supported");
         }
         User user = userMapper.findByUsername(SecurityUtils.getCurrentUsername());
         String oldPath = user.getAvatarPath();
@@ -261,22 +261,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         for (User user : users) {
             List<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("用户名", user.getUsername());
-            map.put("角色", roles);
-            map.put("部门", user.getDept().getName());
-            map.put("岗位", user.getJobs().stream().map(Job::getName).collect(Collectors.toList()));
-            map.put("邮箱", user.getEmail());
-            map.put("状态", user.getEnabled() ? "启用" : "禁用");
-            map.put("手机号码", user.getPhone());
-            map.put("修改密码的时间", user.getPwdResetTime());
-            map.put("创建日期", user.getCreateTime());
+            map.put("Username", user.getUsername());
+            map.put("Roles", roles);
+            map.put("Department", user.getDept().getName());
+            map.put("Jobs", user.getJobs().stream().map(Job::getName).collect(Collectors.toList()));
+            map.put("Email", user.getEmail());
+            map.put("Status", user.getEnabled() ? "Enabled" : "Disabled");
+            map.put("Phone Number", user.getPhone());
+            map.put("Password Reset Time", user.getPwdResetTime());
+            map.put("Create Date", user.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
     }
 
     /**
-     * 清理缓存
+     * Clear cache
      *
      * @param id /
      */
@@ -286,7 +286,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * 清理 登陆时 用户缓存信息
+     * Clear user cache during login
      *
      * @param username /
      */

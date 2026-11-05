@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Zheng Jie
- * @date 2019年10月26日21:56:27
+ * @date 2019-10-26 21:56:27
  */
 @Service
 @Slf4j
@@ -45,7 +45,7 @@ public class OnlineUserService {
     private final RedisUtils redisUtils;
 
     /**
-     * 保存在线用户信息
+     * Save online user information
      * @param jwtUserDto /
      * @param token /
      * @param request /
@@ -67,7 +67,7 @@ public class OnlineUserService {
     }
 
     /**
-     * 查询全部数据
+     * Query all data
      * @param username /
      * @param pageable /
      * @return /
@@ -82,7 +82,7 @@ public class OnlineUserService {
     }
 
     /**
-     * 查询全部数据，不分页
+     * Query all data without pagination
      * @param username /
      * @return /
      */
@@ -100,7 +100,7 @@ public class OnlineUserService {
     }
 
     /**
-     * 退出登录
+     * Log out
      * @param token /
      */
     public void logout(String token) {
@@ -109,7 +109,7 @@ public class OnlineUserService {
     }
 
     /**
-     * 导出
+     * Export
      * @param all /
      * @param response /
      * @throws IOException /
@@ -118,19 +118,19 @@ public class OnlineUserService {
         List<Map<String, Object>> list = new ArrayList<>();
         for (OnlineUserDto user : all) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("用户名", user.getUserName());
-            map.put("部门", user.getDept());
-            map.put("登录IP", user.getIp());
-            map.put("登录地点", user.getAddress());
-            map.put("浏览器", user.getBrowser());
-            map.put("登录日期", user.getLoginTime());
+            map.put("Username", user.getUserName());
+            map.put("Department", user.getDept());
+            map.put("Login IP", user.getIp());
+            map.put("Login Location", user.getAddress());
+            map.put("Browser", user.getBrowser());
+            map.put("Login Date", user.getLoginTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
     }
 
     /**
-     * 查询用户
+     * Query user
      * @param key /
      * @return /
      */
@@ -139,7 +139,7 @@ public class OnlineUserService {
     }
 
     /**
-     * 根据用户名强退用户
+     * Force log out user by username
      * @param username /
      */
     public void kickOutForUsername(String username) {

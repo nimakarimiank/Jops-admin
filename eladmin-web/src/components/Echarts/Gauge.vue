@@ -61,10 +61,10 @@ export default {
         },
         series: [
           {
-            name: '业务指标',
+            name: 'Business Indicators',
             type: 'gauge',
             detail: { formatter: '{value}%' },
-            data: [{ value: 50, name: '完成率' }]
+            data: [{ value: 50, name: 'Completion Rate' }]
           }
         ]
       })

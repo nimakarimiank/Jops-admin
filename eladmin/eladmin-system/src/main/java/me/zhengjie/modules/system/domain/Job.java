@@ -42,15 +42,15 @@ public class Job extends BaseEntity implements Serializable {
     private Long id;
 
     @NotBlank
-    @ApiModelProperty(value = "岗位名称")
+    @ApiModelProperty(value = "Job name")
     private String name;
 
     @NotNull
-    @ApiModelProperty(value = "岗位排序")
+    @ApiModelProperty(value = "Job sort")
     private Long jobSort;
 
     @NotNull
-    @ApiModelProperty(value = "是否启用")
+    @ApiModelProperty(value = "Is enabled")
     private Boolean enabled;
 
     @Override

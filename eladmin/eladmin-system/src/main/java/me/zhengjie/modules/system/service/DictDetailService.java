@@ -30,35 +30,35 @@ import java.util.List;
 public interface DictDetailService extends IService<DictDetail> {
 
     /**
-     * 创建
+     * Create
      * @param resources /
      */
     void create(DictDetail resources);
 
     /**
-     * 编辑
+     * Update
      * @param resources /
      */
     void update(DictDetail resources);
 
     /**
-     * 删除
+     * Delete
      * @param id /
      */
     void delete(Long id);
 
     /**
-     * 分页查询
+     * Pagination query
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param criteria Criteria
+     * @param page     Pagination parameters
      * @return /
      */
     PageResult<DictDetail> queryAll(DictDetailQueryCriteria criteria, Page<Object> page);
 
     /**
-     * 根据字典名称获取字典详情
-     * @param name 字典名称
+     * Get dictionary details by dictionary name
+     * @param name Dictionary name
      * @return /
      */
     List<DictDetail> getDictByName(String name);

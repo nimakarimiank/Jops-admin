@@ -30,14 +30,14 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "系统-服务监控管理")
+@Api(tags = "System: Server Monitor Management")
 @RequestMapping("/api/monitor")
 public class MonitorController {
 
     private final MonitorService serverService;
 
     @GetMapping
-    @ApiOperation("查询服务监控")
+    @ApiOperation("Query server monitor")
     @PreAuthorize("@el.check('monitor:list')")
     public ResponseEntity<Object> queryMonitor(){
         return new ResponseEntity<>(serverService.getServers(),HttpStatus.OK);

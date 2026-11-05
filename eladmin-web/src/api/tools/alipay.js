@@ -15,7 +15,7 @@ export function update(data) {
   })
 }
 
-// 支付
+// Payment
 export function toAliPay(url, data) {
   return request({
     url: 'api/' + url,

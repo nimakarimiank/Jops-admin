@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <p class="warn-content">
-      富文本基于
+      Rich text editor based on
       <el-link type="primary" href="https://www.wangeditor.com/v5/getting-started.html" target="_blank">wangEditor</el-link>
     </p>
     <el-row :gutter="10">
@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       editorContent:
-        `更多帮助请查看官方文档`
+        `For more help, please refer to the official documentation`
     }
   },
   computed: {

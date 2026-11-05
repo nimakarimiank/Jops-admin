@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 public class GeneratorServiceImpl extends ServiceImpl<ColumnInfoMapper, ColumnInfo> implements GeneratorService {
 
     private final ColumnInfoMapper columnInfoMapper;
-    private final String CONFIG_MESSAGE = "请先配置生成器";
+    private final String CONFIG_MESSAGE = "Please configure the generator first";
 
     @Override
     public PageResult<TableInfo> getTables(String name, Page<Object> page) {
@@ -86,11 +86,11 @@ public class GeneratorServiceImpl extends ServiceImpl<ColumnInfoMapper, ColumnIn
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void sync(List<ColumnInfo> columnInfos, List<ColumnInfo> columnInfoList) {
-        // 第一种情况，数据库类字段改变或者新增字段
+        // Case 1: database field modified or added
         for (ColumnInfo columnInfo : columnInfoList) {
-            // 根据字段名称查找
+            // Find by column name
             List<ColumnInfo> columns = columnInfos.stream().filter(c -> c.getColumnName().equals(columnInfo.getColumnName())).collect(Collectors.toList());
-            // 如果能找到，就修改部分可能被字段
+            // If found, update modified fields
             if (CollectionUtil.isNotEmpty(columns)) {
                 ColumnInfo column = columns.get(0);
                 column.setColumnType(columnInfo.getColumnType());
@@ -101,15 +101,15 @@ public class GeneratorServiceImpl extends ServiceImpl<ColumnInfoMapper, ColumnIn
                 }
                 saveOrUpdate(column);
             } else {
-                // 如果找不到，则保存新字段信息
+                // If not found, save new column info
                 save(columnInfo);
             }
         }
-        // 第二种情况，数据库字段删除了
+        // Case 2: database column was deleted
         for (ColumnInfo columnInfo : columnInfos) {
-            // 根据字段名称查找
+            // Find by column name
             List<ColumnInfo> columns = columnInfoList.stream().filter(c -> c.getColumnName().equals(columnInfo.getColumnName())).collect(Collectors.toList());
-            // 如果找不到，就代表字段被删除了，则需要删除该字段
+            // If not found, the column was deleted and should be removed
             if (CollectionUtil.isEmpty(columns)) {
                 removeById(columnInfo);
             }
@@ -131,7 +131,7 @@ public class GeneratorServiceImpl extends ServiceImpl<ColumnInfoMapper, ColumnIn
             GenUtil.generatorCode(columns, genConfig);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            throw new BadRequestException("生成失败，请手动处理已生成的文件");
+            throw new BadRequestException("Generation failed, please manually handle generated files");
         }
     }
 
@@ -155,7 +155,7 @@ public class GeneratorServiceImpl extends ServiceImpl<ColumnInfoMapper, ColumnIn
             ZipUtil.zip(file.getPath(), zipPath);
             FileUtil.downloadFile(request, response, new File(zipPath), true);
         } catch (IOException e) {
-            throw new BadRequestException("打包失败");
+            throw new BadRequestException("Packaging failed");
         }
     }
 }

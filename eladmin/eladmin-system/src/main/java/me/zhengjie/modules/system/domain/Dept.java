@@ -47,28 +47,28 @@ public class Dept extends BaseEntity implements Serializable {
 
     @TableField(exist = false)
     @JSONField(serialize = false)
-    @ApiModelProperty(value = "角色")
+    @ApiModelProperty(value = "Roles")
     private Set<Role> roles;
 
     @TableField(exist = false)
-    @ApiModelProperty(value = "子部门")
+    @ApiModelProperty(value = "Sub departments")
     private List<Dept> children;
 
-    @ApiModelProperty(value = "排序")
+    @ApiModelProperty(value = "Sort")
     private Integer deptSort;
 
     @NotBlank
-    @ApiModelProperty(value = "部门名称")
+    @ApiModelProperty(value = "Department name")
     private String name;
 
     @NotNull
-    @ApiModelProperty(value = "是否启用")
+    @ApiModelProperty(value = "Is enabled")
     private Boolean enabled;
 
-    @ApiModelProperty(value = "上级部门")
+    @ApiModelProperty(value = "Parent department")
     private Long pid;
 
-    @ApiModelProperty(value = "子节点数目", hidden = true)
+    @ApiModelProperty(value = "Sub node count", hidden = true)
     private Integer subCount = 0;
 
     @Override
@@ -89,18 +89,18 @@ public class Dept extends BaseEntity implements Serializable {
         return Objects.hash(id, name);
     }
 
-    @ApiModelProperty(value = "是否有子节点")
+    @ApiModelProperty(value = "Has children")
     public Boolean getHasChildren() {
         return subCount > 0;
     }
 
 
-    @ApiModelProperty(value = "是否为叶子")
+    @ApiModelProperty(value = "Is leaf")
     public Boolean getLeaf() {
         return subCount <= 0;
     }
 
-    @ApiModelProperty(value = "标签名称")
+    @ApiModelProperty(value = "Label name")
     public String getLabel() {
         return name;
     }

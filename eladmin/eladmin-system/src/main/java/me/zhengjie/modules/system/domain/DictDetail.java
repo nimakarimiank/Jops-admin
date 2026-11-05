@@ -45,15 +45,15 @@ public class DictDetail extends BaseEntity implements Serializable {
     private Long dictId;
 
     @TableField(exist = false)
-    @ApiModelProperty(value = "字典")
+    @ApiModelProperty(value = "Dictionary")
     private Dict dict;
 
-    @ApiModelProperty(value = "字典标签")
+    @ApiModelProperty(value = "Dict label")
     private String label;
 
-    @ApiModelProperty(value = "字典值")
+    @ApiModelProperty(value = "Dict value")
     private String value;
 
-    @ApiModelProperty(value = "排序")
+    @ApiModelProperty(value = "Sort")
     private Integer dictSort = 999;
 }

@@ -40,21 +40,21 @@ import java.util.Set;
 */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "系统：岗位管理")
+@Api(tags = "System: Job Management")
 @RequestMapping("/api/job")
 public class JobController {
 
     private final JobService jobService;
     private static final String ENTITY_NAME = "job";
 
-    @ApiOperation("导出岗位数据")
+    @ApiOperation("Export job data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('job:list')")
     public void exportJob(HttpServletResponse response, JobQueryCriteria criteria) throws IOException {
         jobService.download(jobService.queryAll(criteria), response);
     }
 
-    @ApiOperation("查询岗位")
+    @ApiOperation("Query jobs")
     @GetMapping
     @PreAuthorize("@el.check('job:list','user:list')")
     public ResponseEntity<PageResult<Job>> queryJob(JobQueryCriteria criteria){
@@ -62,8 +62,8 @@ public class JobController {
         return new ResponseEntity<>(jobService.queryAll(criteria, page),HttpStatus.OK);
     }
 
-    @Log("新增岗位")
-    @ApiOperation("新增岗位")
+    @Log("Create job")
+    @ApiOperation("Create job")
     @PostMapping
     @PreAuthorize("@el.check('job:add')")
     public ResponseEntity<Object> createJob(@Validated @RequestBody Job resources){
@@ -74,8 +74,8 @@ public class JobController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Log("修改岗位")
-    @ApiOperation("修改岗位")
+    @Log("Update job")
+    @ApiOperation("Update job")
     @PutMapping
     @PreAuthorize("@el.check('job:edit')")
     public ResponseEntity<Object> updateJob(@Validated(Job.Update.class) @RequestBody Job resources){
@@ -83,12 +83,12 @@ public class JobController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除岗位")
-    @ApiOperation("删除岗位")
+    @Log("Delete job")
+    @ApiOperation("Delete job")
     @DeleteMapping
     @PreAuthorize("@el.check('job:del')")
     public ResponseEntity<Object> deleteJob(@RequestBody Set<Long> ids){
-        // 验证是否被用户关联
+        // Verify whether associated with users
         jobService.verification(ids);
         jobService.delete(ids);
         return new ResponseEntity<>(HttpStatus.OK);

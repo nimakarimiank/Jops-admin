@@ -61,10 +61,10 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(App resources) {
-        // 验证应用名称是否存在恶意攻击payload，https://github.com/elunez/eladmin/issues/873
+        // Verify whether app name contains malicious payload, https://github.com/elunez/eladmin/issues/873
         String appName = resources.getName();
         if (appName.contains(";") || appName.contains("|") || appName.contains("&")) {
-            throw new IllegalArgumentException("非法的应用名称，请勿包含[; | &]等特殊字符");
+            throw new IllegalArgumentException("Illegal application name, please do not include special characters such as [; | &]");
         }
         verification(resources);
         save(resources);
@@ -73,10 +73,10 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(App resources) {
-        // 验证应用名称是否存在恶意攻击payload，https://github.com/elunez/eladmin/issues/873
+        // Verify whether app name contains malicious payload, https://github.com/elunez/eladmin/issues/873
         String appName = resources.getName();
         if (appName.contains(";") || appName.contains("|") || appName.contains("&")) {
-            throw new IllegalArgumentException("非法的应用名称，请勿包含[; | &]等特殊字符");
+            throw new IllegalArgumentException("Illegal application name, please do not include special characters such as [; | &]");
         }
         verification(resources);
         App app = getById(resources.getId());
@@ -88,22 +88,22 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         String opt = "/opt";
         String home = "/home";
         if (!(resources.getUploadPath().startsWith(opt) || resources.getUploadPath().startsWith(home))) {
-            throw new BadRequestException("文件只能上传在opt目录或者home目录 ");
+            throw new BadRequestException("Files can only be uploaded to /opt or /home directory ");
         }
         if (!(resources.getDeployPath().startsWith(opt) || resources.getDeployPath().startsWith(home))) {
-            throw new BadRequestException("文件只能部署在opt目录或者home目录 ");
+            throw new BadRequestException("Files can only be deployed to /opt or /home directory ");
         }
         if (!(resources.getBackupPath().startsWith(opt) || resources.getBackupPath().startsWith(home))) {
-            throw new BadRequestException("文件只能备份在opt目录或者home目录 ");
+            throw new BadRequestException("Files can only be backed up to /opt or /home directory ");
         }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
-        // 删除应用
+        // Delete application
         removeBatchByIds(ids);
-        // 删除部署
+        // Delete deployment
         Set<Long> deployIds = deployMapper.getIdByAppIds(ids);
         if(CollUtil.isNotEmpty(deployIds)){
             deployServerMapper.deleteByDeployIds(deployIds);
@@ -116,14 +116,14 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         List<Map<String, Object>> list = new ArrayList<>();
         for (App app : apps) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("应用名称", app.getName());
-            map.put("端口", app.getPort());
-            map.put("上传目录", app.getUploadPath());
-            map.put("部署目录", app.getDeployPath());
-            map.put("备份目录", app.getBackupPath());
-            map.put("启动脚本", app.getStartScript());
-            map.put("部署脚本", app.getDeployScript());
-            map.put("创建日期", app.getCreateTime());
+            map.put("Application Name", app.getName());
+            map.put("Port", app.getPort());
+            map.put("Upload Path", app.getUploadPath());
+            map.put("Deploy Path", app.getDeployPath());
+            map.put("Backup Path", app.getBackupPath());
+            map.put("Start Script", app.getStartScript());
+            map.put("Deploy Script", app.getDeployScript());
+            map.put("Creation Date", app.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);

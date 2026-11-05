@@ -93,7 +93,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             throw new EntityExistException(Role.class, "username", resources.getName());
         }
         save(resources);
-        // 判断是否有部门数据，若有，则需创建关联
+        // Determine if department data exists, and create association if present
         if (CollectionUtil.isNotEmpty(resources.getDepts())) {
             roleDeptMapper.insertData(resources.getId(), resources.getDepts());
         }
@@ -112,28 +112,28 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         role.setDataScope(resources.getDataScope());
         role.setDepts(resources.getDepts());
         role.setLevel(resources.getLevel());
-        // 更新
+        // Update
         saveOrUpdate(role);
-        // 删除关联部门数据
+        // Delete associated department data
         roleDeptMapper.deleteByRoleId(resources.getId());
-        // 判断是否有部门数据，若有，则需更新关联
+        // Determine if department data exists, and update association if present
         if (CollectionUtil.isNotEmpty(resources.getDepts())) {
             roleDeptMapper.insertData(resources.getId(), resources.getDepts());
         }
-        // 更新相关缓存
+        // Update relevant cache
         delCaches(role.getId(), null);
     }
 
     @Override
     public void updateMenu(Role role) {
         List<User> users = userMapper.findByRoleId(role.getId());
-        // 更新菜单
+        // Update menus
         roleMenuMapper.deleteByRoleId(role.getId());
-        // 判断是否为空
+        // Check whether empty
         if(CollUtil.isNotEmpty(role.getMenus())){
             roleMenuMapper.insertData(role.getId(), role.getMenus());
         }
-        // 更新缓存
+        // Update cache
         delCaches(role.getId(), users);
     }
 
@@ -141,11 +141,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
         for (Long id : ids) {
-            // 更新相关缓存
+            // Update relevant cache
             delCaches(id, null);
         }
         removeBatchByIds(ids);
-        // 删除角色部门关联数据、角色菜单关联数据
+        // Delete role-department association and role-menu association data
         roleDeptMapper.deleteByRoleIds(ids);
         roleMenuMapper.deleteByRoleIds(ids);
     }
@@ -179,7 +179,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         List<AuthorityDto> authorityDtos = redisUtils.getList(key, AuthorityDto.class);
         if (CollUtil.isEmpty(authorityDtos)) {
             Set<String> permissions = new HashSet<>();
-            // 如果是管理员直接返回
+            // If administrator, return directly
             if (user.getIsAdmin()) {
                 permissions.add("admin");
                 return permissions.stream().map(AuthorityDto::new)
@@ -201,10 +201,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         List<Map<String, Object>> list = new ArrayList<>();
         for (Role role : roles) {
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("角色名称", role.getName());
-            map.put("角色级别", role.getLevel());
-            map.put("描述", role.getDescription());
-            map.put("创建日期", role.getCreateTime());
+            map.put("Role Name", role.getName());
+            map.put("Role Level", role.getLevel());
+            map.put("Description", role.getDescription());
+            map.put("Create Date", role.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
@@ -213,7 +213,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public void verification(Set<Long> ids) {
         if (userMapper.countByRoles(ids) > 0) {
-            throw new BadRequestException("所选角色存在用户关联，请解除关联再试！");
+            throw new BadRequestException("The selected role has associated users, please dissociate before proceeding!");
         }
     }
 
@@ -223,7 +223,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     /**
-     * 清理缓存
+     * Clear cache
      * @param id /
      */
     public void delCaches(Long id, List<User> users) {

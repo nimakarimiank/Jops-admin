@@ -8,15 +8,15 @@
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
 
-        <el-tooltip content="项目文档" effect="dark" placement="bottom">
+        <el-tooltip content="Project Docs" effect="dark" placement="bottom">
           <Doc class="right-menu-item hover-effect" />
         </el-tooltip>
 
-        <el-tooltip content="全屏缩放" effect="dark" placement="bottom">
+        <el-tooltip content="Full Screen" effect="dark" placement="bottom">
           <screenfull id="screenfull" class="right-menu-item hover-effect" />
         </el-tooltip>
 
-        <el-tooltip content="布局设置" effect="dark" placement="bottom">
+        <el-tooltip content="Layout Settings" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
 
@@ -30,17 +30,17 @@
         <el-dropdown-menu slot="dropdown">
           <span style="display:block;" @click="show = true">
             <el-dropdown-item>
-              布局设置
+              Layout Settings
             </el-dropdown-item>
           </span>
           <router-link to="/user/center">
             <el-dropdown-item>
-              个人中心
+              User Center
             </el-dropdown-item>
           </router-link>
           <span style="display:block;" @click="open">
             <el-dropdown-item divided>
-              退出登录
+              Log Out
             </el-dropdown-item>
           </span>
         </el-dropdown-menu>
@@ -98,9 +98,9 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     open() {
-      this.$confirm('确定注销并退出系统吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm('Are you sure you want to log out and exit the system?', 'Notice', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         this.logout()

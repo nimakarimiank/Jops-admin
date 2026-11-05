@@ -1,20 +1,20 @@
 <template>
   <div class="app-container">
-    <!--工具栏-->
+    <!-- Toolbar -->
     <div class="head-container">
       <eHeader :dict="dict" :permission="permission" />
       <crudOperation :permission="permission" />
     </div>
-    <!--表格渲染-->
+    <!-- Table rendering -->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="name" label="名称" />
-      <el-table-column prop="jobSort" label="排序">
+      <el-table-column prop="name" label="Name" />
+      <el-table-column prop="jobSort" label="Sort">
         <template slot-scope="scope">
           {{ scope.row.jobSort }}
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态" align="center">
+      <el-table-column prop="status" label="Status" align="center">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.enabled"
@@ -24,11 +24,11 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建日期" />
-      <!--   编辑与删除   -->
+      <el-table-column prop="createTime" label="Created Date" />
+      <!--   Edit and delete   -->
       <el-table-column
         v-if="checkPer(['admin','job:edit','job:del'])"
-        label="操作"
+        label="Actions"
         width="130px"
         align="center"
         fixed="right"
@@ -41,9 +41,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--分页组件-->
+    <!-- Pagination component -->
     <pagination />
-    <!--表单渲染-->
+    <!-- Form rendering -->
     <eForm :job-status="dict.job_status" />
   </div>
 </template>
@@ -61,13 +61,13 @@ export default {
   components: { eHeader, eForm, crudOperation, pagination, udOperation },
   cruds() {
     return CRUD({
-      title: '岗位',
+      title: 'Job',
       url: 'api/job',
       crudMethod: { ...crudJob }
     })
   },
   mixins: [presenter()],
-  // 数据字典
+  // Data dictionary
   dicts: ['job_status'],
   data() {
     return {
@@ -79,17 +79,17 @@ export default {
     }
   },
   methods: {
-    // 改变状态
+    // Change status
     changeEnabled(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.job_status[val] + '" ' + data.name + '岗位, 是否继续？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm('This action will "' + this.dict.label.job_status[val] + '" job ' + data.name + ', continue?', 'Hint', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         // eslint-disable-next-line no-undef
         crudJob.edit(data).then(() => {
           // eslint-disable-next-line no-undef
-          this.crud.notify(this.dict.label.job_status[val] + '成功', 'success')
+          this.crud.notify(this.dict.label.job_status[val] + ' succeeded', 'success')
         }).catch(err => {
           data.enabled = !data.enabled
           console.log(err.data.message)

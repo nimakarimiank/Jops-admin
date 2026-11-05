@@ -53,41 +53,41 @@ public class TokenProvider implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        // 解码Base64密钥并创建签名密钥
+        // Decode Base64 key and create signing key
         byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
         this.signingKey = Keys.hmacShaKeyFor(keyBytes);
-        // 初始化 JwtParser
+        // Initialize JwtParser
         jwtParser = Jwts.parserBuilder()
-                .setSigningKey(signingKey) // 使用预生成的签名密钥
+                .setSigningKey(signingKey) // Use pre-generated signing key
                 .build();
     }
 
     /**
-     * 创建Token 设置永不过期，
-     * Token 的时间有效性转到Redis 维护
+     * Create token set to never expire,
+     * Token expiration is maintained in Redis
      * @param user /
      * @return /
      */
     public String createToken(JwtUserDto user) {
-        // 设置参数
+        // Set parameters
         Map<String, Object> claims = new HashMap<>(6);
-        // 设置用户ID
+        // Set user ID
         claims.put(AUTHORITIES_UID_KEY, user.getUser().getId());
-        // 设置UUID，确保每次Token不一样
+        // Set UUID to ensure each token is unique
         claims.put(AUTHORITIES_UUID_KEY, IdUtil.simpleUUID());
-        // 直接调用 Jwts.builder() 创建新实例
+        // Call Jwts.builder() directly to create new instance
         return Jwts.builder()
-                // 设置自定义 Claims
+                // Set custom claims
                 .setClaims(claims)
-                // 设置主题
+                // Set subject
                 .setSubject(user.getUsername())
-                // 使用预生成的签名密钥和算法签名
+                // Sign with pre-generated signing key and algorithm
                 .signWith(signingKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
     /**
-     * 依据Token 获取鉴权信息
+     * Get authentication information based on token
      *
      * @param token /
      * @return /
@@ -105,16 +105,16 @@ public class TokenProvider implements InitializingBean {
     }
 
     /**
-     * @param token 需要检查的token
+     * @param token Token to check
      */
     public void checkRenewal(String token) {
-        // 判断是否续期token,计算token的过期时间
+        // Check whether to renew token, calculate expiration time
         String loginKey = loginKey(token);
         long time = redisUtils.getExpire(loginKey) * 1000;
         Date expireDate = DateUtil.offset(new Date(), DateField.MILLISECOND, (int) time);
-        // 判断当前时间与过期时间的时间差
+        // Calculate difference between current time and expiration time
         long differ = expireDate.getTime() - System.currentTimeMillis();
-        // 如果在续期检查的范围内，则续期
+        // Renew if within renewal check window
         if (differ <= properties.getDetect()) {
             long renew = time + properties.getRenew();
             redisUtils.expire(loginKey, renew, TimeUnit.MILLISECONDS);
@@ -130,7 +130,7 @@ public class TokenProvider implements InitializingBean {
     }
 
     /**
-     * 获取登录用户RedisKey
+     * Get login user Redis key
      * @param token /
      * @return key
      */
@@ -140,7 +140,7 @@ public class TokenProvider implements InitializingBean {
     }
 
     /**
-     * 获取会话编号
+     * Get session ID
      * @param token /
      * @return /
      */

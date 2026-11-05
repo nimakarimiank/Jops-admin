@@ -1,5 +1,5 @@
 <template>
-  <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="dialog" title="应用部署" width="400px">
+  <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="dialog" title="Application Deployment" width="400px">
     <el-form ref="form" :model="form" :rules="rules" size="small">
       <el-upload
         :action="deployUploadApi"
@@ -12,14 +12,14 @@
       >
         <i class="el-icon-upload" />
         <div class="el-upload__text">
-          将文件拖到此处，或
-          <em>点击上传</em>
+          Drop files here, or
+          <em>click to upload</em>
         </div>
-        <div slot="tip" class="el-upload__tip">多个应用上传文件名称为all.zip,数据库更新脚本扩展名为.sql,上传成功后系统自动部署系统。</div>
+        <div slot="tip" class="el-upload__tip">For multiple apps, uploaded file name is all.zip, database update script extension is .sql. System auto-deploys upon upload.</div>
       </el-upload>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="cancel">关闭</el-button>
+      <el-button type="primary" @click="cancel">Close</el-button>
     </div>
   </el-dialog>
 </template>
@@ -86,7 +86,7 @@ export default {
         .then(res => {
           this.resetForm()
           this.$notify({
-            title: '添加成功',
+            title: 'Added successfully',
             type: 'success',
             duration: 2500
           })
@@ -104,7 +104,7 @@ export default {
         .then(res => {
           this.resetForm()
           this.$notify({
-            title: '修改成功',
+            title: 'Modified successfully',
             type: 'success',
             duration: 2500
           })
@@ -137,7 +137,7 @@ export default {
     handleSuccess(response, file, fileList) {
       this.cancel()
     },
-    // 监听上传失败
+    // Listen for upload failure
     handleError(e, file, fileList) {
       const msg = JSON.parse(e.message)
       this.$notify({
@@ -154,7 +154,7 @@ export default {
     },
     webSocketOnError(e) {
       this.$notify({
-        title: 'WebSocket连接发生错误',
+        title: 'WebSocket connection error occurred',
         type: 'error',
         duration: 0
       })

@@ -26,48 +26,48 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import me.zhengjie.utils.PageResult;
 
 /**
-* @description 服务接口
+* @description Service interface
 * @author ${author}
 * @date ${date}
 **/
 public interface ${className}Service extends IService<${className}> {
 
     /**
-    * 查询数据分页
-    * @param criteria 条件
-    * @param page 分页参数
+    * Paginated query
+    * @param criteria Criteria
+    * @param page Pagination parameters
     * @return PageResult
     */
     PageResult<${className}> queryAll(${className}QueryCriteria criteria, Page<Object> page);
 
     /**
-    * 查询所有数据不分页
-    * @param criteria 条件参数
+    * Query all data unpaged
+    * @param criteria Criteria parameters
     * @return List<${className}Dto>
     */
     List<${className}> queryAll(${className}QueryCriteria criteria);
 
     /**
-    * 创建
+    * Create
     * @param resources /
     */
     void create(${className} resources);
 
     /**
-    * 编辑
+    * Edit
     * @param resources /
     */
     void update(${className} resources);
 
     /**
-    * 多选删除
+    * Batch delete
     * @param ids /
     */
     void deleteAll(List<${pkColumnType}> ids);
 
     /**
-    * 导出数据
-    * @param all 待导出的数据
+    * Export data
+    * @param all Data to export
     * @param response /
     * @throws IOException /
     */

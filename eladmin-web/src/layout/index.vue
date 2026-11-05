@@ -12,7 +12,7 @@
         <settings />
       </right-panel>
     </div>
-    <!--  防止刷新后主题丢失  -->
+    <!--  Prevent theme loss after refresh  -->
     <Theme v-show="false" ref="theme" />
   </div>
 </template>

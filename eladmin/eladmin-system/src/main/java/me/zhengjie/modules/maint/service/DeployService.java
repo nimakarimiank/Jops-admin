@@ -34,75 +34,75 @@ import java.util.Set;
 public interface DeployService extends IService<Deploy> {
 
     /**
-     * 分页查询
+     * Pagination query
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param criteria Criteria
+     * @param page     Pagination parameters
      * @return /
      */
     PageResult<Deploy> queryAll(DeployQueryCriteria criteria, Page<Object> page);
 
     /**
-     * 查询全部数据
-     * @param criteria 条件
+     * Query all data
+     * @param criteria Criteria
      * @return /
      */
     List<Deploy> queryAll(DeployQueryCriteria criteria);
 
     /**
-     * 创建
+     * Create
      * @param resources /
      */
     void create(Deploy resources);
 
 
     /**
-     * 编辑
+     * Edit
      * @param resources /
      */
     void update(Deploy resources);
 
     /**
-     * 删除
+     * Delete
      * @param ids /
      */
     void delete(Set<Long> ids);
 
     /**
-     * 部署服务
+     * Deploy service
      * @param fileSavePath /
      * @param appId /
      */
     void deploy(String fileSavePath, Long appId);
 
     /**
-     * 查询部署状态
+     * Query deployment status
      * @param resources /
      * @return /
      */
     String serverStatus(Deploy resources);
     /**
-     * 启动服务
+     * Start service
      * @param resources /
      * @return /
      */
     String startServer(Deploy resources);
     /**
-     * 停止服务
+     * Stop service
      * @param resources /
      * @return /
      */
     String stopServer(Deploy resources);
 
     /**
-     * 停止服务
+     * Stop service
      * @param resources /
      * @return /
      */
     String serverReduction(DeployHistory resources);
 
     /**
-     * 导出数据
+     * Export data
      * @param queryAll /
      * @param response /
      * @throws IOException /

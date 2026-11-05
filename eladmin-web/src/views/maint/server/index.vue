@@ -1,49 +1,49 @@
 <template>
   <div class="app-container">
-    <!--工具栏-->
+    <!-- Toolbar -->
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
-        <!-- 搜索 -->
-        <el-input v-model="query.blurry" clearable placeholder="输入名称或IP搜索" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <!-- Search -->
+        <el-input v-model="query.blurry" clearable placeholder="Search by name or IP" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <date-range-picker v-model="query.createTime" class="date-item" />
         <rrOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>
-    <!--表单组件-->
+    <!-- Form Component -->
     <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="470px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="55px">
-        <el-form-item label="名称" prop="name">
+        <el-form-item label="Name" prop="name">
           <el-input v-model="form.name" style="width: 370px" />
         </el-form-item>
         <el-form-item label="IP" prop="ip">
           <el-input v-model="form.ip" style="width: 370px" />
         </el-form-item>
-        <el-form-item label="端口" prop="port">
+        <el-form-item label="Port" prop="port">
           <el-input-number v-model.number="form.port" controls-position="right" style="width: 370px;" />
         </el-form-item>
-        <el-form-item label="账号" prop="account">
+        <el-form-item label="Account" prop="account">
           <el-input v-model="form.account" style="width: 370px" />
         </el-form-item>
-        <el-form-item label="密码" prop="password">
+        <el-form-item label="Password" prop="password">
           <el-input v-model="form.password" type="password" style="width: 200px" />
-          <el-button :loading="loading" type="success" style="align: right;" @click="testConnectServer">测试连接</el-button>
+          <el-button :loading="loading" type="success" style="align: right;" @click="testConnectServer">Test Connection</el-button>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="crud.cancelCU">取消</el-button>
-        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+        <el-button type="text" @click="crud.cancelCU">Cancel</el-button>
+        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">Confirm</el-button>
       </div>
     </el-dialog>
-    <!--表格渲染-->
+    <!-- Table Rendering -->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="name" label="名称" />
+      <el-table-column prop="name" label="Name" />
       <el-table-column prop="ip" label="IP" />
-      <el-table-column prop="port" label="端口" />
-      <el-table-column prop="account" label="账号" />
-      <el-table-column prop="createTime" label="创建日期" />
-      <el-table-column v-if="checkPer(['admin','serverDeploy:edit','serverDeploy:del'])" label="操作" width="150px" align="center">
+      <el-table-column prop="port" label="Port" />
+      <el-table-column prop="account" label="Account" />
+      <el-table-column prop="createTime" label="Created Date" />
+      <el-table-column v-if="checkPer(['admin','serverDeploy:edit','serverDeploy:del'])" label="Operation" width="150px" align="center">
         <template slot-scope="scope">
           <udOperation
             :data="scope.row"
@@ -52,7 +52,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--分页组件-->
+    <!-- Pagination Component -->
     <pagination />
   </div>
 </template>
@@ -74,7 +74,7 @@ export default {
   name: 'Server',
   components: { pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '服务器', url: 'api/serverDeploy', crudMethod: { ...crudServer }})
+    return CRUD({ title: 'Server', url: 'api/serverDeploy', crudMethod: { ...crudServer }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
@@ -89,20 +89,20 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+          { required: true, message: 'Please enter name', trigger: 'blur' }
         ],
         ip: [
-          { required: true, message: '请输入IP', trigger: 'blur' },
+          { required: true, message: 'Please enter IP', trigger: 'blur' },
           { validator: validateIP, trigger: 'change' }
         ],
         port: [
-          { required: true, message: '请输入端口', trigger: 'blur', type: 'number' }
+          { required: true, message: 'Please enter port', trigger: 'blur', type: 'number' }
         ],
         account: [
-          { required: true, message: '请输入账号', trigger: 'blur' }
+          { required: true, message: 'Please enter account', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
+          { required: true, message: 'Please enter password', trigger: 'blur' }
         ]
       }
     }
@@ -115,7 +115,7 @@ export default {
           testServerConnect(this.form).then((res) => {
             this.loading = false
             this.$notify({
-              title: res ? '连接成功' : '连接失败',
+              title: res ? 'Connection successful' : 'Connection failed',
               type: res ? 'success' : 'error',
               duration: 2500
             })

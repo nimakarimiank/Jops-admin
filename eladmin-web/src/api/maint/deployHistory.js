@@ -9,8 +9,8 @@ export function del(ids) {
 }
 
 /**
- * 版本回退
- * @param data 选中行
+ * Version rollback
+ * @param data Selected row
  */
 export function reducte(data) {
   return request({

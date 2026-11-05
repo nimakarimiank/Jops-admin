@@ -54,7 +54,7 @@ export default {
       ]
       this.chart.setOption({
         title: {
-          text: '1990 与 2015 年各国家人均寿命与 GDP'
+          text: '1990 and 2015 Life Expectancy and GDP by Country'
         },
         legend: {
           right: 10,

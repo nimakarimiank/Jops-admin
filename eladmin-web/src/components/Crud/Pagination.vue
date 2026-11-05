@@ -1,4 +1,4 @@
-<!--分页-->
+<!-- Pagination -->
 <template>
   <el-pagination
     :page-size.sync="page.size"

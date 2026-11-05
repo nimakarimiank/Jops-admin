@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 获取所有的Role
+// Get all Roles
 export function getAll() {
   return request({
     url: 'api/roles/all',

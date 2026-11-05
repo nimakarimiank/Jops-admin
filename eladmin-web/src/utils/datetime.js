@@ -1,8 +1,8 @@
 /* eslint-disable */
 
 /**
- * Date对象的补充函数，包括类似Python中的strftime()
- * 阿债 https://gitee.com/azhai/datetime.js
+ * Supplementary functions for Date object, including strftime() similar to Python
+ * Azhai https://gitee.com/azhai/datetime.js
  */
 
 Date.prototype.toMidnight = function() {
@@ -194,22 +194,22 @@ const local_labels = {
   monthes: {
     english: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    zh: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+    zh: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   },
   weekdays: {
     english: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-    zh: ['日', '一', '二', '三', '四', '五', '六']
+    zh: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
   },
   meridians: {
     english: ['a.m.', 'p.m.'],
     en: ['AM', 'PM'],
-    zh: ['上午', '下午']
+    zh: ['AM', 'PM'],
   },
   dayagos: {
     english: ['Today', 'Yesterday', 'Tomorrow', ' days ago', ' days late'],
     en: ['Today', 'Yesterday', 'Tomorrow', ' days ago', ' days late'],
-    zh: ['今天', '昨天', '明天', '天前', '天后']
+    zh: ['Today', 'Yesterday', 'Tomorrow', ' days ago', ' days later']
   }
 }
 

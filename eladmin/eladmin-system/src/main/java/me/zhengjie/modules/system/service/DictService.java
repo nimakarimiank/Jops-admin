@@ -33,42 +33,42 @@ import java.util.Set;
 public interface DictService extends IService<Dict> {
 
     /**
-     * 分页查询
+     * Pagination query
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param criteria Criteria
+     * @param page     Pagination parameters
      * @return /
      */
     PageResult<Dict> queryAll(DictQueryCriteria criteria, Page<Object> page);
 
     /**
-     * 查询全部数据
+     * Query all data
      * @param criteria /
      * @return /
      */
     List<Dict> queryAll(DictQueryCriteria criteria);
 
     /**
-     * 创建
+     * Create
      * @param resources /
      */
     void create(Dict resources);
 
     /**
-     * 编辑
+     * Update
      * @param resources /
      */
     void update(Dict resources);
 
     /**
-     * 删除
+     * Delete
      * @param ids /
      */
     void delete(Set<Long> ids);
 
     /**
-     * 导出数据
-     * @param queryAll 待导出的数据
+     * Export data
+     * @param queryAll Data to export
      * @param response /
      * @throws IOException /
      */

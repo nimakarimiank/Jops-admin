@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Zheng Jie
- * @description 数据权限服务实现
+ * @description Data permission service implementation
  * @date 2020-05-07
  **/
 @Service
@@ -44,7 +44,7 @@ public class DataServiceImpl implements DataService {
     private final DeptService deptService;
 
     /**
-     * 用户角色和用户部门改变时需清理缓存
+     * Clear cache when user role or department changes
      * @param user /
      * @return /
      */
@@ -54,9 +54,9 @@ public class DataServiceImpl implements DataService {
         List<Long> ids = redisUtils.getList(key, Long.class);
         if (CollUtil.isEmpty(ids)) {
             Set<Long> deptIds = new HashSet<>();
-            // 查询用户角色
+            // Query user roles
             List<Role> roleList = roleService.findByUsersId(user.getId());
-            // 获取对应的部门ID
+            // Get corresponding department IDs
             for (Role role : roleList) {
                 DataScopeEnum dataScopeEnum = DataScopeEnum.find(role.getDataScope());
                 switch (Objects.requireNonNull(dataScopeEnum)) {
@@ -77,10 +77,10 @@ public class DataServiceImpl implements DataService {
     }
 
     /**
-     * 获取自定义的数据权限
-     * @param deptIds 部门ID
-     * @param role 角色
-     * @return 数据权限ID
+     * Get customized data permissions
+     * @param deptIds Department IDs
+     * @param role Role
+     * @return Data permission IDs
      */
     public Set<Long> getCustomize(Set<Long> deptIds, Role role){
         Set<Dept> depts = deptService.findByRoleId(role.getId());

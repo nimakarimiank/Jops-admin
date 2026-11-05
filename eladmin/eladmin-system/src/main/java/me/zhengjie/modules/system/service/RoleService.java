@@ -35,95 +35,95 @@ import java.util.Set;
 public interface RoleService extends IService<Role> {
 
     /**
-     * 查询全部数据
+     * Query all data
      * @return /
      */
     List<Role> queryAll();
 
     /**
-     * 根据ID查询
+     * Query by ID
      * @param id /
      * @return /
      */
     Role findById(long id);
 
     /**
-     * 创建
+     * Create
      * @param resources /
      */
     void create(Role resources);
 
     /**
-     * 编辑
+     * Update
      * @param resources /
      */
     void update(Role resources);
 
     /**
-     * 删除
+     * Delete
      * @param ids /
      */
     void delete(Set<Long> ids);
 
     /**
-     * 根据用户ID查询
-     * @param userId 用户ID
+     * Query by user ID
+     * @param userId User ID
      * @return /
      */
     List<Role> findByUsersId(Long userId);
 
     /**
-     * 根据角色查询角色级别
+     * Query role level by roles
      * @param roles /
      * @return /
      */
     Integer findByRoles(Set<Role> roles);
 
     /**
-     * 修改绑定的菜单
+     * Update bound menus
      * @param resources /
      */
     void updateMenu(Role resources);
 
     /**
-     * 待条件分页查询
+     * Pagination query with criteria
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param criteria Criteria
+     * @param page     Pagination parameters
      * @return /
      */
     PageResult<Role> queryAll(RoleQueryCriteria criteria, Page<Object> page);
 
     /**
-     * 查询全部
-     * @param criteria 条件
+     * Query all
+     * @param criteria Criteria
      * @return /
      */
     List<Role> queryAll(RoleQueryCriteria criteria);
 
     /**
-     * 导出数据
-     * @param roles 待导出的数据
+     * Export data
+     * @param roles Data to export
      * @param response /
      * @throws IOException /
      */
     void download(List<Role> roles, HttpServletResponse response) throws IOException;
 
     /**
-     * 获取用户权限信息
-     * @param user 用户信息
-     * @return 权限信息
+     * Get user permission information
+     * @param user User information
+     * @return Permission information
      */
     List<AuthorityDto> buildPermissions(User user);
 
     /**
-     * 验证是否被用户关联
+     * Verify whether associated with users
      * @param ids /
      */
     void verification(Set<Long> ids);
 
     /**
-     * 根据菜单Id查询
+     * Query by menu ID
      * @param menuId /
      * @return /
      */

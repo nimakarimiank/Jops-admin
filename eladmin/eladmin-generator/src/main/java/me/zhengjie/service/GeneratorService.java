@@ -33,60 +33,60 @@ import java.util.List;
 public interface GeneratorService extends IService<ColumnInfo> {
 
     /**
-     * 查询数据库元数据
+     * Query database metadata
      *
-     * @param name 表名
-     * @param page 分页参数
+     * @param name Table name
+     * @param page Pagination parameters
      * @return /
      */
     PageResult<TableInfo> getTables(String name, Page<Object> page);
 
     /**
-     * 得到数据表的元数据
-     * @param name 表名
+     * Get metadata of data table
+     * @param name Table name
      * @return /
      */
     List<ColumnInfo> getColumns(String name);
 
     /**
-     * 同步表数据
+     * Synchronize table data
      * @param columnInfos /
      * @param columnInfoList /
      */
     void sync(List<ColumnInfo> columnInfos, List<ColumnInfo> columnInfoList);
 
     /**
-     * 保持数据
+     * Save data
      * @param columnInfos /
      */
     void save(List<ColumnInfo> columnInfos);
 
     /**
-     * 代码生成
-     * @param genConfig 配置信息
-     * @param columns 字段信息
+     * Code generation
+     * @param genConfig Configuration information
+     * @param columns Column information
      */
     void generator(GenConfig genConfig, List<ColumnInfo> columns);
 
     /**
-     * 预览
-     * @param genConfig 配置信息
-     * @param columns 字段信息
+     * Preview
+     * @param genConfig Configuration information
+     * @param columns Column information
      * @return /
      */
     ResponseEntity<Object> preview(GenConfig genConfig, List<ColumnInfo> columns);
 
     /**
-     * 打包下载
-     * @param genConfig 配置信息
-     * @param columns 字段信息
+     * Package and download
+     * @param genConfig Configuration information
+     * @param columns Column information
      * @param request /
      * @param response /
      */
     void download(GenConfig genConfig, List<ColumnInfo> columns, HttpServletRequest request, HttpServletResponse response);
 
     /**
-     * 查询数据库的表字段数据数据
+     * Query database table column data
      * @param table /
      * @return /
      */

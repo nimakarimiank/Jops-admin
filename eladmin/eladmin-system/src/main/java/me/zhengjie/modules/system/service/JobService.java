@@ -33,56 +33,56 @@ import java.util.Set;
 public interface JobService extends IService<Job> {
 
     /**
-     * 根据ID查询
+     * Query by ID
      * @param id /
      * @return /
      */
     Job findById(Long id);
 
     /**
-     * 创建
+     * Create
      * @param resources /
      */
     void create(Job resources);
 
     /**
-     * 编辑
+     * Update
      * @param resources /
      */
     void update(Job resources);
 
     /**
-     * 删除
+     * Delete
      * @param ids /
      */
     void delete(Set<Long> ids);
 
     /**
-     * 分页查询
+     * Pagination query
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param criteria Criteria
+     * @param page     Pagination parameters
      * @return /
      */
     PageResult<Job> queryAll(JobQueryCriteria criteria, Page<Object> page);
 
     /**
-     * 查询全部数据
+     * Query all data
      * @param criteria /
      * @return /
      */
     List<Job> queryAll(JobQueryCriteria criteria);
 
     /**
-     * 导出数据
-     * @param jobs 待导出的数据
+     * Export data
+     * @param jobs Data to export
      * @param response /
      * @throws IOException /
      */
     void download(List<Job> jobs, HttpServletResponse response) throws IOException;
 
     /**
-     * 验证是否被用户关联
+     * Verify whether associated with users
      * @param ids /
      */
     void verification(Set<Long> ids);

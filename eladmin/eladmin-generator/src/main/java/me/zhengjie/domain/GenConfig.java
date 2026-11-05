@@ -27,7 +27,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * 代码生成配置
+ * Code generation configuration
  * @author Zheng Jie
  * @date 2019-01-03
  */
@@ -46,33 +46,33 @@ public class GenConfig implements Serializable {
     private Long id;
 
     @NotBlank
-    @ApiModelProperty(value = "表名")
+    @ApiModelProperty(value = "Table name")
     private String tableName;
 
-    @ApiModelProperty(value = "接口名称")
+    @ApiModelProperty(value = "API alias")
     private String apiAlias;
 
     @NotBlank
-    @ApiModelProperty(value = "包路径")
+    @ApiModelProperty(value = "Package path")
     private String pack;
 
     @NotBlank
-    @ApiModelProperty(value = "模块名")
+    @ApiModelProperty(value = "Module name")
     private String moduleName;
 
     @NotBlank
-    @ApiModelProperty(value = "前端文件路径")
+    @ApiModelProperty(value = "Frontend file path")
     private String path;
 
-    @ApiModelProperty(value = "前端文件路径")
+    @ApiModelProperty(value = "Frontend API path")
     private String apiPath;
 
-    @ApiModelProperty(value = "作者")
+    @ApiModelProperty(value = "Author")
     private String author;
 
-    @ApiModelProperty(value = "表前缀")
+    @ApiModelProperty(value = "Table prefix")
     private String prefix;
 
-    @ApiModelProperty(value = "是否覆盖")
+    @ApiModelProperty(value = "Whether to overwrite")
     private Boolean cover = false;
 }

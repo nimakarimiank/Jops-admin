@@ -32,8 +32,8 @@ import java.util.Set;
 public interface MenuService extends IService<Menu> {
 
     /**
-     * 查询全部数据
-     * @param criteria 条件
+     * Query all data
+     * @param criteria Criteria
      * @param isQuery /
      * @throws Exception /
      * @return /
@@ -41,26 +41,26 @@ public interface MenuService extends IService<Menu> {
     List<Menu> queryAll(MenuQueryCriteria criteria, Boolean isQuery) throws Exception;
 
     /**
-     * 根据ID查询
+     * Query by ID
      * @param id /
      * @return /
      */
     Menu findById(long id);
 
     /**
-     * 创建
+     * Create
      * @param resources /
      */
     void create(Menu resources);
 
     /**
-     * 编辑
+     * Update
      * @param resources /
      */
     void update(Menu resources);
 
     /**
-     * 获取所有子节点，包含自身ID
+     * Get all child nodes, including self ID
      * @param menuList /
      * @param menuSet /
      * @return /
@@ -68,42 +68,42 @@ public interface MenuService extends IService<Menu> {
     Set<Menu> getChildMenus(List<Menu> menuList, Set<Menu> menuSet);
 
     /**
-     * 构建菜单树
-     * @param menus 原始数据
+     * Build menu tree
+     * @param menus Raw data
      * @return /
      */
     List<Menu> buildTree(List<Menu> menus);
 
     /**
-     * 构建菜单树
+     * Build menu tree
      * @param menus /
      * @return /
      */
     List<MenuVo> buildMenus(List<Menu> menus);
 
     /**
-     * 删除
+     * Delete
      * @param menuSet /
      */
     void delete(Set<Menu> menuSet);
 
     /**
-     * 导出
-     * @param menus 待导出的数据
+     * Export
+     * @param menus Data to export
      * @param response /
      * @throws IOException /
      */
     void download(List<Menu> menus, HttpServletResponse response) throws IOException;
 
     /**
-     * 懒加载菜单数据
+     * Lazy load menu data
      * @param pid /
      * @return /
      */
     List<Menu> getMenus(Long pid);
 
     /**
-     * 根据ID获取同级与上级数据
+     * Get sibling and parent data by ID
      * @param menu /
      * @param objects /
      * @return /
@@ -111,7 +111,7 @@ public interface MenuService extends IService<Menu> {
     List<Menu> getSuperior(Menu menu, List<Menu> objects);
 
     /**
-     * 根据当前用户获取菜单
+     * Get menus for current user
      * @param currentUserId /
      * @return /
      */

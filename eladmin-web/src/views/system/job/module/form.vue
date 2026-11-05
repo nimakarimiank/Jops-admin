@@ -15,7 +15,7 @@
       label-width="80px"
     >
       <el-form-item
-        label="名称"
+        label="Name"
         prop="name"
       >
         <el-input
@@ -24,7 +24,7 @@
         />
       </el-form-item>
       <el-form-item
-        label="排序"
+        label="Sort"
         prop="jobSort"
       >
         <el-input-number
@@ -37,7 +37,7 @@
       </el-form-item>
       <el-form-item
         v-if="form.pid !== 0"
-        label="状态"
+        label="Status"
         prop="enabled"
       >
         <el-radio
@@ -58,14 +58,14 @@
         type="text"
         @click="crud.cancelCU"
       >
-        取消
+        Cancel
       </el-button>
       <el-button
         :loading="crud.status.cu === 2"
         type="primary"
         @click="crud.submitCU"
       >
-        确认
+        Confirm
       </el-button>
     </div>
   </el-dialog>
@@ -92,10 +92,10 @@ export default {
     return {
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+          { required: true, message: 'Please enter a name', trigger: 'blur' }
         ],
         jobSort: [
-          { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
+          { required: true, message: 'Please enter a sort number', trigger: 'blur', type: 'number' }
         ]
       }
     }

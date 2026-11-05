@@ -17,23 +17,23 @@ router.beforeEach((to, from, next) => {
   }
   NProgress.start()
   if (getToken()) {
-    // 已登录且要跳转的页面是登录页
+    // Already logged in and target page is login page
     if (to.path === '/login') {
       next({ path: '/' })
       NProgress.done()
     } else {
-      if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
-        store.dispatch('GetInfo').then(() => { // 拉取user_info
-          // 动态路由，拉取菜单
+      if (store.getters.roles.length === 0) { // Check if current user info has been fetched
+        store.dispatch('GetInfo').then(() => { // Fetch user_info
+          // Dynamic routes, fetch menus
           loadMenus(next, to)
         }).catch(() => {
           store.dispatch('LogOut').then(() => {
-            location.reload() // 为了重新实例化vue-router对象 避免bug
+            location.reload() // Re-instantiate vue-router object to avoid bugs
           })
         })
-      // 登录时未拉取 菜单，在此处拉取
+      // Menus were not fetched during login, fetch here
       } else if (store.getters.loadMenus) {
-        // 修改成false，防止死循环
+        // Change to false to prevent infinite loop
         store.dispatch('updateLoadMenus')
         loadMenus(next, to)
       } else {
@@ -42,10 +42,10 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     /* has no token*/
-    if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
+    if (whiteList.indexOf(to.path) !== -1) { // In login-exempt whitelist, enter directly
       next()
     } else {
-      next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
+      next(`/login?redirect=${to.fullPath}`) // Otherwise redirect all to login page
       NProgress.done()
     }
   }
@@ -59,8 +59,8 @@ export const loadMenus = (next, to) => {
     const rewriteRoutes = filterAsyncRouter(rdata, false, true)
     rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
 
-    store.dispatch('GenerateRoutes', rewriteRoutes).then(() => { // 存储路由
-      router.addRoutes(rewriteRoutes) // 动态添加可访问路由表
+    store.dispatch('GenerateRoutes', rewriteRoutes).then(() => { // Store routes
+      router.addRoutes(rewriteRoutes) // Dynamically add accessible route table
       next({ ...to, replace: true })
     })
     store.dispatch('SetSidebarRouters', sidebarRoutes)

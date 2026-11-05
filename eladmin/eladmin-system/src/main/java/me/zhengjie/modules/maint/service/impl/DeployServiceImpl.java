@@ -63,7 +63,7 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 	private final ServerService serverService;
 	private final DeployHistoryService deployHistoryService;
 	/**
-	 * 循环次数
+	 * Number of loop iterations
 	 */
 	private final Integer count = 30;
 
@@ -85,7 +85,7 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 	public void create(Deploy resources) {
 		resources.setAppId(resources.getApp().getId());
 		save(resources);
-		// 保存关联关系
+		// Save association
 		deployServerMapper.insertData(resources.getId(), resources.getDeploys());
 	}
 
@@ -95,7 +95,7 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 		Deploy deploy = getById(resources.getId());
 		deploy.copy(resources);
 		saveOrUpdate(deploy);
-		// 更新关联关系
+		// Update association
 		deployServerMapper.deleteByDeployId(resources.getId());
 		deployServerMapper.insertData(resources.getId(), resources.getDeploys());
 	}
@@ -104,7 +104,7 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 	@Transactional(rollbackFor = Exception.class)
 	public void delete(Set<Long> ids) {
 		removeBatchByIds(ids);
-		// 删除关联
+		// Delete association
 		deployServerMapper.deleteByDeployIds(ids);
 	}
 
@@ -114,22 +114,22 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 	}
 
 	/**
-	 * @param fileSavePath 本机路径
+	 * @param fileSavePath Local path
 	 * @param id ID
 	 */
 	private void deployApp(String fileSavePath, Long id) {
 		Deploy deploy = deployMapper.getDeployById(id);
 		if (deploy == null) {
-			sendMsg("部署信息不存在", MsgType.ERROR);
-			throw new BadRequestException("部署信息不存在");
+			sendMsg("Deployment information does not exist", MsgType.ERROR);
+			throw new BadRequestException("Deployment information does not exist");
 		}
 		App app = deploy.getApp();
 		if (app == null) {
-			sendMsg("包对应应用信息不存在", MsgType.ERROR);
-			throw new BadRequestException("包对应应用信息不存在");
+			sendMsg("Application information corresponding to package does not exist", MsgType.ERROR);
+			throw new BadRequestException("Application information corresponding to package does not exist");
 		}
 		int port = app.getPort();
-		//这个是服务器部署路径
+		// This is the server deployment path
 		String uploadPath = app.getUploadPath();
 		StringBuilder sb = new StringBuilder();
 		String msg;
@@ -137,46 +137,46 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 		for (Server server : deploys) {
 			String ip = server.getIp();
 			ExecuteShellUtil executeShellUtil = getExecuteShellUtil(ip);
-			//判断是否第一次部署
+			// Check if this is the first deployment
 			boolean flag = checkFile(executeShellUtil, app);
-			//第一步要确认服务器上有这个目录
+			// First step: confirm this directory exists on server
 			executeShellUtil.execute("mkdir -p " + app.getUploadPath());
 			executeShellUtil.execute("mkdir -p " + app.getBackupPath());
 			executeShellUtil.execute("mkdir -p " + app.getDeployPath());
-			//上传文件
-			msg = String.format("登陆到服务器:%s", ip);
+			// Upload file
+			msg = String.format("Logging into server: %s", ip);
 			ScpClientUtil scpClientUtil = getScpClientUtil(ip);
 			log.info(msg);
 			sendMsg(msg, MsgType.INFO);
-			msg = String.format("上传文件到服务器:%s<br>目录:%s下，请稍等...", ip, uploadPath);
+			msg = String.format("Uploading file to server: %s<br>Directory: %s, please wait...", ip, uploadPath);
 			sendMsg(msg, MsgType.INFO);
 			scpClientUtil.putFile(fileSavePath, uploadPath);
 			if (flag) {
-				sendMsg("停止原来应用", MsgType.INFO);
-				//停止应用
+				sendMsg("Stopping original application", MsgType.INFO);
+				// Stop application
 				stopApp(port, executeShellUtil);
-				sendMsg("备份原来应用", MsgType.INFO);
-				//备份应用
+				sendMsg("Backing up original application", MsgType.INFO);
+				// Back up application
 				backupApp(executeShellUtil, ip, app.getDeployPath()+FILE_SEPARATOR, app.getName(), app.getBackupPath()+FILE_SEPARATOR, id);
 			}
-			sendMsg("部署应用", MsgType.INFO);
-			//部署文件,并启动应用
+			sendMsg("Deploying application", MsgType.INFO);
+			// Deploy file and start application
 			String deployScript = app.getDeployScript();
 			executeShellUtil.execute(deployScript);
 			sleep(3);
-			sendMsg("应用部署中，请耐心等待部署结果，或者稍后手动查看部署状态", MsgType.INFO);
+			sendMsg("Application deploying, please wait for deployment result or check status manually later", MsgType.INFO);
 			int i  = 0;
 			boolean result = false;
-			// 由于启动应用需要时间，所以需要循环获取状态，如果超过30次，则认为是启动失败
+			// Since starting the application takes time, poll status in a loop; if exceeding 30 times, consider it failed
 			while (i++ < count){
 				result = checkIsRunningStatus(port, executeShellUtil);
 				if(result){
 					break;
 				}
-				// 休眠6秒
+				// Sleep for 6 seconds
 				sleep(6);
 			}
-			sb.append("服务器:").append(server.getName()).append("<br>应用:").append(app.getName());
+			sb.append("Server: ").append(server.getName()).append("<br>App: ").append(app.getName());
 			sendResultMsg(result, sb);
 			executeShellUtil.close();
 		}
@@ -197,9 +197,9 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 		sb.append("mkdir -p ").append(backupPath);
 		sb.append("mv -f ").append(fileSavePath);
 		sb.append(appName).append(" ").append(backupPath);
-		log.info("备份应用脚本:" + sb.toString());
+		log.info("Backup application script: " + sb.toString());
 		executeShellUtil.execute(sb.toString());
-		//还原信息入库
+		// Save restore information to database
 		DeployHistory deployHistory = new DeployHistory();
 		deployHistory.setAppName(appName);
 		deployHistory.setDeployUser(SecurityUtils.getCurrentUsername());
@@ -209,23 +209,23 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 	}
 
 	/**
-	 * 停App
+	 * Stop App
 	 *
-	 * @param port 端口
+	 * @param port Port
 	 * @param executeShellUtil /
 	 */
 	private void stopApp(int port, ExecuteShellUtil executeShellUtil) {
-		//发送停止命令
+		// Send stop command
 		executeShellUtil.execute(String.format("lsof -i :%d|grep -v \"PID\"|awk '{print \"kill -9\",$2}'|sh", port));
 
 	}
 
 	/**
-	 * 指定端口程序是否在运行
+	 * Check whether program on specified port is running
 	 *
-	 * @param port 端口
+	 * @param port Port
 	 * @param executeShellUtil /
-	 * @return true 正在运行  false 已经停止
+	 * @return true running, false stopped
 	 */
 	private boolean checkIsRunningStatus(int port, ExecuteShellUtil executeShellUtil) {
 		String result = executeShellUtil.executeForResult(String.format("fuser -n tcp %d", port));
@@ -247,32 +247,32 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 		for (Server server : servers) {
 			StringBuilder sb = new StringBuilder();
 			ExecuteShellUtil executeShellUtil = getExecuteShellUtil(server.getIp());
-			sb.append("服务器:").append(server.getName()).append("<br>应用:").append(app.getName());
+			sb.append("Server: ").append(server.getName()).append("<br>App: ").append(app.getName());
 			boolean result = checkIsRunningStatus(app.getPort(), executeShellUtil);
 			if (result) {
-				sb.append("<br>正在运行");
+				sb.append("<br>Running");
 				sendMsg(sb.toString(), MsgType.INFO);
 			} else {
-				sb.append("<br>已停止!");
+				sb.append("<br>Stopped!");
 				sendMsg(sb.toString(), MsgType.ERROR);
 			}
 			log.info(sb.toString());
 			executeShellUtil.close();
 		}
-		return "执行完毕";
+		return "Execution completed";
 	}
 
 	private boolean checkFile(ExecuteShellUtil executeShellUtil, App app) {
 		String deployPath = app.getDeployPath();
 		String appName = app.getName();
-		// 使用安全的命令执行方式，避免直接拼接字符串，https://github.com/elunez/eladmin/issues/873
+		// Use secure command execution to avoid direct string concatenation, https://github.com/elunez/eladmin/issues/873
 		String[] command = {"find", deployPath, "-name", appName};
 		String result = executeShellUtil.executeForResult(Arrays.toString(command));
 		return result.contains(appName);
 	}
 
 	/**
-	 * 启动服务
+	 * Start service
 	 * @param resources /
 	 * @return /
 	 */
@@ -283,33 +283,33 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 		for (Server deploy : deploys) {
 			StringBuilder sb = new StringBuilder();
 			ExecuteShellUtil executeShellUtil = getExecuteShellUtil(deploy.getIp());
-			//为了防止重复启动，这里先停止应用
+			// Stop application first to prevent duplicate startup
 			stopApp(app.getPort(), executeShellUtil);
-			sb.append("服务器:").append(deploy.getName()).append("<br>应用:").append(app.getName());
-			sendMsg("下发启动命令", MsgType.INFO);
+			sb.append("Server: ").append(deploy.getName()).append("<br>App: ").append(app.getName());
+			sendMsg("Issuing start command", MsgType.INFO);
 			executeShellUtil.execute(app.getStartScript());
 			sleep(3);
-			sendMsg("应用启动中，请耐心等待启动结果，或者稍后手动查看运行状态", MsgType.INFO);
+			sendMsg("Application starting, please wait for result or check status manually later", MsgType.INFO);
 			int i  = 0;
 			boolean result = false;
-			// 由于启动应用需要时间，所以需要循环获取状态，如果超过30次，则认为是启动失败
+			// Since starting the application takes time, poll status in a loop; if exceeding 30 times, consider it failed
 			while (i++ < count){
 				result = checkIsRunningStatus(app.getPort(), executeShellUtil);
 				if(result){
 					break;
 				}
-				// 休眠6秒
+				// Sleep for 6 seconds
 				sleep(6);
 			}
 			sendResultMsg(result, sb);
 			log.info(sb.toString());
 			executeShellUtil.close();
 		}
-		return "执行完毕";
+		return "Execution completed";
 	}
 
 	/**
-	 * 停止服务
+	 * Stop service
 	 * @param resources /
 	 * @return /
 	 */
@@ -320,23 +320,23 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 		for (Server deploy : deploys) {
 			StringBuilder sb = new StringBuilder();
 			ExecuteShellUtil executeShellUtil = getExecuteShellUtil(deploy.getIp());
-			sb.append("服务器:").append(deploy.getName()).append("<br>应用:").append(app.getName());
-			sendMsg("下发停止命令", MsgType.INFO);
-			//停止应用
+			sb.append("Server: ").append(deploy.getName()).append("<br>App: ").append(app.getName());
+			sendMsg("Issuing stop command", MsgType.INFO);
+			// Stop application
 			stopApp(app.getPort(), executeShellUtil);
 			sleep(1);
 			boolean result = checkIsRunningStatus(app.getPort(), executeShellUtil);
 			if (result) {
-				sb.append("<br>关闭失败!");
+				sb.append("<br>Stop failed!");
 				sendMsg(sb.toString(), MsgType.ERROR);
 			} else {
-				sb.append("<br>关闭成功!");
+				sb.append("<br>Stop successful!");
 				sendMsg(sb.toString(), MsgType.INFO);
 			}
 			log.info(sb.toString());
 			executeShellUtil.close();
 		}
-		return "执行完毕";
+		return "Execution completed";
 	}
 
 	@Override
@@ -346,45 +346,45 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 		String deployDate = DateUtil.format(resources.getDeployDate(), DatePattern.PURE_DATETIME_PATTERN);
 		App app = deployInfo.getApp();
 		if (app == null) {
-			sendMsg("应用信息不存在：" + resources.getAppName(), MsgType.ERROR);
-			throw new BadRequestException("应用信息不存在：" + resources.getAppName());
+			sendMsg("Application information does not exist: " + resources.getAppName(), MsgType.ERROR);
+			throw new BadRequestException("Application information does not exist: " + resources.getAppName());
 		}
 		String backupPath = app.getBackupPath()+FILE_SEPARATOR;
 		backupPath += resources.getAppName() + FILE_SEPARATOR + deployDate;
-		//这个是服务器部署路径
+		// This is the server deployment path
 		String deployPath = app.getDeployPath();
 		String ip = resources.getIp();
 		ExecuteShellUtil executeShellUtil = getExecuteShellUtil(ip);
 		String msg;
 
-		msg = String.format("登陆到服务器:%s", ip);
+		msg = String.format("Logging into server: %s", ip);
 		log.info(msg);
 		sendMsg(msg, MsgType.INFO);
-		sendMsg("停止原来应用", MsgType.INFO);
-		//停止应用
+		sendMsg("Stopping original application", MsgType.INFO);
+		// Stop application
 		stopApp(app.getPort(), executeShellUtil);
-		//删除原来应用
-		sendMsg("删除应用", MsgType.INFO);
+		// Delete original application
+		sendMsg("Deleting application", MsgType.INFO);
 		executeShellUtil.execute("rm -rf " + deployPath + FILE_SEPARATOR + resources.getAppName());
-		//还原应用
-		sendMsg("还原应用", MsgType.INFO);
+		// Restore application
+		sendMsg("Restoring application", MsgType.INFO);
 		executeShellUtil.execute("cp -r " + backupPath + "/. " + deployPath);
-		sendMsg("启动应用", MsgType.INFO);
+		sendMsg("Starting application", MsgType.INFO);
 		executeShellUtil.execute(app.getStartScript());
-		sendMsg("应用启动中，请耐心等待启动结果，或者稍后手动查看启动状态", MsgType.INFO);
+		sendMsg("Application starting, please wait for start result or check status manually later", MsgType.INFO);
 		int i  = 0;
 		boolean result = false;
-		// 由于启动应用需要时间，所以需要循环获取状态，如果超过30次，则认为是启动失败
+		// Since starting the application takes time, poll status in a loop; if exceeding 30 times, consider it failed
 		while (i++ < count){
 			result = checkIsRunningStatus(app.getPort(), executeShellUtil);
 			if(result){
 				break;
 			}
-			// 休眠6秒
+			// Sleep for 6 seconds
 			sleep(6);
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append("服务器:").append(ip).append("<br>应用:").append(resources.getAppName());
+		sb.append("Server: ").append(ip).append("<br>App: ").append(resources.getAppName());
 		sendResultMsg(result, sb);
 		executeShellUtil.close();
 		return "";
@@ -393,8 +393,8 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 	private ExecuteShellUtil getExecuteShellUtil(String ip) {
 		Server server = serverService.findByIp(ip);
 		if (server == null) {
-			sendMsg("IP对应服务器信息不存在：" + ip, MsgType.ERROR);
-			throw new BadRequestException("IP对应服务器信息不存在：" + ip);
+			sendMsg("Server information corresponding to IP does not exist: " + ip, MsgType.ERROR);
+			throw new BadRequestException("Server information corresponding to IP does not exist: " + ip);
 		}
 		return new ExecuteShellUtil(ip, server.getAccount(), server.getPassword(), server.getPort());
 	}
@@ -402,18 +402,18 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 	private ScpClientUtil getScpClientUtil(String ip) {
 		Server server = serverService.findByIp(ip);
 		if (server == null) {
-			sendMsg("IP对应服务器信息不存在：" + ip, MsgType.ERROR);
-			throw new BadRequestException("IP对应服务器信息不存在：" + ip);
+			sendMsg("Server information corresponding to IP does not exist: " + ip, MsgType.ERROR);
+			throw new BadRequestException("Server information corresponding to IP does not exist: " + ip);
 		}
 		return ScpClientUtil.getInstance(ip, server.getPort(), server.getAccount(), server.getPassword());
 	}
 
 	private void sendResultMsg(boolean result, StringBuilder sb) {
 		if (result) {
-			sb.append("<br>启动成功!");
+			sb.append("<br>Start successful!");
 			sendMsg(sb.toString(), MsgType.INFO);
 		} else {
-			sb.append("<br>启动失败!");
+			sb.append("<br>Start failed!");
 			sendMsg(sb.toString(), MsgType.ERROR);
 		}
 	}
@@ -423,9 +423,9 @@ public class DeployServiceImpl extends ServiceImpl<DeployMapper, Deploy> impleme
 		List<Map<String, Object>> list = new ArrayList<>();
 		for (Deploy deploy : deploys) {
 			Map<String,Object> map = new LinkedHashMap<>();
-			map.put("应用名称", deploy.getApp().getName());
-			map.put("服务器", deploy.getServers());
-			map.put("部署日期", deploy.getCreateTime());
+			map.put("Application Name", deploy.getApp().getName());
+			map.put("Servers", deploy.getServers());
+			map.put("Deployment Date", deploy.getCreateTime());
 			list.add(map);
 		}
 		FileUtil.downloadExcel(list, response);

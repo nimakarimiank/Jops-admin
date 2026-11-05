@@ -33,48 +33,48 @@ import java.util.Set;
 public interface DatabaseService extends IService<Database> {
 
     /**
-     * 分页查询
+     * Pagination query
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param criteria Criteria
+     * @param page     Pagination parameters
      * @return /
      */
     PageResult<Database> queryAll(DatabaseQueryCriteria criteria, Page<Object> page);
 
     /**
-     * 查询全部
-     * @param criteria 条件
+     * Query all
+     * @param criteria Criteria
      * @return /
      */
     List<Database> queryAll(DatabaseQueryCriteria criteria);
 
     /**
-     * 创建
+     * Create
      * @param resources /
      */
     void create(Database resources);
 
     /**
-     * 编辑
+     * Edit
      * @param resources /
      */
     void update(Database resources);
 
     /**
-     * 删除
+     * Delete
      * @param ids /
      */
     void delete(Set<String> ids);
 
     /**
-     * 测试连接
+     * Test connection
      * @param resources /
      * @return /
      */
     boolean testConnection(Database resources);
 
     /**
-     * 导出数据
+     * Export data
      * @param queryAll /
      * @param response /
      * @throws IOException e

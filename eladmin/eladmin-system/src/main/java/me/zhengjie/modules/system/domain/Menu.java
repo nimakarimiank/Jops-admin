@@ -47,50 +47,50 @@ public class Menu extends BaseEntity implements Serializable {
 
     @TableField(exist = false)
     @JSONField(serialize = false)
-    @ApiModelProperty(value = "菜单角色")
+    @ApiModelProperty(value = "Menu roles")
     private Set<Role> roles;
 
     @TableField(exist = false)
     private List<Menu> children;
 
-    @ApiModelProperty(value = "菜单标题")
+    @ApiModelProperty(value = "Menu title")
     private String title;
 
     @TableField(value = "name")
-    @ApiModelProperty(value = "菜单组件名称")
+    @ApiModelProperty(value = "Menu component name")
     private String componentName;
 
-    @ApiModelProperty(value = "排序")
+    @ApiModelProperty(value = "Sort")
     private Integer menuSort = 999;
 
-    @ApiModelProperty(value = "组件路径")
+    @ApiModelProperty(value = "Component path")
     private String component;
 
-    @ApiModelProperty(value = "路由地址")
+    @ApiModelProperty(value = "Route path")
     private String path;
 
-    @ApiModelProperty(value = "菜单类型，目录、菜单、按钮")
+    @ApiModelProperty(value = "Menu type: directory, menu, button")
     private Integer type;
 
-    @ApiModelProperty(value = "权限标识")
+    @ApiModelProperty(value = "Permission")
     private String permission;
 
-    @ApiModelProperty(value = "菜单图标")
+    @ApiModelProperty(value = "Menu icon")
     private String icon;
 
-    @ApiModelProperty(value = "缓存")
+    @ApiModelProperty(value = "Cache")
     private Boolean cache;
 
-    @ApiModelProperty(value = "是否隐藏")
+    @ApiModelProperty(value = "Is hidden")
     private Boolean hidden;
 
-    @ApiModelProperty(value = "上级菜单")
+    @ApiModelProperty(value = "Parent menu")
     private Long pid;
 
-    @ApiModelProperty(value = "子节点数目", hidden = true)
+    @ApiModelProperty(value = "Sub node count", hidden = true)
     private Integer subCount = 0;
 
-    @ApiModelProperty(value = "外链菜单")
+    @ApiModelProperty(value = "External link menu")
     @JsonProperty("iFrame")
     private Boolean iFrame;
 
@@ -111,17 +111,17 @@ public class Menu extends BaseEntity implements Serializable {
         return Objects.hash(id);
     }
 
-    @ApiModelProperty(value = "是否有子节点")
+    @ApiModelProperty(value = "Has children")
     public Boolean getHasChildren() {
         return subCount > 0;
     }
 
-    @ApiModelProperty(value = "是否为叶子")
+    @ApiModelProperty(value = "Is leaf")
     public Boolean getLeaf() {
         return subCount <= 0;
     }
 
-    @ApiModelProperty(value = "标签名称")
+    @ApiModelProperty(value = "Label name")
     public String getLabel() {
         return title;
     }

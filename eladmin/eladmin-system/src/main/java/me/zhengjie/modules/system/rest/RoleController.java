@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "系统：角色管理")
+@Api(tags = "System: Role Management")
 @RequestMapping("/api/roles")
 public class RoleController {
 
@@ -53,28 +53,28 @@ public class RoleController {
 
     private static final String ENTITY_NAME = "role";
 
-    @ApiOperation("获取单个role")
+    @ApiOperation("Get single role")
     @GetMapping(value = "/{id}")
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<Role> findRoleById(@PathVariable Long id){
         return new ResponseEntity<>(roleService.findById(id), HttpStatus.OK);
     }
 
-    @ApiOperation("导出角色数据")
+    @ApiOperation("Export role data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('role:list')")
     public void exportRole(HttpServletResponse response, RoleQueryCriteria criteria) throws IOException {
         roleService.download(roleService.queryAll(criteria), response);
     }
 
-    @ApiOperation("返回全部的角色")
+    @ApiOperation("Return all roles")
     @GetMapping(value = "/all")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
     public ResponseEntity<List<Role>> queryAllRole(){
         return new ResponseEntity<>(roleService.queryAll(),HttpStatus.OK);
     }
 
-    @ApiOperation("查询角色")
+    @ApiOperation("Query roles")
     @GetMapping
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<PageResult<Role>> queryRole(RoleQueryCriteria criteria){
@@ -82,14 +82,14 @@ public class RoleController {
         return new ResponseEntity<>(roleService.queryAll(criteria, page),HttpStatus.OK);
     }
 
-    @ApiOperation("获取用户级别")
+    @ApiOperation("Get user level")
     @GetMapping(value = "/level")
     public ResponseEntity<Object> getRoleLevel(){
         return new ResponseEntity<>(Dict.create().set("level", getLevels()),HttpStatus.OK);
     }
 
-    @Log("新增角色")
-    @ApiOperation("新增角色")
+    @Log("Create role")
+    @ApiOperation("Create role")
     @PostMapping
     @PreAuthorize("@el.check('roles:add')")
     public ResponseEntity<Object> createRole(@Validated @RequestBody Role resources){
@@ -101,8 +101,8 @@ public class RoleController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Log("修改角色")
-    @ApiOperation("修改角色")
+    @Log("Update role")
+    @ApiOperation("Update role")
     @PutMapping
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> updateRole(@Validated(Role.Update.class) @RequestBody Role resources){
@@ -113,8 +113,8 @@ public class RoleController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("修改角色菜单")
-    @ApiOperation("修改角色菜单")
+    @Log("Update role menus")
+    @ApiOperation("Update role")
     @PutMapping(value = "/menu")
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> updateRoleMenu(@RequestBody Role resources){
@@ -124,8 +124,8 @@ public class RoleController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除角色")
-    @ApiOperation("删除角色")
+    @Log("Delete role")
+    @ApiOperation("Delete role")
     @DeleteMapping
     @PreAuthorize("@el.check('roles:del')")
     public ResponseEntity<Object> deleteRole(@RequestBody Set<Long> ids){
@@ -133,14 +133,14 @@ public class RoleController {
             Role role = roleService.getById(id);
             checkLevel(role.getLevel());
         }
-        // 验证是否被用户关联
+        // Verify whether associated with users
         roleService.verification(ids);
         roleService.delete(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
-     * 获取用户的角色级别
+     * Get user role level
      * @return /
      */
     private int getLevels(){
@@ -151,7 +151,7 @@ public class RoleController {
     private void checkLevel(Integer level){
         int min = getLevels();
         if(level == null || level < min){
-            throw new BadRequestException("权限不足，你的角色级别：" + min + "，低于操作的角色级别：" + level);
+            throw new BadRequestException("Insufficient permissions: your role level (" + min + ") is lower than the target role level (" + level + ")");
         }
     }
 }

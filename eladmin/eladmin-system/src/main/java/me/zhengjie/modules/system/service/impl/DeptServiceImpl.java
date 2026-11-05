@@ -62,7 +62,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
             List<Field> fields = StringUtils.getAllFields(criteria.getClass(), new ArrayList<>());
             List<String> fieldNames = new ArrayList<String>(){{ add("pidIsNull");add("enabled");}};
             for (Field field : fields) {
-                //设置对象的访问权限，保证对private的属性的访问
+                // Set accessible permission on object to allow access to private properties
                 field.setAccessible(true);
                 Object val = field.get(criteria);
                 if(fieldNames.contains(field.getName())){
@@ -74,10 +74,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
                 }
             }
         }
-        // 数据权限
+        // Data scope
         criteria.setIds(SecurityUtils.getCurrentUserDataScope());
         List<Dept> list = deptMapper.findAll(criteria);
-        // 如果为空，就代表为自定义权限或者本级权限，就需要去重，不理解可以注释掉，看查询结果
+        // If empty, indicates custom or this-level data scope, deduplication required
         if(StringUtils.isBlank(dataScopeType)){
             return deduplication(list);
         }
@@ -109,28 +109,28 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Transactional(rollbackFor = Exception.class)
     public void create(Dept resources) {
         save(resources);
-        // 清理缓存
+        // Clear cache
         updateSubCnt(resources.getPid());
-        // 清理自定义角色权限的datascope缓存
+        // Clear datascope cache for custom role permissions
         delCaches(resources.getPid());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(Dept resources) {
-        // 旧的部门
+        // Old department
         Long oldPid = findById(resources.getId()).getPid();
         Long newPid = resources.getPid();
         if(resources.getPid() != null && resources.getId().equals(resources.getPid())) {
-            throw new BadRequestException("上级不能为自己");
+            throw new BadRequestException("The parent department cannot be itself");
         }
         Dept dept = getById(resources.getId());
         resources.setId(dept.getId());
         saveOrUpdate(resources);
-        // 更新父节点中子节点数目
+        // Update sub node count in parent node
         updateSubCnt(oldPid);
         updateSubCnt(newPid);
-        // 清理缓存
+        // Clear cache
         delCaches(resources.getId());
     }
 
@@ -138,7 +138,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Dept> depts) {
         for (Dept dept : depts) {
-            // 清理缓存
+            // Clear cache
             delCaches(dept.getId());
             deptMapper.deleteById(dept.getId());
             updateSubCnt(dept.getPid());
@@ -150,9 +150,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         List<Map<String, Object>> list = new ArrayList<>();
         for (Dept dept : depts) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("部门名称", dept.getName());
-            map.put("部门状态", dept.getEnabled() ? "启用" : "停用");
-            map.put("创建日期", dept.getCreateTime());
+            map.put("Department Name", dept.getName());
+            map.put("Department Status", dept.getEnabled() ? "Enabled" : "Disabled");
+            map.put("Create Date", dept.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
@@ -236,10 +236,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     public void verification(Set<Dept> depts) {
         Set<Long> deptIds = depts.stream().map(Dept::getId).collect(Collectors.toSet());
         if(userMapper.countByDepts(deptIds) > 0){
-            throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
+            throw new BadRequestException("The selected department has associated users, please dissociate before proceeding!");
         }
         if(roleMapper.countByDepts(deptIds) > 0){
-            throw new BadRequestException("所选部门存在角色关联，请解除后再试！");
+            throw new BadRequestException("The selected department has associated roles, please dissociate before proceeding!");
         }
     }
 
@@ -268,12 +268,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     /**
-     * 清理缓存
+     * Clear cache
      * @param id /
      */
     public void delCaches(Long id){
         List<User> users = userMapper.findByRoleDeptId(id);
-        // 删除数据权限
+        // Delete data scope
         redisUtils.delByKeys(CacheKey.DATA_USER, users.stream().map(User::getId).collect(Collectors.toSet()));
         redisUtils.del(CacheKey.DEPT_ID + id);
     }

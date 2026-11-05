@@ -28,15 +28,15 @@ import java.util.List;
 @Data
 public class AppQueryCriteria{
 
-    @ApiModelProperty(value = "名称")
+    @ApiModelProperty(value = "Name")
     private String name;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "Creation time")
     private List<Timestamp> createTime;
 
-    @ApiModelProperty(value = "页码", example = "1")
+    @ApiModelProperty(value = "Page number", example = "1")
     private Integer page = 1;
 
-    @ApiModelProperty(value = "每页数据量", example = "10")
+    @ApiModelProperty(value = "Page size", example = "10")
     private Integer size = 10;
 }

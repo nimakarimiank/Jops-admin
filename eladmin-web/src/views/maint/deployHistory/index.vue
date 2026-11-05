@@ -1,23 +1,23 @@
 <template>
   <div class="app-container">
-    <!--工具栏-->
+    <!-- Toolbar -->
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
-        <!-- 搜索 -->
-        <el-input v-model="query.blurry" clearable placeholder="输入搜索内容" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <!-- Search -->
+        <el-input v-model="query.blurry" clearable placeholder="Search content" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <date-range-picker v-model="query.deployDate" class="date-item" />
         <rrOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>
-    <!--表格渲染-->
+    <!-- Table Rendering -->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="appName" label="应用名称" />
-      <el-table-column prop="ip" label="部署IP" />
-      <el-table-column prop="deployUser" label="部署人员" />
-      <el-table-column prop="deployDate" label="部署时间" />
-      <el-table-column v-if="checkPer(['admin','deployHistory:del'])" label="操作" width="100px" align="center">
+      <el-table-column prop="appName" label="App Name" />
+      <el-table-column prop="ip" label="Deploy IP" />
+      <el-table-column prop="deployUser" label="Deployer" />
+      <el-table-column prop="deployDate" label="Deploy Time" />
+      <el-table-column v-if="checkPer(['admin','deployHistory:del'])" label="Operation" width="100px" align="center">
         <template slot-scope="scope">
           <el-popover
             :ref="scope.row.id"
@@ -25,17 +25,17 @@
             placement="top"
             width="180"
           >
-            <p>确定删除本条数据吗？</p>
+            <p>Are you sure you want to delete this record?</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
+              <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">Cancel</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">Confirm</el-button>
             </div>
             <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
         </template>
       </el-table-column>
     </el-table>
-    <!--分页组件-->
+    <!-- Pagination Component -->
     <pagination />
   </div>
 </template>
@@ -52,7 +52,7 @@ export default {
   name: 'DeployHistory',
   components: { pagination, crudOperation, rrOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '部署历史', url: 'api/deployHistory', crudMethod: { del }})
+    return CRUD({ title: 'Deployment History', url: 'api/deployHistory', crudMethod: { del }})
   },
   mixins: [presenter(), header()],
   data() {

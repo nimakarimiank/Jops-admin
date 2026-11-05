@@ -1,5 +1,5 @@
 const plugins = ['@vue/babel-plugin-transform-vue-jsx']
-// 生产环境移除console
+// Remove console in production environment
 if (process.env.NODE_ENV === 'production') {
   plugins.push('transform-remove-console')
 }

@@ -33,27 +33,27 @@ public class UserQueryCriteria implements Serializable {
     @ApiModelProperty(value = "ID")
     private Long id;
 
-    @ApiModelProperty(value = "多个ID")
+    @ApiModelProperty(value = "Multiple IDs")
     private Set<Long> deptIds = new HashSet<>();
 
-    @ApiModelProperty(value = "模糊查询")
+    @ApiModelProperty(value = "Fuzzy query")
     private String blurry;
 
-    @ApiModelProperty(value = "是否启用")
+    @ApiModelProperty(value = "Is enabled")
     private Boolean enabled;
 
-    @ApiModelProperty(value = "部门ID")
+    @ApiModelProperty(value = "Department ID")
     private Long deptId;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "Create time")
     private List<Timestamp> createTime;
 
-    @ApiModelProperty(value = "页码", example = "1")
+    @ApiModelProperty(value = "Page number", example = "1")
     private Integer page = 1;
 
-    @ApiModelProperty(value = "每页数据量", example = "10")
+    @ApiModelProperty(value = "Page size", example = "10")
     private Integer size = 10;
 
-    @ApiModelProperty(value = "偏移量", hidden = true)
+    @ApiModelProperty(value = "Offset", hidden = true)
     private long offset;
 }

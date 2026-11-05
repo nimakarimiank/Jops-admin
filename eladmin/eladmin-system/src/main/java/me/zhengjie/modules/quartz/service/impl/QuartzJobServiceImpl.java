@@ -73,7 +73,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
     @Transactional(rollbackFor = Exception.class)
     public void create(QuartzJob resources) {
         if (!CronExpression.isValidExpression(resources.getCronExpression())){
-            throw new BadRequestException("cron表达式格式错误");
+            throw new BadRequestException("Invalid cron expression format");
         }
         save(resources);
         quartzManage.addJob(resources);
@@ -83,12 +83,12 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
     @Transactional(rollbackFor = Exception.class)
     public void update(QuartzJob resources) {
         if (!CronExpression.isValidExpression(resources.getCronExpression())){
-            throw new BadRequestException("cron表达式格式错误");
+            throw new BadRequestException("Invalid cron expression format");
         }
         if(StringUtils.isNotBlank(resources.getSubTask())){
-            List<String> tasks = Arrays.asList(resources.getSubTask().split("[,，]"));
+            List<String> tasks = Arrays.asList(resources.getSubTask().split(","));
             if (tasks.contains(resources.getId().toString())) {
-                throw new BadRequestException("子任务中不能添加当前任务ID");
+                throw new BadRequestException("Cannot add current task ID to subtasks");
             }
         }
         saveOrUpdate(resources);
@@ -98,7 +98,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateIsPause(QuartzJob quartzJob) {
-        // 置换暂停状态
+        // Toggle pause status
         if (quartzJob.getIsPause()) {
             quartzManage.resumeJob(quartzJob);
             quartzJob.setIsPause(false);
@@ -129,19 +129,19 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
     public void executionSubJob(String[] tasks) throws InterruptedException {
         for (String id : tasks) {
             if (StrUtil.isBlank(id)) {
-                // 如果是手动清除子任务id，会出现id为空字符串的问题
+                // If subtask ID is cleared manually, empty string issue may occur
                 continue;
             }
             QuartzJob quartzJob = getById(Long.parseLong(id));
-            // 执行任务
+            // Execute task
             String uuid = IdUtil.simpleUUID();
             quartzJob.setUuid(uuid);
-            // 执行任务
+            // Execute task
             execution(quartzJob);
-            // 获取执行状态，如果执行失败则停止后面的子任务执行
+            // Get execution status; if execution fails, stop executing subsequent subtasks
             Boolean result = redisUtils.get(uuid, Boolean.class);
             while (result == null) {
-                // 休眠5秒，再次获取子任务执行情况
+                // Sleep for 5 seconds, then check subtask execution status again
                 Thread.sleep(5000);
                 result = redisUtils.get(uuid, Boolean.class);
             }
@@ -157,14 +157,14 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
         List<Map<String, Object>> list = new ArrayList<>();
         for (QuartzJob quartzJob : quartzJobs) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("任务名称", quartzJob.getJobName());
-            map.put("Bean名称", quartzJob.getBeanName());
-            map.put("执行方法", quartzJob.getMethodName());
-            map.put("参数", quartzJob.getParams());
-            map.put("表达式", quartzJob.getCronExpression());
-            map.put("状态", quartzJob.getIsPause() ? "暂停中" : "运行中");
-            map.put("描述", quartzJob.getDescription());
-            map.put("创建日期", quartzJob.getCreateTime());
+            map.put("Job Name", quartzJob.getJobName());
+            map.put("Bean Name", quartzJob.getBeanName());
+            map.put("Execution Method", quartzJob.getMethodName());
+            map.put("Parameters", quartzJob.getParams());
+            map.put("Expression", quartzJob.getCronExpression());
+            map.put("Status", quartzJob.getIsPause() ? "Paused" : "Running");
+            map.put("Description", quartzJob.getDescription());
+            map.put("Creation Date", quartzJob.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
@@ -175,15 +175,15 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
         List<Map<String, Object>> list = new ArrayList<>();
         for (QuartzLog quartzLog : queryAllLog) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("任务名称", quartzLog.getJobName());
-            map.put("Bean名称", quartzLog.getBeanName());
-            map.put("执行方法", quartzLog.getMethodName());
-            map.put("参数", quartzLog.getParams());
-            map.put("表达式", quartzLog.getCronExpression());
-            map.put("异常详情", quartzLog.getExceptionDetail());
-            map.put("耗时/毫秒", quartzLog.getTime());
-            map.put("状态", quartzLog.getIsSuccess() ? "成功" : "失败");
-            map.put("创建日期", quartzLog.getCreateTime());
+            map.put("Job Name", quartzLog.getJobName());
+            map.put("Bean Name", quartzLog.getBeanName());
+            map.put("Execution Method", quartzLog.getMethodName());
+            map.put("Parameters", quartzLog.getParams());
+            map.put("Expression", quartzLog.getCronExpression());
+            map.put("Exception Details", quartzLog.getExceptionDetail());
+            map.put("Time Elapsed (ms)", quartzLog.getTime());
+            map.put("Status", quartzLog.getIsSuccess() ? "Success" : "Failure");
+            map.put("Creation Date", quartzLog.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);

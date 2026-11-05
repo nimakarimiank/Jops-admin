@@ -7,7 +7,7 @@
 <script>
 import CodeMirror from 'codemirror'
 import 'codemirror/lib/codemirror.css'
-// 替换主题这里需修改名称
+// Modify name here when replacing theme
 import 'codemirror/theme/idea.css'
 import 'codemirror/mode/clike/clike'
 export default {
@@ -45,7 +45,7 @@ export default {
       lineWrapping: true,
       tabSize: 2,
       cursorHeight: 0.9,
-      // 替换主题这里需修改名称
+      // Modify name here when replacing theme
       theme: 'idea',
       readOnly: true
     })

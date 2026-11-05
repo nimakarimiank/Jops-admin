@@ -1,20 +1,20 @@
 <template>
   <div class="errPage-container">
     <el-button icon="arrow-left" class="pan-back-btn" @click="back">
-      返回
+      Back
     </el-button>
     <el-row>
       <el-col :span="12">
         <h1 class="text-jumbo text-ginormous">
           Oops!
         </h1>
-        <h2>你没有权限去该页面</h2>
-        <h6>如有不满请联系你领导</h6>
+        <h2>You do not have permission to access this page</h2>
+        <h6>If you have questions, please contact your administrator</h6>
         <ul class="list-unstyled">
-          <li>或者你可以去:</li>
+          <li>Or you can go to:</li>
           <li class="link-type">
             <router-link to="/dashboard">
-              回首页
+              Home
             </router-link>
           </li>
         </ul>

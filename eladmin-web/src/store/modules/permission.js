@@ -27,13 +27,13 @@ const permission = {
   }
 }
 
-export const filterAsyncRouter = (routers, lastRouter = false, type = false) => { // 遍历后台传来的路由字符串，转换为组件对象
+export const filterAsyncRouter = (routers, lastRouter = false, type = false) => { // Iterate through route strings from backend, convert to component objects
   return routers.filter(router => {
     if (type && router.children) {
       router.children = filterChildren(router.children)
     }
     if (router.component) {
-      if (router.component === 'Layout') { // Layout组件特殊处理
+      if (router.component === 'Layout') { // Special handling for Layout component
         router.component = Layout
       } else if (router.component === 'ParentView') {
         router.component = ParentView

@@ -92,7 +92,7 @@ export function isArray(arg) {
 }
 
 /**
- * 是否合法IP地址
+ * Whether valid IP address
  * @param rule
  * @param value
  * @param callback
@@ -103,63 +103,63 @@ export function validateIP(rule, value, callback) {
   } else {
     const reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
     if ((!reg.test(value)) && value !== '') {
-      callback(new Error('请输入正确的IP地址'))
+      callback(new Error('Please enter a valid IP address'))
     } else {
       callback()
     }
   }
 }
 
-/* 是否手机号码或者固话*/
+/* Whether mobile phone number or landline */
 export function validatePhoneTwo(rule, value, callback) {
   const reg = /^((0\d{2,3}-\d{7,8})|(1([38][0-9]|4[014-9]|[59][0-35-9]|6[2567]|7[0-8])\d{8}))$/
   if (value === '' || value === undefined || value == null) {
     callback()
   } else {
     if ((!reg.test(value)) && value !== '') {
-      callback(new Error('请输入正确的电话号码或者固话号码'))
+      callback(new Error('Please enter a valid mobile or landline phone number'))
     } else {
       callback()
     }
   }
 }
 
-/* 是否固话*/
+/* Whether landline */
 export function validateTelephone(rule, value, callback) {
   const reg = /0\d{2}-\d{7,8}/
   if (value === '' || value === undefined || value == null) {
     callback()
   } else {
     if ((!reg.test(value)) && value !== '') {
-      callback(new Error('请输入正确的固话（格式：区号+号码,如010-1234567）'))
+      callback(new Error('Please enter a valid landline number (format: area code + number, e.g. 010-1234567)'))
     } else {
       callback()
     }
   }
 }
 
-/* 是否手机号码*/
+/* Whether mobile phone number */
 export function validatePhone(rule, value, callback) {
   const reg = /^1([38][0-9]|4[014-9]|[59][0-35-9]|6[2567]|7[0-8])\d{8}$/
   if (value === '' || value === undefined || value == null) {
     callback()
   } else {
     if ((!reg.test(value)) && value !== '') {
-      callback(new Error('请输入正确的电话号码'))
+      callback(new Error('Please enter a valid phone number'))
     } else {
       callback()
     }
   }
 }
 
-/* 是否身份证号码*/
+/* Whether ID card number */
 export function validateIdNo(rule, value, callback) {
   const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
   if (value === '' || value === undefined || value == null) {
     callback()
   } else {
     if ((!reg.test(value)) && value !== '') {
-      callback(new Error('请输入正确的身份证号码'))
+      callback(new Error('Please enter a valid ID card number'))
     } else {
       callback()
     }

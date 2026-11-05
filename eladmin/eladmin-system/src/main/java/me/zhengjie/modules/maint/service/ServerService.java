@@ -33,41 +33,41 @@ import java.util.Set;
 public interface ServerService extends IService<Server> {
 
     /**
-     * 分页查询
+     * Pagination query
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param criteria Criteria
+     * @param page     Pagination parameters
      * @return /
      */
     PageResult<Server> queryAll(ServerQueryCriteria criteria, Page<Object> page);
 
     /**
-     * 查询全部数据
-     * @param criteria 条件
+     * Query all data
+     * @param criteria Criteria
      * @return /
      */
     List<Server> queryAll(ServerQueryCriteria criteria);
 
     /**
-     * 创建
+     * Create
      * @param resources /
      */
     void create(Server resources);
 
     /**
-     * 编辑
+     * Edit
      * @param resources /
      */
     void update(Server resources);
 
     /**
-     * 删除
+     * Delete
      * @param ids /
      */
     void delete(Set<Long> ids);
 
     /**
-     * 根据IP查询
+     * Query by IP
      *
      * @param ip /
      * @return /
@@ -75,14 +75,14 @@ public interface ServerService extends IService<Server> {
     Server findByIp(String ip);
 
     /**
-     * 测试连接
+     * Test connection
      * @param resources /
      * @return /
      */
     Boolean testConnect(Server resources);
 
     /**
-     * 导出数据
+     * Export data
      * @param queryAll /
      * @param response /
      * @throws IOException /

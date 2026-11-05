@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
-    <!--工具栏-->
+    <!-- Toolbar -->
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
-        <!-- 搜索 -->
-        <el-input v-model="query.appName" clearable placeholder="输入应用名称查询" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <!-- Search -->
+        <el-input v-model="query.appName" clearable placeholder="Search by app name" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <date-range-picker v-model="query.createTime" class="date-item" />
         <rrOperation />
       </div>
@@ -18,7 +18,7 @@
             type="primary"
             icon="el-icon-upload"
             @click="sysRestore"
-          >系统还原
+          >System Restore
           </el-button>
           <el-button
             v-permission="['admin','deploy:add']"
@@ -28,7 +28,7 @@
             type="primary"
             icon="el-icon-upload"
             @click="serverStatus"
-          >状态查询
+          >Status Query
           </el-button>
           <el-button
             v-permission="['admin','deploy:add']"
@@ -38,7 +38,7 @@
             type="success"
             icon="el-icon-upload"
             @click="startServer"
-          >启动
+          >Start
           </el-button>
           <el-button
             v-permission="['admin','deploy:add']"
@@ -48,7 +48,7 @@
             type="danger"
             icon="el-icon-upload"
             @click="stopServer"
-          >停止
+          >Stop
           </el-button>
           <el-button
             v-permission="['admin','deploy:add']"
@@ -58,40 +58,40 @@
             type="warning"
             icon="el-icon-upload"
             @click="deploy"
-          >一键部署
+          >One-Click Deploy
           </el-button>
         </template>
       </crudOperation>
     </div>
-    <!--表单组件-->
+    <!-- Form Component -->
     <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-        <el-form-item label="应用" prop="app.id">
-          <el-select v-model.number="form.app.id" placeholder="请选择" style="width: 370px">
+        <el-form-item label="App" prop="app.id">
+          <el-select v-model.number="form.app.id" placeholder="Please select" style="width: 370px">
             <el-option v-for="item in apps" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="服务器" prop="deploys">
-          <el-select v-model="form.deploys" multiple placeholder="请选择" style="width: 370px">
+        <el-form-item label="Server" prop="deploys">
+          <el-select v-model="form.deploys" multiple placeholder="Please select" style="width: 370px">
             <el-option v-for="item in servers" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="crud.cancelCU">取消</el-button>
-        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+        <el-button type="text" @click="crud.cancelCU">Cancel</el-button>
+        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">Confirm</el-button>
       </div>
     </el-dialog>
-    <!--统还原组件-->
+    <!-- System Restore Component -->
     <fForm ref="sysRestore" :key="times" :app-name="appName" />
     <dForm ref="deploy" />
-    <!--表格渲染-->
+    <!-- Table Rendering -->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row stripe style="width: 100%" @selection-change="handleCurrentChange">
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="app.name" label="应用名称" />
-      <el-table-column prop="servers" label="服务器列表" />
-      <el-table-column prop="createTime" label="部署日期" />
-      <el-table-column v-if="checkPer(['admin','deploy:edit','deploy:del'])" label="操作" width="150px" align="center">
+      <el-table-column prop="app.name" label="App Name" />
+      <el-table-column prop="servers" label="Server List" />
+      <el-table-column prop="createTime" label="Deploy Date" />
+      <el-table-column v-if="checkPer(['admin','deploy:edit','deploy:del'])" label="Operation" width="150px" align="center">
         <template slot-scope="scope">
           <udOperation
             :data="scope.row"
@@ -100,7 +100,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--分页组件-->
+    <!-- Pagination Component -->
     <pagination />
   </div>
 </template>
@@ -121,7 +121,7 @@ export default {
   name: 'Deploy',
   components: { dForm, fForm, pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '部署', url: 'api/deploy', crudMethod: { ...crudDeploy }})
+    return CRUD({ title: 'Deploy', url: 'api/deploy', crudMethod: { ...crudDeploy }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
@@ -135,10 +135,10 @@ export default {
       },
       rules: {
         'app.id': [
-          { required: true, message: '应用不能为空', trigger: 'blur', type: 'number' }
+          { required: true, message: 'App cannot be empty', trigger: 'blur', type: 'number' }
         ],
         deploys: [
-          { required: true, message: '服务器不能为空', trigger: 'blur' }
+          { required: true, message: 'Server cannot be empty', trigger: 'blur' }
         ]
       }
     }
@@ -148,7 +148,7 @@ export default {
       this.selectIndex = ''
       return true
     },
-    // 新增编辑前做的操作
+    // Operations performed before add/edit
     [CRUD.HOOK.beforeToCU](crud, form) {
       this.initSelect()
       const deploys = []
@@ -157,7 +157,7 @@ export default {
       })
       this.form.deploys = deploys
     },
-    // 提交前
+    // Before submit
     [CRUD.HOOK.beforeSubmit]() {
       const deploys = []
       this.form.deploys.forEach(function(data, index) {

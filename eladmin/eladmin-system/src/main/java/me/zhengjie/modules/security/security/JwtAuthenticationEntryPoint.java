@@ -35,12 +35,12 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        // 当用户尝试访问安全的REST资源而不提供任何凭据时，将调用此方法发送401 响应
+        // When a user attempts to access a secure REST resource without providing any credentials, this method is called to send a 401 response
         int code = HttpStatus.UNAUTHORIZED.value();
         response.setStatus(code);
         response.setContentType("application/json;charset=UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
-        String jsonResponse = objectMapper.writeValueAsString(ApiError.error(HttpStatus.UNAUTHORIZED.value(), "登录状态已过期，请重新登录"));
+        String jsonResponse = objectMapper.writeValueAsString(ApiError.error(HttpStatus.UNAUTHORIZED.value(), "Login status has expired, please log in again"));
         response.getWriter().write(jsonResponse);
     }
 }

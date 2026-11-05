@@ -34,7 +34,7 @@ import java.util.Set;
 public interface UserService extends IService<User> {
 
     /**
-     * 根据ID查询
+     * Query by ID
      *
      * @param id ID
      * @return /
@@ -42,26 +42,26 @@ public interface UserService extends IService<User> {
     User findById(long id);
 
     /**
-     * 新增用户
+     * Create user
      * @param resources /
      */
     void create(User resources);
 
     /**
-     * 编辑用户
+     * Update user
      * @param resources /
      * @throws Exception /
      */
     void update(User resources) throws Exception;
 
     /**
-     * 删除用户
+     * Delete user
      * @param ids /
      */
     void delete(Set<Long> ids);
 
     /**
-     * 根据用户名查询
+     * Query by username
      *
      * @param userName /
      * @return /
@@ -69,68 +69,68 @@ public interface UserService extends IService<User> {
     User findByName(String userName);
 
     /**
-     * 根据用户名查询
+     * Query by username
      * @param userName /
      * @return /
      */
     User getLoginData(String userName);
 
     /**
-     * 修改密码
-     * @param username 用户名
-     * @param encryptPassword 密码
+     * Update password
+     * @param username Username
+     * @param encryptPassword Password
      */
     void updatePass(String username, String encryptPassword);
 
     /**
-     * 修改头像
-     * @param file 文件
+     * Update avatar
+     * @param file File
      * @return /
      */
     Map<String, String> updateAvatar(MultipartFile file);
 
     /**
-     * 修改邮箱
-     * @param username 用户名
-     * @param email 邮箱
+     * Update email
+     * @param username Username
+     * @param email Email
      */
     void updateEmail(String username, String email);
 
     /**
-     * 查询全部
+     * Query all
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param criteria Criteria
+     * @param page     Pagination parameters
      * @return /
      */
     PageResult<User> queryAll(UserQueryCriteria criteria, Page<Object> page);
 
     /**
-     * 查询全部不分页
+     * Query all unpaged
      *
-     * @param criteria 条件
+     * @param criteria Criteria
      * @return /
      */
     List<User> queryAll(UserQueryCriteria criteria);
 
     /**
-     * 导出数据
-     * @param queryAll 待导出的数据
+     * Export data
+     * @param queryAll Data to export
      * @param response /
      * @throws IOException /
      */
     void download(List<User> queryAll, HttpServletResponse response) throws IOException;
 
     /**
-     * 用户自助修改资料
+     * User self-service profile update
      * @param resources /
      */
     void updateCenter(User resources);
 
     /**
-     * 重置密码
-     * @param ids 用户id
-     * @param pwd 密码
+     * Reset password
+     * @param ids User IDs
+     * @param pwd Password
      */
     void resetPwd(Set<Long> ids, String pwd);
 }

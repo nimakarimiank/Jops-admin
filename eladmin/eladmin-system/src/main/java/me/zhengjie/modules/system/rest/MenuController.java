@@ -43,14 +43,14 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "系统：菜单管理")
+@Api(tags = "System: Menu Management")
 @RequestMapping("/api/menus")
 public class MenuController {
 
     private final MenuService menuService;
     private static final String ENTITY_NAME = "menu";
 
-    @ApiOperation("导出菜单数据")
+    @ApiOperation("Export menu data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('menu:list')")
     public void exportMenu(HttpServletResponse response, MenuQueryCriteria criteria) throws Exception {
@@ -58,21 +58,21 @@ public class MenuController {
     }
 
     @GetMapping(value = "/build")
-    @ApiOperation("获取前端所需菜单")
+    @ApiOperation("Get menus required by frontend")
     public ResponseEntity<List<MenuVo>> buildMenus(){
         List<Menu> menuList = menuService.findByUser(SecurityUtils.getCurrentUserId());
         List<Menu> menus = menuService.buildTree(menuList);
         return new ResponseEntity<>(menuService.buildMenus(menus),HttpStatus.OK);
     }
 
-    @ApiOperation("返回全部的菜单")
+    @ApiOperation("Return all menus")
     @GetMapping(value = "/lazy")
     @PreAuthorize("@el.check('menu:list','roles:list')")
     public ResponseEntity<List<Menu>> queryAllMenu(@RequestParam Long pid){
         return new ResponseEntity<>(menuService.getMenus(pid),HttpStatus.OK);
     }
 
-    @ApiOperation("根据菜单ID返回所有子节点ID，包含自身ID")
+    @ApiOperation("Return all child IDs including self by menu ID")
     @GetMapping(value = "/child")
     @PreAuthorize("@el.check('menu:list','roles:list')")
     public ResponseEntity<Object> childMenu(@RequestParam Long id){
@@ -85,14 +85,14 @@ public class MenuController {
     }
 
     @GetMapping
-    @ApiOperation("查询菜单")
+    @ApiOperation("Query menus")
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<PageResult<Menu>> queryMenu(MenuQueryCriteria criteria) throws Exception {
         List<Menu> menuList = menuService.queryAll(criteria, true);
         return new ResponseEntity<>(PageUtil.toPage(menuList),HttpStatus.OK);
     }
 
-    @ApiOperation("查询菜单:根据ID获取同级与上级数据")
+    @ApiOperation("Query menus: get sibling and parent data by ID")
     @PostMapping("/superior")
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<List<Menu>> getMenuSuperior(@RequestBody List<Long> ids) {
@@ -108,15 +108,15 @@ public class MenuController {
                 }
                 menus.addAll(menuList);
             }
-            // 编辑菜单时不显示自己以及自己下级的数据，避免出现PID数据环形问题
+            // Do not display self and subordinates when editing menu to avoid PID circular loops
             menus = menus.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toSet());
             return new ResponseEntity<>(menuService.buildTree(new ArrayList<>(menus)),HttpStatus.OK);
         }
         return new ResponseEntity<>(menuService.getMenus(null),HttpStatus.OK);
     }
 
-    @Log("新增菜单")
-    @ApiOperation("新增菜单")
+    @Log("Create menu")
+    @ApiOperation("Create menu")
     @PostMapping
     @PreAuthorize("@el.check('menu:add')")
     public ResponseEntity<Object> createMenu(@Validated @RequestBody Menu resources){
@@ -127,8 +127,8 @@ public class MenuController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Log("修改菜单")
-    @ApiOperation("修改菜单")
+    @Log("Update menu")
+    @ApiOperation("Update menu")
     @PutMapping
     @PreAuthorize("@el.check('menu:edit')")
     public ResponseEntity<Object> updateMenu(@Validated(Menu.Update.class) @RequestBody Menu resources){
@@ -136,8 +136,8 @@ public class MenuController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除菜单")
-    @ApiOperation("删除菜单")
+    @Log("Delete menu")
+    @ApiOperation("Delete menu")
     @DeleteMapping
     @PreAuthorize("@el.check('menu:del')")
     public ResponseEntity<Object> deleteMenu(@RequestBody Set<Long> ids){

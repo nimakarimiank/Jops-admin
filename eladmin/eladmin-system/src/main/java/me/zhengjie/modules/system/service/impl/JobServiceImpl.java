@@ -86,7 +86,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
         }
         resources.setId(job.getId());
         saveOrUpdate(resources);
-        // 删除缓存
+        // Delete cache
         delCaches(resources.getId());
     }
 
@@ -94,7 +94,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
         removeBatchByIds(ids);
-        // 删除缓存
+        // Delete cache
         ids.forEach(this::delCaches);
     }
 
@@ -103,9 +103,9 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
         List<Map<String, Object>> list = new ArrayList<>();
         for (Job job : jobs) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("岗位名称", job.getName());
-            map.put("岗位状态", job.getEnabled() ? "启用" : "停用");
-            map.put("创建日期", job.getCreateTime());
+            map.put("Job Name", job.getName());
+            map.put("Job Status", job.getEnabled() ? "Enabled" : "Disabled");
+            map.put("Create Date", job.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
@@ -114,7 +114,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     @Override
     public void verification(Set<Long> ids) {
         if(userMapper.countByJobs(ids) > 0){
-            throw new BadRequestException("所选的岗位中存在用户关联，请解除关联再试！");
+            throw new BadRequestException("The selected job has associated users, please dissociate before proceeding!");
         }
     }
 

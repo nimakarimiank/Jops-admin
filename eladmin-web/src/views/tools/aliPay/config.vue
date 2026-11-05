@@ -2,30 +2,30 @@
   <el-form ref="form" :model="form" :rules="rules" style="margin-top: 6px;" size="small" label-width="100px">
     <el-form-item label="appID" prop="appId">
       <el-input v-model="form.appId" style="width: 40%" />
-      <span style="color: #C0C0C0;margin-left: 10px;">应用APPID,收款账号既是APPID对应支付宝账号</span>
+      <span style="color: #C0C0C0;margin-left: 10px;">Application APPID, payee account is the Alipay account corresponding to APPID</span>
     </el-form-item>
-    <el-form-item label="商家账号" prop="sysServiceProviderId">
+    <el-form-item label="Merchant ID" prop="sysServiceProviderId">
       <el-input v-model="form.sysServiceProviderId" style="width: 40%;" />
-      <span style="color: #C0C0C0;margin-left: 10px;">商家账号</span>
+      <span style="color: #C0C0C0;margin-left: 10px;">Merchant ID</span>
     </el-form-item>
-    <el-form-item label="商户私钥" prop="privateKey">
+    <el-form-item label="Private Key" prop="privateKey">
       <el-input v-model="form.privateKey" type="password" style="width: 40%;" />
-      <span style="color: #C0C0C0;margin-left: 10px;">商户私钥，你的PKCS8格式RSA2私钥</span>
+      <span style="color: #C0C0C0;margin-left: 10px;">Merchant private key, your PKCS8 format RSA2 private key</span>
     </el-form-item>
-    <el-form-item label="支付宝公钥" prop="publicKey">
+    <el-form-item label="Alipay Public Key" prop="publicKey">
       <el-input v-model="form.publicKey" type="password" style="width: 40%;" />
-      <span style="color: #C0C0C0;margin-left: 10px;">支付宝公钥</span>
+      <span style="color: #C0C0C0;margin-left: 10px;">Alipay public key</span>
     </el-form-item>
-    <el-form-item label="回调地址" prop="returnUrl">
+    <el-form-item label="Return URL" prop="returnUrl">
       <el-input v-model="form.returnUrl" style="width: 40%;" />
-      <span style="color: #C0C0C0;margin-left: 10px;">订单完成后返回的地址</span>
+      <span style="color: #C0C0C0;margin-left: 10px;">Return address after order completion</span>
     </el-form-item>
-    <el-form-item label="异步通知" prop="notifyUrl">
+    <el-form-item label="Notify URL" prop="notifyUrl">
       <el-input v-model="form.notifyUrl" style="width: 40%;" />
-      <span style="color: #C0C0C0;margin-left: 10px;">支付结果异步通知地址</span>
+      <span style="color: #C0C0C0;margin-left: 10px;">Payment result asynchronous notification address</span>
     </el-form-item>
     <el-form-item label="">
-      <el-button :loading="loading" size="medium" type="primary" @click="doSubmit">保存配置</el-button>
+      <el-button :loading="loading" size="medium" type="primary" @click="doSubmit">Save Configuration</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -40,22 +40,22 @@ export default {
       form: { appId: '', sysServiceProviderId: '', privateKey: '', publicKey: '', returnUrl: '', notifyUrl: '' },
       rules: {
         appId: [
-          { required: true, message: '请输入appID', trigger: 'blur' }
+          { required: true, message: 'Please enter appID', trigger: 'blur' }
         ],
         sysServiceProviderId: [
-          { required: true, message: '请输入商家账号', trigger: 'blur' }
+          { required: true, message: 'Please enter merchant ID', trigger: 'blur' }
         ],
         privateKey: [
-          { required: true, message: '商户私钥不能为空', trigger: 'blur' }
+          { required: true, message: 'Merchant private key cannot be empty', trigger: 'blur' }
         ],
         publicKey: [
-          { required: true, message: '支付宝公钥不能为空', trigger: 'blur' }
+          { required: true, message: 'Alipay public key cannot be empty', trigger: 'blur' }
         ],
         returnUrl: [
-          { required: true, message: '回调地址不能为空', trigger: 'blur' }
+          { required: true, message: 'Return URL cannot be empty', trigger: 'blur' }
         ],
         notifyUrl: [
-          { required: true, message: '回调地址不能为空', trigger: 'blur' }
+          { required: true, message: 'Notify URL cannot be empty', trigger: 'blur' }
         ]
       }
     }
@@ -75,7 +75,7 @@ export default {
           this.loading = true
           update(this.form).then(res => {
             this.$notify({
-              title: '修改成功',
+              title: 'Modified successfully',
               type: 'success',
               duration: 2500
             })

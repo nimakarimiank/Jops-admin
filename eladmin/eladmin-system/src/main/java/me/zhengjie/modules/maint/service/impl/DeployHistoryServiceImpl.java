@@ -73,11 +73,11 @@ public class DeployHistoryServiceImpl extends ServiceImpl<DeployHistoryMapper, D
         List<Map<String, Object>> list = new ArrayList<>();
         for (DeployHistory deployHistory : deployHistories) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("部署编号", deployHistory.getDeployId());
-            map.put("应用名称", deployHistory.getAppName());
-            map.put("部署IP", deployHistory.getIp());
-            map.put("部署时间", deployHistory.getDeployDate());
-            map.put("部署人员", deployHistory.getDeployUser());
+            map.put("Deploy ID", deployHistory.getDeployId());
+            map.put("Application Name", deployHistory.getAppName());
+            map.put("Deploy IP", deployHistory.getIp());
+            map.put("Deploy Time", deployHistory.getDeployDate());
+            map.put("Deployer", deployHistory.getDeployUser());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);

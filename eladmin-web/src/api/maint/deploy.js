@@ -39,8 +39,8 @@ export function getServers() {
 }
 
 /**
- * 启动服务
- * @param data 选中行
+ * Start service
+ * @param data Selected row
  */
 export function startServer(data) {
   return request({
@@ -51,8 +51,8 @@ export function startServer(data) {
 }
 
 /**
- * 停止服务
- * @param data  选中行
+ * Stop service
+ * @param data  Selected row
  */
 export function stopServer(data) {
   return request({
@@ -63,8 +63,8 @@ export function stopServer(data) {
 }
 
 /**
- * 停止服务
- * @param data  选中行
+ * Server status
+ * @param data  Selected row
  */
 export function serverStatus(data) {
   return request({

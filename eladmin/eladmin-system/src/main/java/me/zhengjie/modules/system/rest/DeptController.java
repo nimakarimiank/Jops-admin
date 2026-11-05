@@ -41,21 +41,21 @@ import java.util.stream.Collectors;
 */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "系统：部门管理")
+@Api(tags = "System: Department Management")
 @RequestMapping("/api/dept")
 public class DeptController {
 
     private final DeptService deptService;
     private static final String ENTITY_NAME = "dept";
 
-    @ApiOperation("导出部门数据")
+    @ApiOperation("Export department data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
     public void exportDept(HttpServletResponse response, DeptQueryCriteria criteria) throws Exception {
         deptService.download(deptService.queryAll(criteria, false), response);
     }
 
-    @ApiOperation("查询部门")
+    @ApiOperation("Query departments")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<PageResult<Dept>> queryDept(DeptQueryCriteria criteria) throws Exception {
@@ -63,7 +63,7 @@ public class DeptController {
         return new ResponseEntity<>(PageUtil.toPage(depts),HttpStatus.OK);
     }
 
-    @ApiOperation("查询部门:根据ID获取同级与上级数据")
+    @ApiOperation("Query departments: get sibling and parent data by ID")
     @PostMapping("/superior")
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<Object> getDeptSuperior(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
@@ -77,7 +77,7 @@ public class DeptController {
                         data.setSubCount(data.getSubCount() - 1);
                     }
                 }
-                // 编辑部门时不显示自己以及自己下级的数据，避免出现PID数据环形问题
+                // Do not display self and subordinates when editing department to avoid PID circular loops
                 depts = depts.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toList());
             }
             deptSet.addAll(depts);
@@ -85,8 +85,8 @@ public class DeptController {
         return new ResponseEntity<>(deptService.buildTree(new ArrayList<>(deptSet)),HttpStatus.OK);
     }
 
-    @Log("新增部门")
-    @ApiOperation("新增部门")
+    @Log("Create department")
+    @ApiOperation("Create department")
     @PostMapping
     @PreAuthorize("@el.check('dept:add')")
     public ResponseEntity<Object> createDept(@Validated @RequestBody Dept resources){
@@ -97,8 +97,8 @@ public class DeptController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Log("修改部门")
-    @ApiOperation("修改部门")
+    @Log("Update department")
+    @ApiOperation("Update department")
     @PutMapping
     @PreAuthorize("@el.check('dept:edit')")
     public ResponseEntity<Object> updateDept(@Validated(Dept.Update.class) @RequestBody Dept resources){
@@ -106,8 +106,8 @@ public class DeptController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除部门")
-    @ApiOperation("删除部门")
+    @Log("Delete department")
+    @ApiOperation("Delete department")
     @DeleteMapping
     @PreAuthorize("@el.check('dept:del')")
     public ResponseEntity<Object> deleteDept(@RequestBody Set<Long> ids){
@@ -119,7 +119,7 @@ public class DeptController {
                 depts = deptService.getDeleteDepts(deptList, depts);
             }
         }
-        // 验证是否被角色或用户关联
+        // Verify whether associated with roles or users
         deptService.verification(depts);
         deptService.delete(depts);
         return new ResponseEntity<>(HttpStatus.OK);

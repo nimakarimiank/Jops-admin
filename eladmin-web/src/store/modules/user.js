@@ -6,7 +6,7 @@ const user = {
     token: getToken(),
     user: {},
     roles: [],
-    // 第一次加载菜单时用到
+    // Used when loading menus for the first time
     loadMenus: false
   },
 
@@ -26,7 +26,7 @@ const user = {
   },
 
   actions: {
-    // 登录
+    // Login
     Login({ commit }, userInfo) {
       const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
@@ -34,7 +34,7 @@ const user = {
           setToken(res.token, rememberMe)
           commit('SET_TOKEN', res.token)
           setUserInfo(res.user, commit)
-          // 第一次加载菜单时用到， 具体见 src 目录下的 permission.js
+          // Used when loading menus for the first time, see permission.js in src directory for details
           commit('SET_LOAD_MENUS', true)
           resolve()
         }).catch(error => {
@@ -43,7 +43,7 @@ const user = {
       })
     },
 
-    // 获取用户信息
+    // Get user info
     GetInfo({ commit }) {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
@@ -54,7 +54,7 @@ const user = {
         })
       })
     },
-    // 登出
+    // Logout
     LogOut({ commit }) {
       return new Promise((resolve, reject) => {
         logout().then(res => {
@@ -82,7 +82,7 @@ export const logOut = (commit) => {
 }
 
 export const setUserInfo = (res, commit) => {
-  // 如果没有任何权限，则赋予一个默认的权限，避免请求死循环
+  // If without any permissions, assign a default permission to avoid infinite request loop
   if (res.roles.length === 0) {
     commit('SET_ROLES', ['ROLE_SYSTEM_DEFAULT'])
   } else {

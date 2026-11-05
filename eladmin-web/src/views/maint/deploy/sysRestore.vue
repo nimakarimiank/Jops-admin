@@ -1,29 +1,29 @@
 <template>
-  <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="dialog" title="系统还原" width="800px">
-    <!--工具栏-->
+  <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="dialog" title="System Restore" width="800px">
+    <!-- Toolbar -->
     <div class="head-container">
       <date-range-picker v-model="query.createTime" class="date-item" />
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
+      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">Search</el-button>
     </div>
     <el-form size="small" label-width="80px">
-      <!--表格渲染-->
+      <!-- Table Rendering -->
       <el-table v-loading="loading" :data="data" style="width: 100%" @row-click="showRow">
         <el-table-column width="30px">
           <template slot-scope="scope">
             <el-radio v-model="radio" :label="scope.$index" />
           </template>
         </el-table-column>
-        <el-table-column prop="appName" label="应用名称" />
-        <el-table-column prop="ip" label="部署IP" />
-        <el-table-column prop="deployDate" label="部署时间" />
-        <el-table-column prop="deployUser" label="部署人员" />
+        <el-table-column prop="appName" label="App Name" />
+        <el-table-column prop="ip" label="Deploy IP" />
+        <el-table-column prop="deployDate" label="Deploy Time" />
+        <el-table-column prop="deployUser" label="Deployer" />
       </el-table>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="text" @click="cancel">取消</el-button>
-      <el-button v-permission="['admin','deploy:add']" :loading="submitLoading" type="primary" @click="doSubmit">确认</el-button>
+      <el-button type="text" @click="cancel">Cancel</el-button>
+      <el-button v-permission="['admin','deploy:add']" :loading="submitLoading" type="primary" @click="doSubmit">Confirm</el-button>
     </div>
-    <!--分页组件-->
+    <!-- Pagination Component -->
     <el-pagination
       :total="total"
       :current-page="page"
@@ -83,7 +83,7 @@ export default {
     },
     doSubmit() {
       if (this.selectIndex === '') {
-        this.$message.error('请选择要还原的备份')
+        this.$message.error('Please select a backup to restore')
       } else {
         this.submitLoading = true
         reducte(JSON.stringify(this.data[this.radio]))

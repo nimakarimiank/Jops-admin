@@ -51,8 +51,8 @@ export default {
 
       this.chart.setOption({
         title: {
-          text: '漏斗图',
-          subtext: '纯属虚构'
+          text: 'Funnel Chart',
+          subtext: 'Fictional'
         },
         tooltip: {
           trigger: 'item',
@@ -66,12 +66,12 @@ export default {
           }
         },
         legend: {
-          data: ['展现', '点击', '访问', '咨询', '订单']
+          data: ['Impressions', 'Clicks', 'Visits', 'Inquiries', 'Orders']
         },
         calculable: true,
         series: [
           {
-            name: '漏斗图',
+            name: 'Funnel Chart',
             type: 'funnel',
             left: '10%',
             top: 60,
@@ -105,11 +105,11 @@ export default {
               }
             },
             data: [
-              { value: 60, name: '访问' },
-              { value: 40, name: '咨询' },
-              { value: 20, name: '订单' },
-              { value: 80, name: '点击' },
-              { value: 100, name: '展现' }
+              { value: 60, name: 'Visits' },
+              { value: 40, name: 'Inquiries' },
+              { value: 20, name: 'Orders' },
+              { value: 80, name: 'Clicks' },
+              { value: 100, name: 'Impressions' }
             ]
           }
         ]

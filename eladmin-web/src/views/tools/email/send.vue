@@ -1,14 +1,14 @@
 <template>
   <div>
     <el-form ref="form" :model="form" :rules="rules" style="margin-top: 6px;" size="small" label-width="100px">
-      <el-form-item label="邮件标题" prop="subject">
-        <el-input v-model="form.subject" style="width: 646px" placeholder="请输入邮件标题，标题不能为空" />
+      <el-form-item label="Subject" prop="subject">
+        <el-input v-model="form.subject" style="width: 646px" placeholder="Please enter email subject, subject cannot be empty" />
       </el-form-item>
-      <el-form-item label="收件地址" prop="tos">
-        <el-input v-model="form.tos" style="width: 646px" placeholder="请输入收件地址，多个地址英文逗号,隔开" />
+      <el-form-item label="Recipient" prop="tos">
+        <el-input v-model="form.tos" style="width: 646px" placeholder="Please enter recipient address, separate multiple addresses with comma (,)" />
       </el-form-item>
       <div ref="editor" class="editor" />
-      <el-button :loading="loading" style="margin-left:1.6%;margin-bottom: 30px" size="medium" type="primary" @click="doSubmit">发送邮件</el-button>
+      <el-button :loading="loading" style="margin-left:1.6%;margin-bottom: 30px" size="medium" type="primary" @click="doSubmit">Send Email</el-button>
     </el-form>
   </div>
 </template>
@@ -25,10 +25,10 @@ export default {
       loading: false, form: { subject: '', tos: '', content: '' },
       rules: {
         subject: [
-          { required: true, message: '标题不能为空', trigger: 'blur' }
+          { required: true, message: 'Subject cannot be empty', trigger: 'blur' }
         ],
         tos: [
-          { required: true, message: '收件人不能为空', trigger: 'blur' }
+          { required: true, message: 'Recipient cannot be empty', trigger: 'blur' }
         ]
       }
     }
@@ -42,12 +42,12 @@ export default {
   mounted() {
     const _this = this
     var editor = new E(this.$refs.editor)
-    // 自定义菜单配置
+    // Custom menu configuration
     editor.config.zIndex = 10
-    // 文件上传
+    // File upload
     editor.config.customUploadImg = function(files, insert) {
-      // files 是 input 中选中的文件列表
-      // insert 是获取图片 url 后，插入到编辑器的方法
+      // files is the list of selected files from the input
+      // insert is the method to insert image url into editor after retrieval
       files.forEach(image => {
         upload(_this.imagesUploadApi, image).then(res => {
           const data = res.data
@@ -68,7 +68,7 @@ export default {
           this.loading = true
           send(this.form).then(res => {
             this.$notify({
-              title: '发送成功',
+              title: 'Sent successfully',
               type: 'success',
               duration: 2500
             })

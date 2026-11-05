@@ -26,7 +26,7 @@ import java.io.PrintWriter;
 import java.util.Vector;
 
 /**
- * 执行shell命令
+ * Execute shell commands
  *
  * @author ZhangHouYing
  * @date 2019/8/10

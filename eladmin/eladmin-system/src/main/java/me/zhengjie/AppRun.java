@@ -40,8 +40,8 @@ public class AppRun {
 
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(AppRun.class);
-        // 监控应用的PID，启动时可指定PID路径：--spring.pid.file=/home/eladmin/app.pid
-        // 或者在 application.yml 添加文件路径，方便 kill，kill `cat /home/eladmin/app.pid`
+        // Monitor application PID, PID path can be specified on startup: --spring.pid.file=/home/eladmin/app.pid
+        // Or add file path in application.yml for easy killing: kill `cat /home/eladmin/app.pid`
         springApplication.addListeners(new ApplicationPidFileWriter());
         ConfigurableApplicationContext context = springApplication.run(args);
         String port = context.getEnvironment().getProperty("server.port");
@@ -57,7 +57,7 @@ public class AppRun {
     }
 
     /**
-     * 访问首页提示
+     * Home page visit prompt
      * @return /
      */
     @AnonymousGetMapping("/")

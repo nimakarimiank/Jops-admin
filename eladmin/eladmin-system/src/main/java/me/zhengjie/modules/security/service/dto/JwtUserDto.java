@@ -34,13 +34,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class JwtUserDto implements UserDetails {
 
-    @ApiModelProperty(value = "用户")
+    @ApiModelProperty(value = "User")
     private final User user;
 
-    @ApiModelProperty(value = "数据权限")
+    @ApiModelProperty(value = "Data scope")
     private final List<Long> dataScopes;
 
-    @ApiModelProperty(value = "角色")
+    @ApiModelProperty(value = "Roles")
     private final List<AuthorityDto> authorities;
 
     public Set<String> getRoles() {

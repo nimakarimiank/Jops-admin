@@ -15,7 +15,7 @@ export default {
         }
       }
     } else {
-      throw new Error(`使用方式： v-permission="['admin','editor']"`)
+      throw new Error(`Usage: v-permission="['admin','editor']"`)
     }
   }
 }
